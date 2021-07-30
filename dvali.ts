@@ -21,7 +21,11 @@ export type ValidatorObject<T> = {
     [key in keyof T]: Validator<T[key]>;
 };
 
-export type Validator<T> = ValidatorObject<T> | ValidatorFunction<T>[] | ValidatorFunction<T>;
+export type Validator<T> =
+    | ValidatorObject<T>[]
+    | ValidatorObject<T>
+    | ValidatorFunction<T>[]
+    | ValidatorFunction<T>;
 
 export type SanitizedObject<T> = {
     [key in keyof T]?: SanitizedValue<T[key]>;
@@ -90,15 +94,54 @@ const resolveValidatorList = function <T>(
 
 const _validate = function <T>(validator: Validator<T>, conf: ValidatorConfiguration) {
     return async function (testValue: unknown): Promise<SanitizedValue<T>> {
-        if (typeof validator === 'object' && Array.isArray(validator) && typeof validator[0] === 'function') {
+        if (
+            typeof validator === 'object' &&
+            Array.isArray(validator) &&
+            typeof validator[0] === 'function'
+        ) {
             // Array of functions mean a list of validators
-            const { value, failures } = await resolveValidatorList(validator, testValue as T, conf);
+            const { value, failures } = await resolveValidatorList(
+                validator as ValidatorFunction<T>[],
+                testValue as T,
+                conf
+            );
             if (failures.length > 0) {
                 throw failures;
             }
             return value;
         } else if (typeof validator === 'object' && Array.isArray(validator)) {
-            // TODO: validate an array with the first item
+            // Array of one item should use that validation to every item in the array
+            if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
+                throw `Field ${conf.name} should be an array.`;
+            }
+
+            const arrayValidator = validator[0] as ValidatorObject<T>;
+            let sanitizedArray: SanitizedValue<T>[] = [];
+            let validationFailures: FailureType[] = [];
+            for (let i = 0; i < testValue.length; i++) {
+                try {
+                    const value = await _validate(arrayValidator, {
+                        ...conf,
+                        name: `${conf.name}[${i}]`,
+                        path: conf.path.concat(i.toString()),
+                        parent: testValue,
+                    })(testValue[i]);
+                    sanitizedArray[i] = value;
+                } catch (failures) {
+                    if (Array.isArray(failures)) {
+                        validationFailures = failures.reduce(
+                            (previousFailures, failure) => previousFailures.concat(failure),
+                            validationFailures
+                        );
+                    } else {
+                        validationFailures = validationFailures.concat(failures);
+                    }
+                }
+            }
+            if (validationFailures.length > 0) {
+                throw validationFailures;
+            }
+            return sanitizedArray;
         } else if (typeof validator === 'object') {
             // It is an object, all properties should be validated recursively
             if (typeof testValue !== 'object' || testValue === null) {

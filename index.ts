@@ -10,17 +10,28 @@ const validateUser = validate({
     email: [required(), isEmail()],
     password: [required(), minLength(8), containsAlpha(), containsNumber()],
     picture: [isUrl()],
-    address: validateAddress
+    address: [
+        {
+            city: required(),
+            street: required(),
+        },
+    ],
 });
 
 const validations = validateUser({
     email: 'asd@asd.asd',
     password: 'asdasd69',
     picture: 'http://asd.as/',
-    address: {
-        city: 'asdasd',
-        street: 'dsadsa',
-    },
+    address: [
+        {
+            city: 'asdasd',
+            street: 'dsadsa',
+        },
+        {
+            city: 'asdasd',
+            street: 'dsadsa',
+        },
+    ],
 });
 
 validations.then((p) => console.log(p)).catch((p) => console.log(p));
