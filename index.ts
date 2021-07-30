@@ -1,12 +1,12 @@
-import { validateObject } from './dvali';
+import { validate } from './dvali';
 import { required, isEmail, minLength, containsAlpha, containsNumber, isUrl } from './validators';
 
-const validateAddress = validateObject({
+const validateAddress = validate({
     city: required(),
     street: required(),
 });
 
-const validateUser = validateObject({
+const validateUser = validate({
     email: [required(), isEmail()],
     password: [required(), minLength(8), containsAlpha(), containsNumber()],
     picture: [isUrl()],
