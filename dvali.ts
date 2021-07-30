@@ -92,8 +92,25 @@ const resolveValidatorList = function <T>(
     }, Promise.resolve({ value, failures: [] } as ValidatorState<T>));
 };
 
-const _validate = function <T>(validator: Validator<T>, conf: ValidatorConfiguration) {
-    return async function (testValue: unknown): Promise<SanitizedValue<T>> {
+export const validate = function <T>(
+    validator: Validator<T>,
+    validateConf?: Partial<ValidatorConfiguration>
+) {
+    return async function (
+        testValue: unknown,
+        testConf?: Partial<ValidatorConfiguration>
+    ): Promise<SanitizedValue<T>> {
+        // Set defaults to configuration
+        const conf: ValidatorConfiguration = {
+            name: 'object',
+            path: [],
+            original: testValue,
+            parent: testValue,
+            ...validateConf,
+            ...testConf,
+        };
+
+        // Start the validation
         if (
             typeof validator === 'object' &&
             Array.isArray(validator) &&
@@ -120,7 +137,7 @@ const _validate = function <T>(validator: Validator<T>, conf: ValidatorConfigura
             let validationFailures: FailureType[] = [];
             for (let i = 0; i < testValue.length; i++) {
                 try {
-                    const value = await _validate(arrayValidator, {
+                    const value = await validate(arrayValidator, {
                         ...conf,
                         name: `${conf.name}[${i}]`,
                         path: conf.path.concat(i.toString()),
@@ -153,7 +170,7 @@ const _validate = function <T>(validator: Validator<T>, conf: ValidatorConfigura
             for (let i in validator) {
                 if (Object.prototype.hasOwnProperty.call(validator, i)) {
                     try {
-                        const value = await _validate(validator[i], {
+                        const value = await validate(validator[i], {
                             ...conf,
                             name: i,
                             path: conf.path.concat(i),
@@ -187,25 +204,6 @@ const _validate = function <T>(validator: Validator<T>, conf: ValidatorConfigura
             // Shouldn't go on here
             // TODO: handle errors / warnings
         }
-    };
-};
-
-export const validate = function <T>(
-    validator: Validator<T>,
-    validateConf?: Partial<ValidatorConfiguration>
-) {
-    return async function (
-        testObject: unknown,
-        testConf?: Partial<ValidatorConfiguration>
-    ): Promise<SanitizedValue<T>> {
-        return _validate(validator, {
-            name: 'object',
-            path: [],
-            original: testObject,
-            parent: testObject,
-            ...validateConf,
-            ...testConf,
-        })(testObject);
     };
 };
 
