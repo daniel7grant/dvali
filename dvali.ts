@@ -1,160 +1,167 @@
-type SuccessType<T> = T | undefined | null;
-type FailureType = string;
+export type SuccessType<T> = T | null | undefined;
+export type FailureType = string;
 
-type UnknownObject = {
-    [k: string]: unknown;
-};
-
-interface ValidationState<T> {
+export interface ValidatorState<T> {
     value: T;
     failures: FailureType[];
 }
 
-interface ValidationConfiguration {
+export interface ValidatorConfiguration {
     name: string;
     path: string[];
-    original: UnknownObject;
-    parent: UnknownObject;
+    original: TestObject;
+    parent: TestObject;
 }
 
-type ValidationProperty =
-    | ValidationObject
-    | ValidationObject[]
-    | ValidationFunction<any>
-    | ValidationFunction<any>[];
-
-type ValidationObject = {
-    [k: string]: ValidationProperty;
-};
-
-type TestObject<T> = {
-    [key in keyof T]: any;
-};
-
-type ResultProperty<T> = ValidationResult<T> | ValidationState<any> | [ValidationState<any>];
-
-type ValidationResult<T> = {
-    [key in keyof T]: ResultProperty<T>;
-};
-
-export interface ValidationFunction<T = any> {
-    (v: T, conf: ValidationConfiguration): Promise<SuccessType<T>>;
-    // (v: T, conf: ValidationConfiguration): SuccessType<T>|FailureType;
+export interface ValidatorFunction<T = any> {
+    (value: T, conf: ValidatorConfiguration): Promise<SuccessType<T>>;
 }
+
+export type ValidatorProp<T> = ValidatorObject<T> | ValidatorFunction<T>[] | ValidatorFunction<T>;
+
+export type ValidatorObject<T> = {
+    [key in keyof T]: ValidatorProp<T[key]>;
+};
+
+export type TestObject = {
+    [key: string]: unknown;
+};
+
+export type SanitizedObject<T> = {
+    [key in keyof T]?: T[key];
+};
 
 interface FailureFunction<T> {
-    (v: T, conf: ValidationConfiguration): FailureType;
+    (v: T, conf: ValidatorConfiguration): FailureType;
 }
 
 interface ConditionFunction<T> {
-    (v: T, conf: ValidationConfiguration): boolean;
+    (v: T, conf: ValidatorConfiguration): boolean;
 }
 
-const Success = <T>(x?: T): T | undefined => x;
-const Failure = (e: string): never => {
-    throw new Error(e);
+export const Success = function <T>(t?: T): T | undefined {
+    return t;
 };
 
-function validateKey<T>(configuration: ValidationConfiguration) {
-    return async function (
-        { value, failures }: ValidationState<T>,
-        validate: ValidationFunction<T>
-    ) {
-        try {
-            const newValue = await validate(value, configuration);
-            if (!newValue) {
-                return { value, failures };
-            } else {
-                return { value: newValue, failures };
-            }
-        } catch (err) {
-            return { value, failures: failures.concat(err.message) };
-        }
-    };
-}
+export const Failure = function (t: string): never {
+    throw t;
+};
 
-function _validateObject(validation: ValidationObject, conf: ValidationConfiguration) {
-    return async (
-        source: TestObject<typeof validation>
-    ): Promise<ValidationResult<typeof validation>> => {
-        let target: ValidationResult<typeof validation> = {};
-        for (const i in validation) {
-            const v: any = validation[i];
-            switch (typeof v) {
-                case 'object':
-                    if (Array.isArray(v)) {
-                        // Array of functions mean validators
-                        if (typeof v[0] === 'function') {
-                            target[i] = await v.reduce(
-                                async (previousValue, validatorFunction) => {
-                                    return previousValue.then((p: ValidationState<unknown>) =>
-                                        validateKey({
-                                            ...conf,
-                                            name: i,
-                                            path: conf.path.concat(i),
-                                            parent: source,
-                                        })(p, validatorFunction)
-                                    );
-                                },
-                                Promise.resolve({
-                                    value: source[i],
-                                    failures: [],
-                                }) as Promise<ValidationState<unknown>>
-                            );
-                            break;
-                        }
-                        else {
-                            // TODO: handle array of objects / values
-                        }
+const resolveValidator = function <T>(
+    validatorFunction: ValidatorFunction<T>,
+    value: T,
+    conf: ValidatorConfiguration
+): Promise<ValidatorState<T>> {
+    let validatorResult = validatorFunction(value, conf);
+    if (typeof validatorResult === 'object' && validatorResult !== null) {
+        // Promise
+        return validatorResult.then(
+            (newValue) => ({
+                value: newValue ? newValue : value,
+                failures: [],
+            }),
+            (failure) => ({
+                value,
+                failures: [failure],
+            })
+        );
+    } else if (!validatorResult) {
+        // Empty string or null should be valid
+        return Promise.resolve({ value, failures: [] });
+    }
+    // String should be an error message
+    return Promise.resolve({ value, failures: [validatorResult] });
+};
+
+const resolveValidatorList = function <T>(
+    validators: ValidatorFunction<T>[],
+    value: T,
+    conf: ValidatorConfiguration
+): Promise<ValidatorState<T>> {
+    return validators.reduce((previousPromise, validator) => {
+        return previousPromise.then(({ value, failures }) =>
+            resolveValidator(validator, value, conf).then(
+                ({ value: newValue, failures: additionalFailures }) => ({
+                    value: newValue,
+                    failures: failures.concat(additionalFailures),
+                })
+            )
+        );
+    }, Promise.resolve({ value, failures: [] } as ValidatorState<T>));
+};
+
+const _validateObject = function <T>(
+    validatorObject: ValidatorObject<T>,
+    conf: ValidatorConfiguration
+) {
+    return async function (testObject: TestObject): Promise<SanitizedObject<typeof testObject>> {
+        let sanitizedObject: SanitizedObject<typeof testObject> = {};
+        let validationFailures: FailureType[] = [];
+        for (const i in validatorObject) {
+            if (Object.prototype.hasOwnProperty.call(validatorObject, i)) {
+                if (typeof validatorObject[i] === 'object' && Array.isArray(validatorObject[i])) {
+                    // Array
+                    const validators = validatorObject[
+                        i
+                    ] as unknown as ValidatorFunction<unknown>[];
+                    const { value, failures } = await resolveValidatorList(
+                        validators,
+                        testObject[i],
+                        { ...conf, name: i, path: conf.path.concat(i) }
+                    );
+                    sanitizedObject[i] = value;
+                    validationFailures = validationFailures.concat(failures);
+                } else if (typeof validatorObject[i] === 'object') {
+                    // Object
+                    const validator = validatorObject[i] as unknown as ValidatorObject<unknown>;
+                    try {
+                        const value = await _validateObject(validator, {
+                            ...conf,
+                            name: i,
+                            path: conf.path.concat(i),
+                        })(testObject[i] as TestObject);
+                        sanitizedObject[i] = value;
+                    } catch (failures) {
+                        validationFailures = validationFailures.concat(failures);
                     }
-
-                    // If key does not exists we should return an error
-                    if (typeof source[i] !== 'object') {
-                        target[i] = {
-                            value: source[i],
-                            failures: [`Field ${i} should exist.`],
-                        };
-                        break;
-                    }
-
-                    // Otherwise, validate inside object / array
-                    target[i] = await _validateObject(v, conf)(source[i]);
-                    break;
-                case 'function':
-                    // One function should be called for validation
-                    target[i] = await validateKey({
+                } else if (typeof validatorObject[i] === 'function') {
+                    // Function
+                    const validator = validatorObject[i] as unknown as ValidatorFunction<unknown>;
+                    const { value, failures } = await resolveValidator(validator, testObject[i], {
                         ...conf,
                         name: i,
                         path: conf.path.concat(i),
-                        parent: source,
-                    })({ value: source[i], failures: [] }, v);
-                    break;
-                default:
-                    // numbers, strings and undefined / null shouldn't be here
-                    break;
+                    });
+                    sanitizedObject[i] = value;
+                    validationFailures = validationFailures.concat(failures);
+                } else {
+                    // Shouldn't go on here
+                }
             }
         }
-        return target;
+        if (validationFailures.length > 0) {
+            throw validationFailures;
+        }
+        return sanitizedObject;
     };
-}
+};
 
-export function validateObject(validation: ValidationObject) {
-    return async function (
-        source: { [key in keyof typeof validation]: any }
-    ): Promise<ValidationResult<typeof validation>> {
-        return _validateObject(validation, {
+export const validateObject = function <T>(validatorObject: ValidatorObject<T>, conf?: Partial<ValidatorConfiguration>) {
+    return async function (testObject: TestObject): Promise<SanitizedObject<typeof testObject>> {
+        return _validateObject(validatorObject, {
             name: 'object',
             path: [],
-            original: source,
-            parent: source,
-        })(source);
+            original: testObject,
+            parent: testObject,
+            ...conf,
+        })(testObject);
     };
-}
+};
 
 export const validateCondition = <T>(
     condition: ConditionFunction<T>,
     errorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidationFunction<T> => {
+): ValidatorFunction<T> => {
     return async function (field, conf) {
         if (condition(field, conf)) {
             return Success();
@@ -164,15 +171,11 @@ export const validateCondition = <T>(
     };
 };
 
-export const validateRegex = <T>(
+export const validateRegex = (
     regex: RegExp,
-    errorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} format is invalid.`,
-    typeErrorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} should be a string.`
-): ValidationFunction<T> => {
+    errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
+): ValidatorFunction<string> => {
     return async function (field, conf) {
-        if (typeof field !== 'string') {
-            return Failure(typeErrorMsg(field, conf));
-        }
         if (regex.test(field)) {
             return Success();
         } else {
