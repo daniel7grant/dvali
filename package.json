@@ -5,14 +5,22 @@
     "main": "dvali.ts",
     "scripts": {
         "build": "tsc -p tsconfig.json",
+        "size": "npm run build && size-limit",
         "test": "ts-node index.ts"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@size-limit/preset-small-lib": "^5.0.2",
         "prettier": "^2.3.2",
+        "size-limit": "^5.0.2",
         "ts-node": "^10.1.0",
         "typescript": "^4.3.5"
-    }
+    },
+    "size-limit": [{
+        "path": "dist/index.js",
+        "limit": "5 kB",
+        "import": "{ validate }"
+    }]
 }
