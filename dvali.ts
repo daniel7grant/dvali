@@ -18,11 +18,7 @@ export type ValidatorObject<T> = {
     [key in keyof T]: Validator<T[key]>;
 };
 
-export type Validator<T> =
-    | [ValidatorObject<T[keyof T]>]
-    | ValidatorObject<T>
-    | ValidatorFunction<T>[]
-    | ValidatorFunction<T>;
+export type Validator<T> = ValidatorObject<T> | ValidatorFunction<T>[] | ValidatorFunction<T>;
 
 interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
@@ -86,21 +82,7 @@ const resolveValidatorList = function <T>(
 const isValidatorFunctionList = <T>(
     validator: Validator<T>
 ): validator is ValidatorFunction<T>[] => {
-    return (
-        typeof validator === 'object' &&
-        Array.isArray(validator) &&
-        typeof validator[0] === 'function'
-    );
-};
-
-const isValidatorArray = <T>(
-    validator: Validator<T>
-): validator is [ValidatorObject<T[keyof T]>] => {
-    return (
-        typeof validator === 'object' &&
-        Array.isArray(validator) &&
-        typeof validator[0] !== 'function'
-    );
+    return typeof validator === 'object' && Array.isArray(validator);
 };
 
 const isValidatorObject = <T>(validator: Validator<T>): validator is ValidatorObject<T> => {
@@ -134,41 +116,8 @@ export const validate = function <T>(
                 throw failures;
             }
             return value;
-        } else if (isValidatorArray(validator)) {
-            // Array of one item should use that validation to every item in the array
-            if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
-                throw `Field ${conf.name} should be an array.`;
-            }
-
-            const [arrayValidator] = validator;
-            let sanitizedArray: T[keyof T][] = [];
-            let validationFailures: string[] = [];
-            for (let i = 0; i < testValue.length; i++) {
-                try {
-                    const value = await validate(arrayValidator, {
-                        ...conf,
-                        name: `${conf.name}[${i}]`,
-                        path: conf.path.concat(i.toString()),
-                        parent: testValue,
-                    })(testValue[i]);
-                    sanitizedArray[i] = value;
-                } catch (failures) {
-                    if (Array.isArray(failures)) {
-                        validationFailures = failures.reduce(
-                            (previousFailures, failure) => previousFailures.concat(failure),
-                            validationFailures
-                        );
-                    } else {
-                        validationFailures = validationFailures.concat(failures);
-                    }
-                }
-            }
-
-            if (validationFailures.length > 0) {
-                throw validationFailures;
-            }
-            // TODO: figure out how this should be typed actually
-            return sanitizedArray as unknown as T;
+            // } else if (isValidatorArray(validator)) {
+            // Array validation should use arrayOf instead
         } else if (isValidatorObject(validator)) {
             // It is an object, all properties should be validated recursively
             if (typeof testValue !== 'object' || testValue === null) {
@@ -212,7 +161,6 @@ export const validate = function <T>(
             return value;
         } else {
             // Shouldn't go on here
-            // TODO: handle errors / warnings
             throw new Error('Validator should be an array, object or function.');
         }
     };
@@ -241,5 +189,43 @@ export const validateRegex = (
         } else {
             return Failure(errorMsg(field, conf));
         }
+    };
+};
+
+export const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
+    return async function name(testValue, conf) {
+        // Array of one item should use that validation to every item in the array
+        if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
+            throw `Field ${conf.name} should be an array.`;
+        }
+
+        let sanitizedArray: T[] = [];
+        let validationFailures: string[] = [];
+        for (let i = 0; i < testValue.length; i++) {
+            try {
+                const value = await validate(validator, {
+                    ...conf,
+                    name: `${conf.name}[${i}]`,
+                    path: conf.path.concat(i.toString()),
+                    parent: testValue,
+                })(testValue[i]);
+                sanitizedArray[i] = value;
+            } catch (failures) {
+                if (Array.isArray(failures)) {
+                    validationFailures = failures.reduce(
+                        (previousFailures, failure) => previousFailures.concat(failure),
+                        validationFailures
+                    );
+                } else {
+                    validationFailures = validationFailures.concat(failures);
+                }
+            }
+        }
+
+        if (validationFailures.length > 0) {
+            throw validationFailures;
+        }
+
+        return sanitizedArray as T[];
     };
 };
