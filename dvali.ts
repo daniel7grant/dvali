@@ -36,47 +36,32 @@ export const Failure = function (t: string): never {
     throw t;
 };
 
-const resolveValidator = function <T>(
-    validatorFunction: ValidatorFunction<T>,
-    value: any,
-    conf: ValidatorConfiguration
-): Promise<ValidatorState<T>> {
-    let validatorResult = validatorFunction(value, conf);
-    if (typeof validatorResult === 'object' && validatorResult !== null) {
-        // Promise
-        return validatorResult.then(
-            (newValue) => ({
-                value: newValue ? newValue : value,
-                failures: [],
-            }),
-            (failure) => ({
-                value,
-                failures: [failure],
-            })
-        );
-    } else if (!validatorResult) {
-        // Empty string or null should be valid
-        return Promise.resolve({ value, failures: [] });
-    }
-    // String should be an error message
-    return Promise.resolve({ value, failures: [validatorResult] });
-};
-
 const resolveValidatorList = function <T>(
     validators: ValidatorFunction<T>[],
     value: any,
     conf: ValidatorConfiguration
-): Promise<ValidatorState<T>> {
-    return validators.reduce<Promise<ValidatorState<T>>>((previousPromise, validator) => {
-        return previousPromise.then(({ value, failures }) =>
-            resolveValidator(validator, value, conf).then(
-                ({ value: newValue, failures: additionalFailures }) => ({
-                    value: newValue,
-                    failures: failures.concat(additionalFailures),
-                })
-            )
-        );
-    }, Promise.resolve({ value, failures: [] }));
+): Promise<T> {
+    return validators
+        .reduce<Promise<ValidatorState<T>>>((previousPromise, validator) => {
+            return previousPromise.then(({ value, failures }) =>
+                validator(value, conf).then(
+                    (newValue) => ({
+                        value: typeof newValue !== 'undefined' ? newValue : value,
+                        failures,
+                    }),
+                    (failure) => ({
+                        value,
+                        failures: failures.concat(failure),
+                    })
+                )
+            );
+        }, Promise.resolve({ value, failures: [] }))
+        .then(({ value, failures }) => {
+            if (failures.length > 0) {
+                throw failures;
+            }
+            return value;
+        });
 };
 
 const isValidatorFunctionList = <T>(
@@ -111,13 +96,7 @@ export const validate = function <T>(
         // Start the validation
         if (isValidatorFunctionList(validator)) {
             // Array of functions mean a list of validators
-            const { value, failures } = await resolveValidatorList(validator, testValue, conf);
-            if (failures.length > 0) {
-                throw failures;
-            }
-            return value;
-            // } else if (isValidatorArray(validator)) {
-            // Array validation should use arrayOf instead
+            return resolveValidatorList(validator, testValue, conf);
         } else if (isValidatorObject(validator)) {
             // It is an object, all properties should be validated recursively
             if (typeof testValue !== 'object' || testValue === null) {
@@ -154,11 +133,9 @@ export const validate = function <T>(
             return sanitizedObject as T;
         } else if (isValidatorFunction(validator)) {
             // It is a function, validate with it
-            const { value, failures } = await resolveValidator(validator, testValue, conf);
-            if (failures.length > 0) {
-                throw failures;
-            }
-            return value;
+            return validator(testValue, conf).then((newValue) =>
+                typeof newValue !== 'undefined' ? newValue : testValue
+            );
         } else {
             // Shouldn't go on here
             throw new Error('Validator should be an array, object or function.');
