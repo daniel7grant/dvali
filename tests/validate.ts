@@ -1,5 +1,6 @@
 import test from 'ava';
-import { Failure, Success, validate, ValidatorFunction } from '../src/dvali';
+import validate from '../src/validate';
+import { Failure, Success, ValidatorFunction } from '../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction =>
     async function (_value, _conf) {

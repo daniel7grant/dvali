@@ -1,5 +1,5 @@
 import test from 'ava';
-import { ValidatorConfiguration } from '../../src/dvali';
+import { ValidatorConfiguration } from '../../src/types';
 import validateCondition from '../../src/validators/validateCondition';
 
 const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {}, path: [] };

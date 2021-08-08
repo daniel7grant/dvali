@@ -4,7 +4,7 @@ import {
     Success,
     ValidatorConfiguration,
     ValidatorFunction,
-} from '../dvali';
+} from '../types';
 
 interface ConditionFunction<T> {
     (v: T, conf: ValidatorConfiguration): boolean;

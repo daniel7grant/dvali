@@ -1,4 +1,5 @@
-import { validate, Validator, ValidatorFunction } from './dvali';
+import validate from './validate';
+import { Validator, ValidatorFunction } from './types';
 
 const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
     return async function name(testValue, conf) {

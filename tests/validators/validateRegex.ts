@@ -1,5 +1,5 @@
 import test from 'ava';
-import { ValidatorConfiguration } from '../../src/dvali';
+import { ValidatorConfiguration } from '../../src/types';
 import validateRegex from '../../src/validators/validateRegex';
 
 const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {}, path: [] };

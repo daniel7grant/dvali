@@ -2,7 +2,7 @@
     "name": "dvali",
     "version": "1.0.0",
     "description": "",
-    "main": "src/dvali.ts",
+    "main": "src/index.ts",
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "size": "npm run build && size-limit",
@@ -14,7 +14,7 @@
     "license": "ISC",
     "devDependencies": {
         "@ava/typescript": "^2.0.0",
-        "@size-limit/preset-small-lib": "^5.0.2",
+        "@size-limit/preset-small-lib": "^4.5.5",
         "ava": "^3.15.0",
         "nyc": "^15.1.0",
         "prettier": "^2.3.2",
@@ -35,15 +35,24 @@
     },
     "nyc": {
         "all": true,
-        "include": ["src/**"],
-        "reporter": ["html"],
+        "include": [
+            "src/**"
+        ],
+        "reporter": [
+            "html"
+        ],
         "report-dir": ".coverage"
     },
     "size-limit": [
         {
-            "path": "dist/index.js",
+            "path": "dist/validate.js",
             "limit": "5 kB",
-            "import": "{ validate }"
+            "import": "validate"
+        },
+        {
+            "path": "dist/index.js",
+            "limit": "10 kB",
+            "import": "{ arrayOf, Failure, Ignore, Success, isEmail, isUrl, minLength, validate, validateCondition, validateRegex }"
         }
     ]
 }

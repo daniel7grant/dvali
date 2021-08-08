@@ -1,4 +1,4 @@
-import { Failure, FailureFunction, Ignore, Success, ValidatorFunction } from '../dvali';
+import { Failure, FailureFunction, Ignore, Success, ValidatorFunction } from '../types';
 
 const validateRegex = (
     regex: RegExp,
