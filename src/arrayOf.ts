@@ -1,6 +1,6 @@
 import { validate, Validator, ValidatorFunction } from './dvali';
 
-export const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
+const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
     return async function name(testValue, conf) {
         // Array of one item should use that validation to every item in the array
         if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
@@ -19,14 +19,11 @@ export const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
                 })(testValue[i]);
                 sanitizedArray[i] = value;
             } catch (failures) {
-                if (Array.isArray(failures)) {
-                    validationFailures = failures.reduce(
-                        (previousFailures, failure) => previousFailures.concat(failure),
-                        validationFailures
-                    );
-                } else {
-                    validationFailures = validationFailures.concat(failures);
-                }
+                validationFailures = failures.reduce(
+                    (previousFailures: string[], failure: string[]) =>
+                        previousFailures.concat(failure),
+                    validationFailures
+                );
             }
         }
 
@@ -37,3 +34,5 @@ export const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
         return sanitizedArray as T[];
     };
 };
+
+export default arrayOf;

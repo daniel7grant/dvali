@@ -28,6 +28,10 @@ export const Success = function <T>(t?: T): T | undefined {
     return t;
 };
 
+export const Ignore = function (): undefined {
+    return undefined;
+};
+
 export const Failure = function (t: string): never {
     throw t;
 };
@@ -112,14 +116,11 @@ export const validate = function <T>(
                         })(testValue[i]);
                         sanitizedObject[i] = value;
                     } catch (failures) {
-                        if (Array.isArray(failures)) {
-                            validationFailures = failures.reduce(
-                                (previousFailures, failure) => previousFailures.concat(failure),
-                                validationFailures
-                            );
-                        } else {
-                            validationFailures = validationFailures.concat(failures);
-                        }
+                        validationFailures = failures.reduce(
+                            (previousFailures: string[], failure: string[]) =>
+                                previousFailures.concat(failure),
+                            validationFailures
+                        );
                     }
                 }
             }
@@ -131,8 +132,11 @@ export const validate = function <T>(
             // It is a function, validate with it
             return validator(testValue, conf)
                 .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
-                .catch((exception) => {
-                    throw [exception];
+                .catch((failures) => {
+                    if (Array.isArray(failures)) {
+                        throw failures;
+                    }
+                    throw [failures];
                 });
         } else {
             // Shouldn't go on here

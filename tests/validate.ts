@@ -139,6 +139,23 @@ test('validate with object returns the value on success', async (t) => {
     }
 });
 
+test('validate with object works with nested objects', async (t) => {
+    const value = { key: 'asdasd', nested: { and: 'tested' } };
+    const validateTest = validate({
+        key: [testSuccessfulValidation()],
+        nested: {
+            and: testSuccessfulValidation(),
+        },
+    });
+
+    try {
+        const validatedValue = await validateTest(value);
+        t.deepEqual(validatedValue, value);
+    } catch {
+        t.fail();
+    }
+});
+
 test('validate with object throws array of error messages', async (t) => {
     const value = { key: 'asdasd', another: 'dsadas' };
     const validateTest = validate({
