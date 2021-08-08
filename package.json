@@ -2,25 +2,48 @@
     "name": "dvali",
     "version": "1.0.0",
     "description": "",
-    "main": "dvali.ts",
+    "main": "src/dvali.ts",
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "size": "npm run build && size-limit",
-        "test": "ts-node index.ts"
+        "test": "nyc ava -v",
+        "test:watch": "ava -v --watch"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@ava/typescript": "^2.0.0",
         "@size-limit/preset-small-lib": "^5.0.2",
+        "ava": "^3.15.0",
+        "nyc": "^15.1.0",
         "prettier": "^2.3.2",
         "size-limit": "^5.0.2",
         "ts-node": "^10.1.0",
         "typescript": "^4.3.5"
     },
-    "size-limit": [{
-        "path": "dist/index.js",
-        "limit": "5 kB",
-        "import": "{ validate }"
-    }]
+    "ava": {
+        "typescript": {
+            "rewritePaths": {
+                "src/": "dist/"
+            },
+            "compile": false
+        },
+        "require": [
+            "ts-node/register"
+        ]
+    },
+    "nyc": {
+        "all": true,
+        "include": ["src/**"],
+        "reporter": ["html"],
+        "report-dir": ".coverage"
+    },
+    "size-limit": [
+        {
+            "path": "dist/index.js",
+            "limit": "5 kB",
+            "import": "{ validate }"
+        }
+    ]
 }
