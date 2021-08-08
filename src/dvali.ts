@@ -20,12 +20,8 @@ export type ValidatorObject<T> = {
 
 export type Validator<T> = ValidatorObject<T> | ValidatorFunction<T>[] | ValidatorFunction<T>;
 
-interface FailureFunction<T> {
+export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
-}
-
-interface ConditionFunction<T> {
-    (v: T, conf: ValidatorConfiguration): boolean;
 }
 
 export const Success = function <T>(t?: T): T | undefined {
@@ -133,76 +129,14 @@ export const validate = function <T>(
             return sanitizedObject as T;
         } else if (isValidatorFunction(validator)) {
             // It is a function, validate with it
-            return validator(testValue, conf).then((newValue) =>
-                typeof newValue !== 'undefined' ? newValue : testValue
-            );
+            return validator(testValue, conf)
+                .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
+                .catch((exception) => {
+                    throw [exception];
+                });
         } else {
             // Shouldn't go on here
             throw new Error('Validator should be an array, object or function.');
         }
-    };
-};
-
-export const validateCondition = <T>(
-    condition: ConditionFunction<T>,
-    errorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<T> => {
-    return async function (field, conf) {
-        if (condition(field, conf)) {
-            return Success();
-        } else {
-            return Failure(errorMsg(field, conf));
-        }
-    };
-};
-
-export const validateRegex = (
-    regex: RegExp,
-    errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<string> => {
-    return async function (field, conf) {
-        if (regex.test(field)) {
-            return Success();
-        } else {
-            return Failure(errorMsg(field, conf));
-        }
-    };
-};
-
-export const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
-    return async function name(testValue, conf) {
-        // Array of one item should use that validation to every item in the array
-        if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
-            throw `Field ${conf.name} should be an array.`;
-        }
-
-        let sanitizedArray: T[] = [];
-        let validationFailures: string[] = [];
-        for (let i = 0; i < testValue.length; i++) {
-            try {
-                const value = await validate(validator, {
-                    ...conf,
-                    name: `${conf.name}[${i}]`,
-                    path: conf.path.concat(i.toString()),
-                    parent: testValue,
-                })(testValue[i]);
-                sanitizedArray[i] = value;
-            } catch (failures) {
-                if (Array.isArray(failures)) {
-                    validationFailures = failures.reduce(
-                        (previousFailures, failure) => previousFailures.concat(failure),
-                        validationFailures
-                    );
-                } else {
-                    validationFailures = validationFailures.concat(failures);
-                }
-            }
-        }
-
-        if (validationFailures.length > 0) {
-            throw validationFailures;
-        }
-
-        return sanitizedArray as T[];
     };
 };
