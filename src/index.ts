@@ -1,5 +1,5 @@
 import validate from './validate';
-import arrayOf from './arrayOf';
+import arrayOf from './validators/arrayOf';
 import validateCondition from './validators/validateCondition';
 import validateRegex from './validators/validateRegex';
 import isEmail from './validators/string/isEmail';
