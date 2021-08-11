@@ -1,4 +1,5 @@
 .nyc_output
+.bsconfig.yaml
 .coverage
 node_modules
 dist

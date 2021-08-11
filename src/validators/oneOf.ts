@@ -1,7 +1,7 @@
 import { ValidatorFunction } from '../types';
 
-const equals = (): ValidatorFunction<boolean> => {
+const oneOf = (): ValidatorFunction<boolean> => {
     throw 'Not implemented.';
 };
 
-export default equals;
+export default oneOf;
