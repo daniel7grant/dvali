@@ -1,7 +1,15 @@
-import { ValidatorFunction } from '../../types';
+import { Failure, Success, ValidatorFunction } from '../../types';
 
-const tryBool = (): ValidatorFunction<boolean> => {
-    throw 'Not implemented.';
-};
+const tryBool: (t?: any[], f?: any[]) => ValidatorFunction<boolean> =
+    (truthy = [true, 1], falsey = [false, 0]) =>
+    async (value, conf) => {
+        if (truthy.indexOf(value) !== -1) {
+            return Success(true);
+        }
+        if (falsey.indexOf(value) !== -1) {
+            return Success(false);
+        }
+        throw Failure(`Field ${conf.name} cannot be converted to boolean.`);
+    };
 
 export default tryBool;
