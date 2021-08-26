@@ -1,6 +1,6 @@
 import test from 'ava';
-import isString from '../../../src/validators/string/isString';
+import isEmail from '../../../src/validators/string/isEmail';
 
-test('isString validator exists', async (t) => {
-    t.is(typeof isString, 'function');
+test('isEmail validator exists', async (t) => {
+    t.is(typeof isEmail, 'function');
 });
