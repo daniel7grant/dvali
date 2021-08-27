@@ -29,6 +29,7 @@ import between from './validators/number/between';
 import closeTo from './validators/number/closeTo';
 import gte from './validators/number/gte';
 import gt from './validators/number/gt';
+import isInt from './validators/number/isInt';
 import isNumber from './validators/number/isNumber';
 import lte from './validators/number/lte';
 import lt from './validators/number/lt';
@@ -92,6 +93,7 @@ export {
     closeTo,
     gte,
     gt,
+    isInt,
     isNumber,
     lte,
     lt,

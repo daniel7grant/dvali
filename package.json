@@ -53,7 +53,7 @@
         {
             "path": "dist/index.js",
             "limit": "10 kB",
-            "import": "{ Failure, Ignore, Success, validate, isEmail, toString, insensitiveEquals, length, minLength, isUrl, maxLength, betweenLength, isString, isIP, validateRegex, oneOf, validateCondition, arrayOf, tryDate, after, betweenDates, before, toDate, isDate, falsey, truthy, isBool, toBool, tryBool, lt, tryInt, lte, gte, tryNumber, gt, closeTo, toNumber, isNumber, toInt, between, equals }"
+            "import": "{ Failure, Ignore, Success, validate, isEmail, toString, insensitiveEquals, length, minLength, isUrl, maxLength, betweenLength, isString, isIP, validateRegex, oneOf, validateCondition, arrayOf, tryDate, after, betweenDates, before, toDate, isDate, falsey, truthy, isBool, toBool, tryBool, lt, tryInt, lte, gte, tryNumber, gt, closeTo, toNumber, isInt, isNumber, toInt, between, equals }"
         }
     ]
 }
