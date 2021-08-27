@@ -13,6 +13,7 @@ import validateRegex from './validators/validateRegex';
 import falsey from './validators/boolean/falsey';
 import isBool from './validators/boolean/isBool';
 import truthy from './validators/boolean/truthy';
+import toBool from './validators/boolean/toBool';
 import tryBool from './validators/boolean/tryBool';
 
 // Date validators
@@ -78,6 +79,7 @@ export {
     falsey,
     isBool,
     truthy,
+    toBool,
     tryBool,
     after,
     before,
