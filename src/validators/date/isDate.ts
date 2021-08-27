@@ -1,6 +1,6 @@
 import { ValidatorFunction } from '../../types';
 
-const isDate = (): ValidatorFunction<boolean> => {
+const isDate = (): ValidatorFunction<Date> => async (value, conf) => {
     throw 'Not implemented.';
 };
 

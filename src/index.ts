@@ -19,7 +19,7 @@ import tryBool from './validators/boolean/tryBool';
 // Date validators
 import after from './validators/date/after';
 import before from './validators/date/before';
-import betweenDates from './validators/date/betweenDates';
+import inRange from './validators/date/inRange';
 import isDate from './validators/date/isDate';
 import toDate from './validators/date/toDate';
 import tryDate from './validators/date/tryDate';
@@ -84,7 +84,7 @@ export {
     tryBool,
     after,
     before,
-    betweenDates,
+    inRange,
     isDate,
     toDate,
     tryDate,
