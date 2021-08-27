@@ -1,6 +1,6 @@
 import test from 'ava';
 import { ValidatorConfiguration } from '../../../src/types';
-import tryInt from '../../../src/validators/number/tryInt';
+import isInt from '../../../src/validators/number/isInt';
 
 const conf: ValidatorConfiguration = {
     name: 'numField',
@@ -9,47 +9,44 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('tryInt, when integer is passed, returns the value', async (t) => {
-    const validateInteger = tryInt();
+test('isInt, when integer is passed, returns success', async (t) => {
+    const validateInteger = isInt();
 
-    t.is(await validateInteger(-1, conf), -1);
-    t.is(await validateInteger(0, conf), 0);
-    t.is(await validateInteger(123, conf), 123);
-    t.is(await validateInteger(1e10, conf), 1e10);
+    await validateInteger(-1, conf);
+    await validateInteger(0, conf);
+    await validateInteger(123, conf);
+    await validateInteger(1e10, conf);
 
     t.pass();
 });
 
-test('tryInt, when numeric string is passed, returns the parsed value', async (t) => {
-    const validateInteger = tryInt();
-
-    t.is(await validateInteger('-1' as any, conf), -1);
-    t.is(await validateInteger('0' as any, conf), 0);
-    t.is(await validateInteger('123' as any, conf), 123);
-});
-
-test('tryInt, when decimal value is passed, returns the value floored to the integer part', async (t) => {
-    const validateInteger = tryInt();
-
-    t.is(await validateInteger(1.1 as any, conf), 1);
-    t.is(await validateInteger('1.1' as any, conf), 1);
-    t.is(await validateInteger('123.99' as any, conf), 123);
-    t.is(await validateInteger('-123.99' as any, conf), -123);
-});
-
-test('tryInt, when not an integer is passed, fails', async (t) => {
-    const validateInteger = tryInt();
+test('isInt, when not an integer is passed, fails', async (t) => {
+    const validateInteger = isInt();
 
     try {
-        await validateInteger(Infinity, conf);
+        await validateInteger(Infinity as any, conf);
         t.fail("Infinity is integer doesn't fail.");
     } catch (ex) {
         t.is(ex, 'Field numField should be an integer.');
     }
 
     try {
-        await validateInteger(-Infinity, conf);
+        await validateInteger(-Infinity as any, conf);
         t.fail("Negative infinity is integer doesn't fail.");
+    } catch (ex) {
+        t.is(ex, 'Field numField should be an integer.');
+    }
+
+    try {
+        await validateInteger(66.6 as any, conf);
+        t.fail("Decimal is integer doesn't fail.");
+    } catch (ex) {
+        t.is(ex, 'Field numField should be an integer.');
+    }
+
+    try {
+        await validateInteger('66' as any, conf);
+        t.fail("String is integer doesn't fail.");
     } catch (ex) {
         t.is(ex, 'Field numField should be an integer.');
     }

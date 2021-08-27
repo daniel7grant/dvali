@@ -32,9 +32,9 @@ import gt from './validators/number/gt';
 import isNumber from './validators/number/isNumber';
 import lte from './validators/number/lte';
 import lt from './validators/number/lt';
-import toFloat from './validators/number/toFloat';
+import toNumber from './validators/number/toNumber';
 import toInt from './validators/number/toInt';
-import tryFloat from './validators/number/tryFloat';
+import tryNumber from './validators/number/tryNumber';
 import tryInt from './validators/number/tryInt';
 
 // String validators
@@ -95,9 +95,9 @@ export {
     isNumber,
     lte,
     lt,
-    toFloat,
+    toNumber,
     toInt,
-    tryFloat,
+    tryNumber,
     tryInt,
     oneOf,
     betweenLength,

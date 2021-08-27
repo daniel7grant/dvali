@@ -1,7 +1,7 @@
-import { ValidatorFunction } from '../../types';
+import { Success, ValidatorFunction } from '../../types';
 
-const toInt = (): ValidatorFunction<boolean> => {
-    throw 'Not implemented.';
+const toInt = (): ValidatorFunction<number> => async (value) => {
+    return Success(Number.parseInt(value as any));
 };
 
 export default toInt;

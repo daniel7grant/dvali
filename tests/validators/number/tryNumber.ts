@@ -1,6 +1,6 @@
 import test from 'ava';
 import { ValidatorConfiguration } from '../../../src/types';
-import isNumber from '../../../src/validators/number/isNumber';
+import tryNumber from '../../../src/validators/number/tryNumber';
 
 const conf: ValidatorConfiguration = {
     name: 'numField',
@@ -9,8 +9,8 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('isNumber, when number is passed, returns success', async (t) => {
-    const validateNumber = isNumber();
+test('tryNumber, when number is passed, returns the value', async (t) => {
+    const validateNumber = tryNumber();
 
     await validateNumber(-1, conf);
     await validateNumber(0, conf);
@@ -24,41 +24,44 @@ test('isNumber, when number is passed, returns success', async (t) => {
     t.pass();
 });
 
-test('isNumber, when not a number is passed, fails', async (t) => {
-    const validateNumber = isNumber();
+test('tryNumber, when numeric string is passed, returns the parsed value', async (t) => {
+    const validateNumber = tryNumber();
 
-    try {
-        await validateNumber('66' as any, conf);
-        t.fail("String is number doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be a number.');
-    }
+    t.is(await validateNumber('-1' as any, conf), -1);
+    t.is(await validateNumber('0' as any, conf), 0);
+    t.is(await validateNumber('123' as any, conf), 123);
+    t.is(await validateNumber('1e10' as any, conf), 1e10);
+    t.is(await validateNumber('123.45' as any, conf), 123.45);
+});
+
+test('tryNumber, when not a number is passed, fails', async (t) => {
+    const validateNumber = tryNumber();
 
     try {
         await validateNumber(NaN as any, conf);
         t.fail("NaN is number doesn't fail.");
     } catch (ex) {
-        t.is(ex, 'Field numField should be a number.');
+        t.is(ex, 'Field numField should be numeric.');
     }
 
     try {
         await validateNumber([] as any, conf);
         t.fail("Array is number doesn't fail.");
     } catch (ex) {
-        t.is(ex, 'Field numField should be a number.');
+        t.is(ex, 'Field numField should be numeric.');
     }
 
     try {
         await validateNumber({} as any, conf);
         t.fail("Object is number doesn't fail.");
     } catch (ex) {
-        t.is(ex, 'Field numField should be a number.');
+        t.is(ex, 'Field numField should be numeric.');
     }
 
     try {
         await validateNumber(null as any, conf);
         t.fail("Null is number doesn't fail.");
     } catch (ex) {
-        t.is(ex, 'Field numField should be a number.');
+        t.is(ex, 'Field numField should be numeric.');
     }
 });
