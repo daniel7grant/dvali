@@ -1,6 +1,6 @@
 import { ValidatorFunction } from '../../types';
 
-const maxLength = (): ValidatorFunction<boolean> => {
+const maxLength = (): ValidatorFunction<string> => async (value, conf) => {
     throw 'Not implemented.';
 };
 

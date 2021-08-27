@@ -1,6 +1,6 @@
 import { ValidatorFunction } from '../../types';
 
-const toString = (): ValidatorFunction<boolean> => {
+const toString = (): ValidatorFunction<string> => async (value, conf) => {
     throw 'Not implemented.';
 };
 
