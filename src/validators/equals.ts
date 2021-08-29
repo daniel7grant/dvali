@@ -1,7 +1,10 @@
 import { ValidatorFunction } from '../types';
+import validateCondition from './validateCondition';
 
-const equals = (): ValidatorFunction<string> => async (value, conf) => {
-    throw 'Not implemented.';
-};
+const equals = <T>(to: T): ValidatorFunction<T> =>
+    validateCondition(
+        (value) => value === to,
+        (_, conf) => `Field ${conf.name} should be equal to ${to}.`
+    );
 
 export default equals;
