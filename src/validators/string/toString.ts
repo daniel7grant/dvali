@@ -1,7 +1,7 @@
-import { ValidatorFunction } from '../../types';
+import { Success, ValidatorFunction } from '../../types';
 
 const toString = (): ValidatorFunction<string> => async (value, conf) => {
-    throw 'Not implemented.';
+    return Success("" + value);
 };
 
 export default toString;

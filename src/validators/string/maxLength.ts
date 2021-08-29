@@ -1,7 +1,16 @@
-import { ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
-const maxLength = (): ValidatorFunction<string> => async (value, conf) => {
-    throw 'Not implemented.';
-};
+const maxLength =
+    (max: number): ValidatorFunction<string> =>
+    async (value, conf) => {
+        if (typeof value !== 'string') {
+            return Ignore();
+        }
+
+        if (value.length <= max) {
+            return Success();
+        }
+        return Failure(`Field ${conf.name} length should be at most ${max} characters.`);
+    };
 
 export default maxLength;

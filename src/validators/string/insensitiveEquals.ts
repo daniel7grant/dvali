@@ -1,7 +1,13 @@
-import { ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
-const insensitiveEquals = (): ValidatorFunction<string> => async (value, conf) => {
-    throw 'Not implemented.';
+const insensitiveEquals = (to: string): ValidatorFunction<string> => async (value, conf) => {
+    if (typeof value !== 'string') {
+        return Ignore();
+    }
+    if (value.toLocaleLowerCase() === to.toLocaleLowerCase()) {
+        return Success();
+    }
+    return Failure(`Field ${conf.name} should be equal to ${to}.`)
 };
 
 export default insensitiveEquals;
