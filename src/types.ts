@@ -10,8 +10,8 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
-export interface ValidatorFunction<T = any> {
-    (value: T, conf: ValidatorConfiguration): Promise<T | undefined>;
+export interface ValidatorFunction<T = any, U = any> {
+    (value: U, conf: ValidatorConfiguration): Promise<T | undefined | void>;
 }
 
 export type ValidatorObject<T> = {

@@ -17,6 +17,7 @@
         "@ava/typescript": "^2.0.0",
         "@size-limit/preset-small-lib": "^4.5.5",
         "ava": "^3.15.0",
+        "doctoc": "^2.0.1",
         "nyc": "^15.1.0",
         "prettier": "^2.3.2",
         "size-limit": "^5.0.2",
@@ -47,12 +48,12 @@
     "size-limit": [
         {
             "path": "dist/validate.js",
-            "limit": "5 kB",
+            "limit": "2 kB",
             "import": "validate"
         },
         {
             "path": "dist/index.js",
-            "limit": "10 kB",
+            "limit": "5 kB",
             "import": "{ Failure, Ignore, Success, validate, isEmail, toString, insensitiveEquals, length, minLength, isUrl, maxLength, betweenLength, isString, validateRegex, oneOf, validateCondition, arrayOf, tryDate, after, inRange, before, toDate, isDate, falsey, truthy, isBool, toBool, tryBool, lt, tryInt, lte, gte, tryNumber, gt, closeTo, toNumber, isInt, isNumber, toInt, between, equals }"
         }
     ]

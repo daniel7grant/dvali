@@ -2,9 +2,33 @@
 
 Simple, extensible, functional validation library written in TypeScript
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [Why another validation library](#why-another-validation-library)
+- [Get started](#get-started)
+  - [Validation functions](#validation-functions)
+  - [Bring your own validator](#bring-your-own-validator)
+  - [Sanitize and transform](#sanitize-and-transform)
+  - [Higher-order validators](#higher-order-validators)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <!-- TOC -->
 
-<!-- ## Why use this library -->
+## Why another validation library
+
+In most modern JavaScript validation libraries, chaining is used to define your rules. You usually have to import every validator altogether in a god object, and define shapes and types from there. This is not only very cumbersome to use, but very hard to extend with your own rules, even more, in a TypeScript-friendly way.
+
+In Dvali, instead of the usual chaining API, composition is used: every validation is evaluated one-by-one and the errors are collected at the end. This helps creating modular and reusable validators, makes it easy to group them and reuse them for more complex array or object validations.
+
+Other cool parts:
+* **Immutable**: at the end of the validation, a brand new object is returned
+* **Extensible**: write common checks and transformations at the validation level (keep it simple and testable!)
+* **Small**: the core function weighs <2kB gzipped (ensured by [size-limit](https://github.com/ai/size-limit))
+* **Only pay for what you need**: you can import every validator one-by-one, so the bundle size only raised when you use them (all validators are still <5kB)
+* **TypeScript-first**: TypeScript types are inferred from the validation object statically
 
 ## Get started
 
@@ -18,27 +42,14 @@ npm install dvali
 
 ### Validation functions
 
-In the heart of Dvali **validation functions** lie. A validation function is any async function that returns when the given data is valid and throws an error when it isn't. You can use the exported functions as-is:
-
-```js
-import { isEmail } from 'dvali';
-
-const validateEmail = isEmail();
-
-await validateEmail('asd@asd.asd'); // => return "asd@asd.asd"
-await validateEmail('notanemail'); // => throw "Field should be a valid email."
-```
-
-...but you usually will want to use it with the `validate` function. This can take one validator, an array of validators or most importantly, plain objects of validators:
+In the heart of Dvali **validation functions** lie. A validation function is any async function that returns when the given data is valid and throws an error when it isn't. You can use the exported functions as-is, but you usually will want to use it with the `validate` function. This can take one validator, an array of validators or most importantly, plain objects of validators:
 
 ```js
 import validate, { isString, isEmail, minLength } from 'dvali';
 
-const validateEmail = validate(isEmail()); // equivalent to the previous example
-
 const validatePassword = validate([isString(), minLength(8)]); // this will only return if all of them succeeds, and collects all failures
 
-const validateUser = validateUser({
+const validateUser = validate({
     email: [isString(), isEmail()], // use them
     password: validatePassword, // compose them
     address: {
@@ -140,11 +151,49 @@ const validateRegistration = validate({
 });
 
 await validateRegistration({
-    email: 'asd@asd.asd',
+    email: 'asd2@asd.asd',
     password: 'asdasd69',
-}); // => { email: "asd@asd.asd", password: "$2b$08$4S0b.0ut..." }
+}); // => { email: "asd2@asd.asd", password: "$2b$08$4S0b.0ut..." }
 ```
 
 One thing you have to note is that validation and sanitization functions are applied serially: so make sure to figure out a correct order first. For example if the `minLength` and `hash` functions are swapped, the `minLength` will validate the hashed string's length, and therefore will always succeed. Failed validations does not change the value, so in that case the previous value willl be used.
 
 The great part about these validation functions is you can achieve complex checks and modifications, while remain reusable, composable and easily testable.
+
+### Higher-order validators
+
+Let's finish our registration validation task with one last usual suspect: the password confirmation. These are usually hard to do in most validation libraries, since these require some form of relationship between two separate fields. Luckily we have **higher-order validators** to the rescue.
+
+Higher-order validators is a concept borrowed from functional programming, and it means a validator that takes another validator as its parameter. Higher-order validators usually call their inner validators with the `validate` function, and do some checks before or after this call. For example, this password confirmation validator might check the confirmation field against the password field and then pass the validation to the inner validator, like nothing happened.
+
+See the `confirmPassword` higher-order validator in action:
+
+```js
+const confirmPassword = (validators) =>
+    async function (user, conf) {
+        if (user?.password_confirm === undefined) {
+            return Failure('You should confirm your password.');
+        }
+        if (user.password_confirm !== user.password) {
+            return Failure('The two passwords do not match.');
+        }
+        return validate(validators)(user);
+    };
+
+const validateRegistration = validate(
+    confirmPassword({
+        email: [isString(), isUniqueEmail()],
+        password: [isString(), minLength(8), hash()],
+    })
+);
+
+await validateRegistration({
+    email: 'asd@asd.asd',
+    password: 'asdasd69',
+    password_confirm: 'asdasd69',
+}); // => { email: 'asd@asd.asd', password: 'asdasd69' }
+```
+
+Basically the `confirmPassword` validator takes the whole user object and runs the confirmation test on it, and then gives the user to the inner tests. This is pretty useful, as it decouples the confirmation from the shape of the user object. So if in the end we don't need the `password_confirm` field (which we most likely won't), we can just miss it from the inner validator.
+
+This idea might need some read-through, but it is extremely useful for a vast variety of use-cases - library functions, like `arrayOf` or `bail` is implemented in a similar way.
