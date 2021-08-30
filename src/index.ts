@@ -42,7 +42,6 @@ import tryInt from './validators/number/tryInt';
 import betweenLength from './validators/string/betweenLength';
 import insensitiveEquals from './validators/string/insensitiveEquals';
 import isEmail from './validators/string/isEmail';
-import isIP from './validators/string/isIP';
 import isString from './validators/string/isString';
 import isUrl from './validators/string/isUrl';
 import length from './validators/string/length';
@@ -105,7 +104,6 @@ export {
     betweenLength,
     insensitiveEquals,
     isEmail,
-    isIP,
     isString,
     isUrl,
     length,
