@@ -1,8 +1,9 @@
 import validate from '../validate';
 import { Validator, ValidatorFunction } from '../types';
 
-const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
-    return async function name(testValue, conf) {
+const arrayOf =
+    <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
+    async (testValue, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
             throw `Field ${conf.name} should be an array.`;
@@ -34,6 +35,5 @@ const arrayOf = <T>(validator: Validator<T>): ValidatorFunction<T[]> => {
 
         return sanitizedArray as T[];
     };
-};
 
 export default arrayOf;

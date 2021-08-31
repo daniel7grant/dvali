@@ -2,6 +2,7 @@ import validate from './validate';
 
 // Generic validators
 import arrayOf from './validators/arrayOf';
+import bail from './validators/bail';
 import equals from './validators/equals';
 import oneOf from './validators/oneOf';
 
@@ -76,6 +77,7 @@ export {
     Success,
     validate,
     arrayOf,
+    bail,
     falsey,
     isBool,
     truthy,

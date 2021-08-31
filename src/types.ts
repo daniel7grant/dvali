@@ -24,6 +24,8 @@ export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
 }
 
+export type inferValidation<S extends ValidatorFunction<T>, T> = T; 
+
 export const Success = function <T>(t?: T): T | undefined {
     return t;
 };
