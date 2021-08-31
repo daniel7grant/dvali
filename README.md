@@ -19,7 +19,7 @@ Simple, extensible, functional validation library written in TypeScript
 
 ## Why another validation library
 
-In most modern JavaScript validation libraries, chaining is used to define your rules. You usually have to import every validator altogether in a god object, and define shapes and types from there. This is not only very cumbersome to use, but very hard to extend with your own rules, even more, in a TypeScript-friendly way.
+In most modern JavaScript validation libraries, chaining is used to define your rules. You usually have to import every validator altogether in a god object, and define shapes and types from there. This is not only very cumbersome to use, but very hard to extend with your own rules, even more in a TypeScript-friendly way.
 
 In Dvali, instead of the usual chaining API, composition is used: every validation is evaluated one-by-one and the errors are collected at the end. This helps creating modular and reusable validators, makes it easy to group them and reuse them for more complex array or object validations.
 
@@ -83,8 +83,8 @@ What makes validation functions very cool is that it is extremely easy to write 
 Let's see this in action! For example, let's write a function that checks if a user with the given email already exists.
 
 ```js
+import validate, { isString } from 'dvali';
 import db from 'mycooldbpackage';
-import validate from 'dvali';
 
 const isUniqueEmail = () =>
     async function (email, conf) {
@@ -132,7 +132,7 @@ To go forth with our registration theme, check this feature out with a sanitizat
 
 ```js
 import bcrypt from 'bcrypt';
-import validate from 'dvali';
+import validate, { isString, minLength, Ignore, Success } from 'dvali';
 
 const hash = () =>
     async function (password, conf) {
@@ -191,7 +191,7 @@ await validateRegistration({
     email: 'asd@asd.asd',
     password: 'asdasd69',
     password_confirm: 'asdasd69',
-}); // => { email: 'asd@asd.asd', password: 'asdasd69' }
+}); // => { email: 'asd@asd.asd', password: '$2b$08$4S0b.0ut...' }
 ```
 
 Basically the `confirmPassword` validator takes the whole user object and runs the confirmation test on it, and then gives the user to the inner tests. This is pretty useful, as it decouples the confirmation from the shape of the user object. So if in the end we don't need the `password_confirm` field (which we most likely won't), we can just miss it from the inner validator.
