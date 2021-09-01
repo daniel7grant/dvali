@@ -2,7 +2,7 @@ import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
 const closeTo: (v: number, e?: number) => ValidatorFunction<number> =
     (exactValue, epsilon = Number.EPSILON) =>
-    async (value, conf) => {
+    (value, conf) => {
         if (typeof value !== 'number') {
             return Ignore();
         }

@@ -2,7 +2,7 @@ import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
 const gt =
     (min: number): ValidatorFunction<number> =>
-    async (value, conf) => {
+    (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();
         }

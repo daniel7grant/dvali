@@ -14,7 +14,7 @@ const validateCondition = <T>(
     condition: ConditionFunction<T>,
     errorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} format is invalid.`
 ): ValidatorFunction<T> => {
-    return async function (field, conf) {
+    return function (field, conf) {
         if (condition(field, conf)) {
             return Success();
         } else {

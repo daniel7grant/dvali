@@ -10,7 +10,7 @@ const inRange: (
         maxDate,
         opts = { minInclusive : false, maxInclusive : false }
     ): ValidatorFunction<Date> =>
-    async (value, conf) => {
+    (value, conf) => {
         if (!(value instanceof Date)) {
             return Ignore();
         }

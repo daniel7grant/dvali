@@ -1,6 +1,6 @@
 import { Success, ValidatorFunction } from '../../types';
 
-const toNumber = (): ValidatorFunction<number> => async (value, conf) => {
+const toNumber = (): ValidatorFunction<number> => (value, conf) => {
     return Success(Number.parseFloat(value as any));
 };
 

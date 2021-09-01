@@ -1,6 +1,6 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
-const insensitiveEquals = (to: string): ValidatorFunction<string> => async (value, conf) => {
+const insensitiveEquals = (to: string): ValidatorFunction<string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

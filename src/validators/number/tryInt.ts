@@ -1,6 +1,6 @@
 import { Failure, Success, ValidatorFunction } from '../../types';
 
-const tryInt = (): ValidatorFunction<number> => async (value, conf) => {
+const tryInt = (): ValidatorFunction<number> => (value, conf) => {
     const parsed = Number.parseInt(value as any);
     if (!Number.isNaN(parsed)) {
         return Success(parsed);

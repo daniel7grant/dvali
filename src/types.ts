@@ -24,14 +24,14 @@ export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
 }
 
-export type inferValidation<S extends ValidatorFunction<T>, T> = T; 
+export type inferValidation<S extends ValidatorFunction<T>, T> = T;
 
-export const Success = function <T>(t?: T): T | undefined {
-    return t;
+export const Success = function <T>(t?: T): Promise<T | undefined> {
+    return Promise.resolve(t);
 };
 
-export const Ignore = function (): undefined {
-    return undefined;
+export const Ignore = function (): Promise<undefined> {
+    return Promise.resolve(undefined);
 };
 
 export const Failure = function (t: string): never {

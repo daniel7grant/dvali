@@ -2,7 +2,7 @@ import { Failure, Success, ValidatorFunction } from '../../types';
 
 const tryBool: (t?: any[], f?: any[]) => ValidatorFunction<boolean> =
     (truthy = [true, 1], falsey = [false, 0]) =>
-    async (value, conf) => {
+    (value, conf) => {
         if (truthy.indexOf(value) !== -1) {
             return Success(true);
         }

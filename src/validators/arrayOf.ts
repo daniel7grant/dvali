@@ -1,39 +1,37 @@
 import validate from '../validate';
-import { Validator, ValidatorFunction } from '../types';
+import { Validator, ValidatorFunction, ValidatorState } from '../types';
 
 const arrayOf =
     <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
-    async (testValue, conf) => {
+    (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
-        if (typeof testValue !== 'object' || !Array.isArray(testValue)) {
+        if (typeof testValues !== 'object' || !Array.isArray(testValues)) {
             throw `Field ${conf.name} should be an array.`;
         }
 
-        let sanitizedArray: T[] = [];
-        let validationFailures: string[] = [];
-        for (let i = 0; i < testValue.length; i++) {
-            try {
-                const value = await validate(validator, {
+        return Promise.all(
+            testValues.map<Promise<ValidatorState<T>>>((testValue, i) =>
+                validate(validator, {
                     ...conf,
                     name: `${conf.name}[${i}]`,
                     path: conf.path.concat(i.toString()),
-                    parent: testValue,
-                })(testValue[i]);
-                sanitizedArray[i] = value;
-            } catch (failures) {
-                validationFailures = failures.reduce(
-                    (previousFailures: string[], failure: string[]) =>
-                        previousFailures.concat(failure),
-                    validationFailures
-                );
+                    parent: testValues,
+                })(testValue).then(
+                    (value) => ({ value, failures: [] }),
+                    (failures) => ({ value: testValue, failures })
+                )
+            )
+        ).then((results) => {
+            let validationFailures = results.reduce<string[]>(
+                (previousFailures, { failures }) => previousFailures.concat(failures),
+                []
+            );
+            if (validationFailures.length > 0) {
+                throw validationFailures;
             }
-        }
 
-        if (validationFailures.length > 0) {
-            throw validationFailures;
-        }
-
-        return sanitizedArray as T[];
+            return results.map(({ value }) => value) as T[];
+        });
     };
 
 export default arrayOf;

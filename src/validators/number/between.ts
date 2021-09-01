@@ -6,7 +6,7 @@ const between: (
     opts?: { minInclusive?: boolean; maxInclusive?: boolean }
 ) => ValidatorFunction<number> =
     (min, max, opts = { minInclusive: false, maxInclusive: false }) =>
-    async (value, conf) => {
+    (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();
         }

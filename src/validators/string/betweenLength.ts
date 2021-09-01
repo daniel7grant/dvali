@@ -1,6 +1,6 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
-const betweenLength = (min: number, max: number): ValidatorFunction<string> => async (value, conf) => {
+const betweenLength = (min: number, max: number): ValidatorFunction<string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

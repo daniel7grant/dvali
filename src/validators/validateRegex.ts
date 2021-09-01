@@ -4,7 +4,7 @@ const validateRegex = (
     regex: RegExp,
     errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
 ): ValidatorFunction<string> => {
-    return async function (field, conf) {
+    return function (field, conf) {
         if (typeof field !== 'string') {
             return Ignore();
         }

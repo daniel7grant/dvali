@@ -2,7 +2,7 @@ import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
 const maxLength =
     (max: number): ValidatorFunction<string> =>
-    async (value, conf) => {
+    (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();
         }

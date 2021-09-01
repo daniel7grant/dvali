@@ -5,7 +5,7 @@ const after: (
     opts?: { inclusive: boolean }
 ) => ValidatorFunction<Date> =
     (date, opts = { inclusive: false }) =>
-    async (value, conf) => {
+    (value, conf) => {
         if (!(value instanceof Date)) {
             return Ignore();
         }

@@ -1,6 +1,6 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
 
-const length = (n: number): ValidatorFunction<string> => async (value, conf) => {
+const length = (n: number): ValidatorFunction<string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }
