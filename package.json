@@ -48,7 +48,7 @@
     "size-limit": [
         {
             "path": "dist/validate.js",
-            "limit": "2 kB",
+            "limit": "1 kB",
             "import": "validate"
         },
         {

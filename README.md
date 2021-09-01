@@ -26,7 +26,7 @@ In Dvali, instead of the usual chaining API, composition is used: every validati
 Other cool parts:
 * **Immutable**: at the end of the validation, a brand new object is returned
 * **Extensible**: write common checks and transformations at the validation level (keep it simple and testable!)
-* **Small**: the core function weighs <2kB gzipped (ensured by [size-limit](https://github.com/ai/size-limit))
+* **Small**: the core function weighs <1kB gzipped (ensured by [size-limit](https://github.com/ai/size-limit))
 * **Only pay for what you need**: you can import every validator one-by-one, so the bundle size only raised when you use them (all validators are still <5kB)
 * **TypeScript-first**: TypeScript types are inferred from the validation object statically
 
