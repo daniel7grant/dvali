@@ -1,5 +1,8 @@
 # Dvali
 
+[![GitHub](https://img.shields.io/github/license/daniel7grant/dvali)](https://github.com/daniel7grant/dvali/LICENSE)
+[![Test on Node.js 8.x+](https://github.com/daniel7grant/dvali/actions/workflows/test.yml/badge.svg)](https://github.com/daniel7grant/dvali/actions/workflows/test.yml)
+
 Simple, extensible, functional validation library written in TypeScript
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
