@@ -1,7 +1,7 @@
 # Dvali
 
-[![GitHub](https://img.shields.io/github/license/daniel7grant/dvali)](https://github.com/daniel7grant/dvali/LICENSE)
-[![Test on Node.js 8.x+](https://github.com/daniel7grant/dvali/actions/workflows/test.yml/badge.svg)](https://github.com/daniel7grant/dvali/actions/workflows/test.yml)
+[![MIT](https://img.shields.io/github/license/daniel7grant/dvali)](https://github.com/daniel7grant/dvali/LICENSE)
+[![tests](https://github.com/daniel7grant/dvali/actions/workflows/test.yml/badge.svg)](https://github.com/daniel7grant/dvali/actions/workflows/test.yml)
 
 Simple, extensible, functional validation library written in TypeScript
 
