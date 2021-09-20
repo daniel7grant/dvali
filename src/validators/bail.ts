@@ -1,4 +1,4 @@
-import { ValidatorFunction, ValidatorState } from '../types';
+import { isEmptySuccess, ValidatorFunction, ValidatorState } from '../types';
 import validate from '../validate';
 
 const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
@@ -14,7 +14,7 @@ const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
                         ? { value, failures } // Short-circuit for any error
                         : validator(value, conf).then(
                               (newValue) => ({
-                                  value: typeof newValue !== 'undefined' ? newValue : value,
+                                  value: isEmptySuccess(newValue) ? value : newValue,
                                   failures,
                               }),
                               (failure) => ({

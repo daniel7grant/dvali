@@ -1,4 +1,5 @@
 import {
+    isEmptySuccess,
     Validator,
     ValidatorConfiguration,
     ValidatorFunction,
@@ -16,7 +17,7 @@ const resolveValidatorList = function <T>(
             return previousPromise.then(({ value, failures }) =>
                 validator(value, conf).then(
                     (newValue) => ({
-                        value: typeof newValue !== 'undefined' ? newValue : value,
+                        value: isEmptySuccess(newValue) ? value : newValue,
                         failures,
                     }),
                     (failure) => ({
@@ -48,7 +49,10 @@ const resolveValidatorObject = function <T>(
                 path: conf.path.concat(i as string),
                 parent: testValue,
             })(testValue[i]).then(
-                (value) => ({ value: [i, value], failures: [] }),
+                (value) => ({
+                    value: [i, isEmptySuccess(value) ? testValue[i] : value],
+                    failures: [],
+                }),
                 (failures) => ({ value: [i, testValue[i]], failures })
             )
         )
@@ -114,7 +118,7 @@ const validate = function <T>(
         } else if (isValidatorFunction(validator)) {
             // It is a function, validate with it
             return validator(testValue, conf)
-                .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
+                .then((newValue) => (isEmptySuccess(newValue) ? testValue : newValue))
                 .catch((failures) => {
                     if (Array.isArray(failures)) {
                         throw failures;

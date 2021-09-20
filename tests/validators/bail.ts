@@ -26,7 +26,7 @@ test('bail runs over each test if they are not failing', async (t) => {
 
     const validateBail = validate(bail([increment(), increment2(), increment()]));
 
-    await validateBail(null);
+    await validateBail(true);
     t.is(i, 3);
 });
 
@@ -41,7 +41,7 @@ test('bail stops after first failing test', async (t) => {
     const validateBail = validate(bail([failIncrement(), failIncrement(), failIncrement()]));
 
     try {
-        await validateBail(null);
+        await validateBail(true);
         t.fail('Failing validation passed.');
     } catch (ex) {
         t.deepEqual(ex, ['Incrementation failed.']);
@@ -50,7 +50,7 @@ test('bail stops after first failing test', async (t) => {
 });
 
 test('bail just passes to validate if the passed value is not an array', async (t) => {
-    const increment =
+    const validator =
         (): ValidatorFunction<boolean> =>
         async (value) => {
             if (value) {
@@ -60,7 +60,7 @@ test('bail just passes to validate if the passed value is not an array', async (
             }
         };
 
-    const validateBail = validate(bail(increment() as any));
+    const validateBail = validate((validator() as any));
 
     t.is(await validateBail(true), true);
 

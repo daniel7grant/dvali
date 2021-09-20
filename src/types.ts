@@ -1,3 +1,19 @@
+type EmptySuccess = null;
+const emptySuccess: EmptySuccess = null;
+export const isEmptySuccess = (t: unknown): t is EmptySuccess => t === null;
+
+export const Success = function <T>(t: T | EmptySuccess = emptySuccess): Promise<T | EmptySuccess> {
+    return Promise.resolve(t);
+};
+
+export const Ignore = function (): Promise<EmptySuccess> {
+    return Promise.resolve(emptySuccess);
+};
+
+export const Failure = function (t: string): never {
+    throw t;
+};
+
 export interface ValidatorState<T> {
     value: T;
     failures: string[];
@@ -11,7 +27,7 @@ export interface ValidatorConfiguration {
 }
 
 export interface ValidatorFunction<T = any, U = any> {
-    (value: U, conf: ValidatorConfiguration): Promise<T | undefined | void>;
+    (value: U, conf: ValidatorConfiguration): Promise<T | EmptySuccess>;
 }
 
 export type ValidatorObject<T> = {
@@ -25,15 +41,3 @@ export interface FailureFunction<T> {
 }
 
 export type inferValidation<S extends ValidatorFunction<T>, T> = T;
-
-export const Success = function <T>(t?: T): Promise<T | undefined> {
-    return Promise.resolve(t);
-};
-
-export const Ignore = function (): Promise<undefined> {
-    return Promise.resolve(undefined);
-};
-
-export const Failure = function (t: string): never {
-    throw t;
-};

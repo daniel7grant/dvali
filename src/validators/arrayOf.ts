@@ -1,5 +1,5 @@
 import validate from '../validate';
-import { Validator, ValidatorFunction, ValidatorState } from '../types';
+import { isEmptySuccess, Validator, ValidatorFunction, ValidatorState } from '../types';
 
 const arrayOf =
     <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
@@ -17,7 +17,7 @@ const arrayOf =
                     path: conf.path.concat(i.toString()),
                     parent: testValues,
                 })(testValue).then(
-                    (value) => ({ value, failures: [] }),
+                    (value) => ({ value: isEmptySuccess(value) ? testValue : value, failures: [] }),
                     (failures) => ({ value: testValue, failures })
                 )
             )

@@ -1,5 +1,5 @@
 import test from 'ava';
-import { ValidatorConfiguration } from '../../src/types';
+import { isEmptySuccess, ValidatorConfiguration } from '../../src/types';
 import validateRegex from '../../src/validators/validateRegex';
 
 const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {}, path: [] };
@@ -8,7 +8,7 @@ test('validateRegex function returns undefined if regex applies', async (t) => {
     const validateTest = validateRegex(/[a-z].*/);
     try {
         const validated = await validateTest('asdasd', conf);
-        t.is(typeof validated, 'undefined');
+        t.true(isEmptySuccess(validated));
     } catch (ex) {
         t.fail();
     }
@@ -28,7 +28,7 @@ test('validateRegex function ignores if passed value is not a string', async (t)
     const validateTest = validateRegex(/[a-z].*/);
     try {
         const validated = await validateTest(123 as any, conf);
-        t.is(typeof validated, 'undefined');
+        t.true(isEmptySuccess(validated));
     } catch (ex) {
         t.fail();
     }

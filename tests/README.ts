@@ -63,7 +63,7 @@ test('README: Bring your own validator - isUniqueEmail starting', async (t) => {
         async function (email, conf) {
             const exists = await db.users.find({ email }); // User | null
             if (!exists) {
-                return;
+                return null;
             }
             throw 'This email already in use. Try your alternate address.';
         };

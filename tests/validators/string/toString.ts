@@ -1,5 +1,5 @@
 import test from 'ava';
-import { ValidatorConfiguration } from '../../../src/types';
+import { isEmptySuccess, ValidatorConfiguration } from '../../../src/types';
 import toString from '../../../src/validators/string/toString';
 
 const conf: ValidatorConfiguration = {
@@ -20,6 +20,4 @@ test('toString returns the stringified value', async (t) => {
     t.is(await sanitizeString({} as any, conf), '[object Object]');
     const date = new Date('2021-08-29');
     t.is(await sanitizeString(date as any, conf), date.toString());
-    t.is(await sanitizeString(null as any, conf), 'null');
-    t.is(await sanitizeString(undefined as any, conf), 'undefined');
 });
