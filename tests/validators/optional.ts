@@ -37,6 +37,15 @@ test('optional validator if value is undefined, returns successfully without cal
     t.deepEqual(i, 2);
 
     t.pass();
+
+    // Let's check for the expected type with some TypeScript magic
+    const validatedOptional = await validateFunctionOptional({ field: 'string' });
+    type ExpectedType = {
+        field: string | undefined;
+    };
+    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
+    // This line shouldn't compile if the type is wrong
+    const cond1: AssertExpectedType<typeof validatedOptional> = true;
 });
 
 test('optional validator without it, undefined fails', async (t) => {

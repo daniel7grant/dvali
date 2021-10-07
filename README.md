@@ -81,7 +81,7 @@ There is a list of validation functions in the core library for the most common 
 
 ### Bring your own validator
 
-What makes validation functions very cool is that it is extremely easy to write one. You simply have to create an async function (or any Promise-returning function) and return undefined or the value if it is valid, and throw a string error if anything is wrong.
+What makes validation functions very cool is that it is extremely easy to write one. You simply have to create an async function (or any Promise-returning function) and return null or the value if it is valid, and throw a string error if anything is wrong.
 
 Let's see this in action! For example, let's write a function that checks if a user with the given email already exists.
 
@@ -93,7 +93,7 @@ const isUniqueEmail = () =>
     async function (email, conf) {
         const exists = await db.users.find({ email }); // User | null
         if (!exists) {
-            return;
+            return null; // We are good to go
         }
         throw 'This email already in use. Try your alternate address.';
     };
