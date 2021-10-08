@@ -60,7 +60,9 @@ const resolveValidatorObject = function <T>(
             if (result.failures.length > 0) {
                 validationFailures = validationFailures.concat(result.failures);
             } else {
-                sanitizedObject[result.value[0]] = result.value[1];
+                if (typeof result.value[1] !== 'undefined') {
+                    sanitizedObject[result.value[0]] = result.value[1];
+                }
             }
         });
 
