@@ -50,6 +50,19 @@ import maxLength from './validators/string/maxLength';
 import minLength from './validators/string/minLength';
 import toString from './validators/string/toString';
 
+// Number transformers
+import ceil from './transformers/number/ceil';
+import clamp from './transformers/number/clamp';
+import floor from './transformers/number/floor';
+import round from './transformers/number/round';
+
+// String transformers
+import lower from './transformers/string/lower';
+import normalize from './transformers/string/normalize';
+import trim from './transformers/string/trim';
+import truncate from './transformers/string/truncate';
+import upper from './transformers/string/upper';
+
 import {
     Failure,
     Ignore,
@@ -114,6 +127,15 @@ export {
     toString,
     validateCondition,
     validateRegex,
+    ceil,
+    clamp,
+    floor,
+    round,
+    lower,
+    normalize,
+    trim,
+    truncate,
+    upper,
 };
 
 export default validate;
