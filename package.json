@@ -1,17 +1,19 @@
 {
     "name": "dvali",
-    "version": "1.0.0",
-    "description": "",
+    "version": "0.1.0",
+    "description": "Simple, extensible, functional validation library written in TypeScript",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc -p tsconfig.json",
+		"prepare": "npm run build",
         "size": "npm run build && size-limit",
         "test": "nyc ava -v",
         "test:watch": "ava -v --watch"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": ["validation", "sanitization", "transform"],
+	"files": ["dist/**/*"],
+    "author": "Daniel Grant",
     "license": "MIT",
     "devDependencies": {
         "@ava/typescript": "^2.0.0",
