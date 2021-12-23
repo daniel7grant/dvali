@@ -35,13 +35,11 @@ Other cool parts:
 
 ## Get started
 
-<!--
 To get started, install the `dvali` package with npm:
 
 ```
 npm install dvali
 ```
--->
 
 ### Validation functions
 

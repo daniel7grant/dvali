@@ -5,6 +5,7 @@ import arrayOf from './validators/arrayOf';
 import bail from './validators/bail';
 import equals from './validators/equals';
 import oneOf from './validators/oneOf';
+import optional from './validators/optional';
 
 // Validator helpers
 import validateCondition from './validators/validateCondition';
@@ -116,6 +117,7 @@ export {
     tryNumber,
     tryInt,
     oneOf,
+    optional,
     betweenLength,
     insensitiveEquals,
     isEmail,
