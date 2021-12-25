@@ -3,10 +3,16 @@
     "version": "0.2.4",
     "description": "Simple, extensible, functional validation library written in TypeScript",
     "type": "module",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "./dist/index.cjs",
+    "module": "./es/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        "require": "./dist/index.cjs",
+        "import": "./es/index.js",
+        "default": "./es/index.js"
+    },
     "scripts": {
-        "build": "tsc -p tsconfig.json",
+        "build": "tsc -p tsconfig.json && tsc -p tsconfig.es.json",
         "prepare": "npm run build",
         "size": "npm run build && size-limit",
         "test": "nyc ava -v",
@@ -19,7 +25,8 @@
     ],
     "sideEffects": false,
     "files": [
-        "dist/**/*"
+        "dist/**/*",
+        "es/**/*"
     ],
     "author": "Daniel Grant",
     "license": "MIT",
