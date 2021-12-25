@@ -1,6 +1,6 @@
 {
     "name": "dvali",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Simple, extensible, functional validation library written in TypeScript",
     "type": "module",
     "main": "dist/index.js",
