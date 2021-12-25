@@ -2,6 +2,7 @@
     "name": "dvali",
     "version": "0.2.2",
     "description": "Simple, extensible, functional validation library written in TypeScript",
+    "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
@@ -28,15 +29,15 @@
         "url": "https://github.com/daniel7grant/dvali"
     },
     "devDependencies": {
-        "@ava/typescript": "^2.0.0",
-        "@size-limit/preset-small-lib": "^4.5.5",
-        "ava": "^3.15.0",
-        "doctoc": "^2.0.1",
+        "@ava/typescript": "^3.0.1",
+        "@size-limit/preset-small-lib": "^7.0.4",
+        "ava": "^4.0.0-rc.1",
+        "doctoc": "^2.1.0",
         "nyc": "^15.1.0",
         "prettier": "^2.3.2",
-        "size-limit": "^5.0.2",
+        "size-limit": "^7.0.4",
         "ts-node": "^10.1.0",
-        "typescript": "^4.3.5"
+        "typescript": "^4.5.4"
     },
     "ava": {
         "typescript": {
@@ -44,10 +45,7 @@
                 "src/": "dist/"
             },
             "compile": false
-        },
-        "require": [
-            "ts-node/register"
-        ]
+        }
     },
     "nyc": {
         "all": true,
