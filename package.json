@@ -12,6 +12,7 @@
         "test:watch": "ava -v --watch"
     },
     "keywords": ["validation", "sanitization", "transform"],
+    "sideEffect": false,
 	"files": ["dist/**/*"],
     "author": "Daniel Grant",
     "license": "MIT",
