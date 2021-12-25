@@ -27,42 +27,42 @@ test('tryBool with other things fails', async (t) => {
         await sanitizeBool('' as any, conf);
         t.fail("Converting empty string to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     try {
         await sanitizeBool('asd' as any, conf);
         t.fail("Converting string to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     try {
         await sanitizeBool({} as any, conf);
         t.fail("Converting object to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     try {
         await sanitizeBool([] as any, conf);
         t.fail("Converting array to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     try {
         await sanitizeBool(undefined as any, conf);
         t.fail("Converting undefined to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     try {
         await sanitizeBool(null as any, conf);
         t.fail("Converting null to boolean didn't fail.");
     } catch (ex) {
-        t.is('Field boolField cannot be converted to boolean.', ex);
+        t.is('Field boolField cannot be converted to boolean.', ex as any);
     }
 
     t.pass();

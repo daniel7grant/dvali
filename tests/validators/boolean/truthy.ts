@@ -29,49 +29,49 @@ test('truthy with false, zero, empty string or nullish other fails', async (t) =
         await validateTruthy(false, conf);
         t.fail("False is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy(0 as any, conf);
         t.fail("Zero is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy(-0 as any, conf);
         t.fail("Negative zero is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy('' as any, conf);
         t.fail("Empty string is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy(null as any, conf);
         t.fail("Null is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy(undefined as any, conf);
         t.fail("Undefined is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     try {
         await validateTruthy(NaN as any, conf);
         t.fail("NaN is truthy didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be truthy.', ex);
+        t.is('Field boolField should be truthy.', ex as any);
     }
 
     t.pass();

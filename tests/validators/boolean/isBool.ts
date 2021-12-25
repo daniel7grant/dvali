@@ -24,35 +24,35 @@ test('isBool with anything other fails', async (t) => {
         await validateBool('string' as any, conf);
         t.fail("Validating string didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex);
+        t.is('Field boolField should be a boolean.', ex as any);
     }
 
     try {
         await validateBool(123 as any, conf);
         t.fail("Validating number didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex);
+        t.is('Field boolField should be a boolean.', ex as any);
     }
 
     try {
         await validateBool(null as any, conf);
         t.fail("Validating null didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex);
+        t.is('Field boolField should be a boolean.', ex as any);
     }
 
     try {
         await validateBool(undefined as any, conf);
         t.fail("Validating null didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex);
+        t.is('Field boolField should be a boolean.', ex as any);
     }
 
     try {
         await validateBool(NaN as any, conf);
         t.fail("Validating NaN didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex);
+        t.is('Field boolField should be a boolean.', ex as any);
     }
 
     t.pass();

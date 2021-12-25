@@ -30,42 +30,42 @@ test('falsey with anything other fails', async (t) => {
         await validateFalsey(true as any, conf);
         t.fail("True is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     try {
         await validateFalsey(-1 as any, conf);
         t.fail("Number is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     try {
         await validateFalsey("string" as any, conf);
         t.fail("String is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     try {
         await validateFalsey({} as any, conf);
         t.fail("Object is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     try {
         await validateFalsey([] as any, conf);
         t.fail("Array is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     try {
         await validateFalsey((() => {}) as any, conf);
         t.fail("Function is falsey didn't fail.");
     } catch (ex) {
-        t.is('Field boolField should be falsey.', ex);
+        t.is('Field boolField should be falsey.', ex as any);
     }
 
     t.pass();
