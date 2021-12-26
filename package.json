@@ -2,7 +2,6 @@
     "name": "dvali",
     "version": "0.2.5",
     "description": "Simple, extensible, functional validation library written in TypeScript",
-    "type": "module",
     "main": "./dist/index.js",
     "module": "./es/index.js",
     "types": "./dist/index.d.ts",
@@ -52,7 +51,10 @@
                 "src/": "dist/"
             },
             "compile": false
-        }
+        },
+        "require": [
+            "ts-node/register"
+        ]
     },
     "nyc": {
         "all": true,
