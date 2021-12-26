@@ -2,6 +2,8 @@
 
 [![MIT](https://img.shields.io/github/license/daniel7grant/dvali)](https://github.com/daniel7grant/dvali/LICENSE)
 [![tests](https://github.com/daniel7grant/dvali/actions/workflows/test.yml/badge.svg)](https://github.com/daniel7grant/dvali/actions/workflows/test.yml)
+[![npm](https://img.shields.io/npm/v/dvali)](https://www.npmjs.com/package/dvali)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/dvali)](https://bundlephobia.com/package/dvali)
 
 Simple, extensible, functional validation library written in TypeScript
 
