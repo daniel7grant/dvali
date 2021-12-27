@@ -19,6 +19,16 @@ test('toMultipleOf validator rounds to the nearest multiple of n mathematically'
     t.is(await validateMultipleOfFive(-7.5, conf), -5);
 });
 
+test('toMultipleOf validator rounds to the nearest multiple of n with the given function', async (t) => {
+    const validateMultipleOfFive = toMultipleOf(5, Math.floor);
+
+    t.is(await validateMultipleOfFive(5, conf), 5);
+    t.is(await validateMultipleOfFive(6.1, conf), 5);
+    t.is(await validateMultipleOfFive(7.5, conf), 5);
+    t.is(await validateMultipleOfFive(10.00000000001, conf), 10);
+    t.is(await validateMultipleOfFive(-7.5, conf), -10);
+});
+
 test('toMultipleOf ignores non-number inputs', async (t) => {
     const validateMultipleOfFive = toMultipleOf(5);
 
