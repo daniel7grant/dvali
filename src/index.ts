@@ -32,6 +32,7 @@ import closeTo from './validators/number/closeTo';
 import gte from './validators/number/gte';
 import gt from './validators/number/gt';
 import isInt from './validators/number/isInt';
+import isMultipleOf from './validators/number/isMultipleOf';
 import isNumber from './validators/number/isNumber';
 import lte from './validators/number/lte';
 import lt from './validators/number/lt';
@@ -56,6 +57,7 @@ import ceil from './transformers/number/ceil';
 import clamp from './transformers/number/clamp';
 import floor from './transformers/number/floor';
 import round from './transformers/number/round';
+import toMultipleOf from './transformers/number/toMultipleOf';
 
 // String transformers
 import lower from './transformers/string/lower';
@@ -109,6 +111,7 @@ export {
     gte,
     gt,
     isInt,
+    isMultipleOf,
     isNumber,
     lte,
     lt,
@@ -133,6 +136,7 @@ export {
     clamp,
     floor,
     round,
+    toMultipleOf,
     lower,
     normalize,
     trim,
