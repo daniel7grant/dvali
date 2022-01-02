@@ -18,6 +18,13 @@ jobs:
         run: npm ci
       - name: Run tests with AVA
         run: npm run test
+      - name: Send coverage to coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: node-${{ matrix.node-version }}
+          path-to-lcov: ./.coverage/lcov.info
+          parallel: true
   size:
     runs-on: ubuntu-latest
     steps:
@@ -30,3 +37,13 @@ jobs:
         run: npm ci
       - name: Check size-limit
         run: npm run size
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Signal finished to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
+        

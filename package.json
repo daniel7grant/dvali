@@ -62,7 +62,7 @@
             "src/**"
         ],
         "reporter": [
-            "html"
+            "lcov"
         ],
         "report-dir": ".coverage"
     },
