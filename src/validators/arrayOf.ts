@@ -1,5 +1,5 @@
-import validate from '../validate';
-import { Validator, ValidatorFunction, ValidatorState } from '../types';
+import validate from '../validate.js';
+import { Validator, ValidatorFunction, ValidatorState } from '../types.js';
 
 const arrayOf =
     <T>(validator: Validator<T>): ValidatorFunction<T[]> =>

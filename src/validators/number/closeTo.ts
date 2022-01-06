@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const closeTo: (v: number, e?: number) => ValidatorFunction<number> =
     (exactValue, epsilon = Number.EPSILON) =>

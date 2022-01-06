@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const gte =
     (min: number): ValidatorFunction<number> =>

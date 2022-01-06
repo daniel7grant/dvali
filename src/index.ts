@@ -1,70 +1,70 @@
-import validate from './validate';
+import validate from './validate.js';
 
 // Generic validators
-import arrayOf from './validators/arrayOf';
-import bail from './validators/bail';
-import equals from './validators/equals';
-import oneOf from './validators/oneOf';
-import optional from './validators/optional';
+import arrayOf from './validators/arrayOf.js';
+import bail from './validators/bail.js';
+import equals from './validators/equals.js';
+import oneOf from './validators/oneOf.js';
+import optional from './validators/optional.js';
 
 // Validator helpers
-import validateCondition from './validators/validateCondition';
-import validateRegex from './validators/validateRegex';
+import validateCondition from './validators/validateCondition.js';
+import validateRegex from './validators/validateRegex.js';
 
 // Boolean validators
-import falsey from './validators/boolean/falsey';
-import isBool from './validators/boolean/isBool';
-import truthy from './validators/boolean/truthy';
-import toBool from './validators/boolean/toBool';
-import tryBool from './validators/boolean/tryBool';
+import falsey from './validators/boolean/falsey.js';
+import isBool from './validators/boolean/isBool.js';
+import truthy from './validators/boolean/truthy.js';
+import toBool from './validators/boolean/toBool.js';
+import tryBool from './validators/boolean/tryBool.js';
 
 // Date validators
-import after from './validators/date/after';
-import before from './validators/date/before';
-import inRange from './validators/date/inRange';
-import isDate from './validators/date/isDate';
-import toDate from './validators/date/toDate';
-import tryDate from './validators/date/tryDate';
+import after from './validators/date/after.js';
+import before from './validators/date/before.js';
+import inRange from './validators/date/inRange.js';
+import isDate from './validators/date/isDate.js';
+import toDate from './validators/date/toDate.js';
+import tryDate from './validators/date/tryDate.js';
 
 // Number validators
-import between from './validators/number/between';
-import closeTo from './validators/number/closeTo';
-import gte from './validators/number/gte';
-import gt from './validators/number/gt';
-import isInt from './validators/number/isInt';
-import isMultipleOf from './validators/number/isMultipleOf';
-import isNumber from './validators/number/isNumber';
-import lte from './validators/number/lte';
-import lt from './validators/number/lt';
-import toNumber from './validators/number/toNumber';
-import toInt from './validators/number/toInt';
-import tryNumber from './validators/number/tryNumber';
-import tryInt from './validators/number/tryInt';
+import between from './validators/number/between.js';
+import closeTo from './validators/number/closeTo.js';
+import gte from './validators/number/gte.js';
+import gt from './validators/number/gt.js';
+import isInt from './validators/number/isInt.js';
+import isMultipleOf from './validators/number/isMultipleOf.js';
+import isNumber from './validators/number/isNumber.js';
+import lte from './validators/number/lte.js';
+import lt from './validators/number/lt.js';
+import toNumber from './validators/number/toNumber.js';
+import toInt from './validators/number/toInt.js';
+import tryNumber from './validators/number/tryNumber.js';
+import tryInt from './validators/number/tryInt.js';
 
 // String validators
-import betweenLength from './validators/string/betweenLength';
-import insensitiveEquals from './validators/string/insensitiveEquals';
-import isEmail from './validators/string/isEmail';
-import isString from './validators/string/isString';
-import isUrl from './validators/string/isUrl';
-import length from './validators/string/length';
-import maxLength from './validators/string/maxLength';
-import minLength from './validators/string/minLength';
-import toString from './validators/string/toString';
+import betweenLength from './validators/string/betweenLength.js';
+import insensitiveEquals from './validators/string/insensitiveEquals.js';
+import isEmail from './validators/string/isEmail.js';
+import isString from './validators/string/isString.js';
+import isUrl from './validators/string/isUrl.js';
+import length from './validators/string/length.js';
+import maxLength from './validators/string/maxLength.js';
+import minLength from './validators/string/minLength.js';
+import toString from './validators/string/toString.js';
 
 // Number transformers
-import ceil from './transformers/number/ceil';
-import clamp from './transformers/number/clamp';
-import floor from './transformers/number/floor';
-import round from './transformers/number/round';
-import toMultipleOf from './transformers/number/toMultipleOf';
+import ceil from './transformers/number/ceil.js';
+import clamp from './transformers/number/clamp.js';
+import floor from './transformers/number/floor.js';
+import round from './transformers/number/round.js';
+import toMultipleOf from './transformers/number/toMultipleOf.js';
 
 // String transformers
-import lower from './transformers/string/lower';
-import normalize from './transformers/string/normalize';
-import trim from './transformers/string/trim';
-import truncate from './transformers/string/truncate';
-import upper from './transformers/string/upper';
+import lower from './transformers/string/lower.js';
+import normalize from './transformers/string/normalize.js';
+import trim from './transformers/string/trim.js';
+import truncate from './transformers/string/truncate.js';
+import upper from './transformers/string/upper.js';
 
 import {
     Failure,
@@ -76,7 +76,7 @@ import {
     ValidatorFunction,
     ValidatorObject,
     ValidatorState,
-} from './types';
+} from './types.js';
 
 export type {
     FailureFunction,

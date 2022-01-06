@@ -4,7 +4,7 @@ import {
     ValidatorFunction,
     ValidatorObject,
     ValidatorState,
-} from './types';
+} from './types.js';
 
 const resolveValidatorList = function <T>(
     validators: ValidatorFunction<T>[],

@@ -1,5 +1,5 @@
-import { ValidatorFunction } from '../../types';
-import validateCondition from '../validateCondition';
+import { ValidatorFunction } from '../../types.js';
+import validateCondition from '../validateCondition.js';
 
 const falsey = (): ValidatorFunction<boolean> =>
     validateCondition(

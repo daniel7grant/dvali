@@ -1,4 +1,4 @@
-import { Success, ValidatorFunction } from '../../types';
+import { Success, ValidatorFunction } from '../../types.js';
 
 const toBool = (): ValidatorFunction<boolean> => (value) => {
     return Success(!!value);

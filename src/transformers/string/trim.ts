@@ -1,4 +1,4 @@
-import { Ignore, Success, ValidatorFunction } from '../../types';
+import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const trim = (): ValidatorFunction<string> => (value, conf) => {
     if (typeof value !== 'string') {

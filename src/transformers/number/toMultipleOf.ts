@@ -1,4 +1,4 @@
-import { Ignore, Success, ValidatorFunction } from '../../types';
+import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const toMultipleOf =
     (n: number, round = Math.round): ValidatorFunction<number> =>

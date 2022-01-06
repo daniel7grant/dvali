@@ -1,4 +1,4 @@
-import { Failure, Success, ValidatorFunction } from '../../types';
+import { Failure, Success, ValidatorFunction } from '../../types.js';
 
 const tryBool: (t?: any[], f?: any[]) => ValidatorFunction<boolean> =
     (truthy = [true, 1], falsey = [false, 0]) =>

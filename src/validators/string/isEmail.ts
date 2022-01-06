@@ -1,5 +1,5 @@
-import { ValidatorFunction } from '../../types';
-import validateRegex from '../validateRegex';
+import { ValidatorFunction } from '../../types.js';
+import validateRegex from '../validateRegex.js';
 
 const isEmail = (): ValidatorFunction<string> =>
     validateRegex(

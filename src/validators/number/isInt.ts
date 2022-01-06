@@ -1,5 +1,5 @@
-import { Failure, Success, ValidatorFunction } from '../../types';
-import validateCondition from '../validateCondition';
+import { Failure, Success, ValidatorFunction } from '../../types.js';
+import validateCondition from '../validateCondition.js';
 
 const isInt = (): ValidatorFunction<number> =>
     validateCondition(

@@ -7,4 +7,6 @@ module.exports = {
     collectCoverageFrom: ['**/src/**/*.ts'],
     coverageDirectory: '.coverage',
     coverageReporters: ['lcov'],
+    resolver: 'jest-ts-webcompat-resolver',
+    verbose: true,
 };

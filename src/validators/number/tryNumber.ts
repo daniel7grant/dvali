@@ -1,4 +1,4 @@
-import { Failure, Success, ValidatorFunction } from '../../types';
+import { Failure, Success, ValidatorFunction } from '../../types.js';
 
 const tryNumber = (): ValidatorFunction<number> => (value, conf) => {
     const parsed = Number.parseFloat(value as any);

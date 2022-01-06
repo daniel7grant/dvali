@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const maxLength =
     (max: number): ValidatorFunction<string> =>

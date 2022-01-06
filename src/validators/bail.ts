@@ -1,5 +1,5 @@
-import { ValidatorFunction, ValidatorState } from '../types';
-import validate from '../validate';
+import { ValidatorFunction, ValidatorState } from '../types.js';
+import validate from '../validate.js';
 
 const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
     if (!Array.isArray(validators)) {

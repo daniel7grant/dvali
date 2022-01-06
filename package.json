@@ -39,6 +39,7 @@
         "@types/jest": "^27.4.0",
         "doctoc": "^2.1.0",
         "jest": "^27.4.7",
+        "jest-ts-webcompat-resolver": "^1.0.0",
         "prettier": "^2.3.2",
         "size-limit": "^7.0.4",
         "ts-jest": "^27.1.2",

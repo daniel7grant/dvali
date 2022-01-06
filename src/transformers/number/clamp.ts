@@ -1,4 +1,4 @@
-import { Ignore, Success, ValidatorFunction } from '../../types';
+import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const clamp =
     (min: number, max: number): ValidatorFunction<number> =>

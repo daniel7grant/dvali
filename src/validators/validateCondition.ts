@@ -4,7 +4,7 @@ import {
     Success,
     ValidatorConfiguration,
     ValidatorFunction,
-} from '../types';
+} from '../types.js';
 
 interface ConditionFunction<T> {
     (v: T, conf: ValidatorConfiguration): boolean;

@@ -1,4 +1,4 @@
-import { Failure, Success, ValidatorFunction } from '../../types';
+import { Failure, Success, ValidatorFunction } from '../../types.js';
 
 const tryDate = (): ValidatorFunction<Date> => (value, conf) => {
     const parsed = value instanceof Date ? value : new Date(value);

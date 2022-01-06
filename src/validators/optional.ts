@@ -1,5 +1,5 @@
-import validate from '../validate';
-import { ValidatorFunction, Validator, Success } from '../types';
+import validate from '../validate.js';
+import { ValidatorFunction, Validator, Success } from '../types.js';
 
 const optional =
     <T>(validators: Validator<T>): ValidatorFunction<T | undefined> =>

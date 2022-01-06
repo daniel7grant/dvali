@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types';
+import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const inRange: (
     minDate: string | number | Date,
@@ -8,7 +8,7 @@ const inRange: (
     (
         minDate,
         maxDate,
-        opts = { minInclusive : false, maxInclusive : false }
+        opts = { minInclusive: false, maxInclusive: false }
     ): ValidatorFunction<Date> =>
     (value, conf) => {
         if (!(value instanceof Date)) {
