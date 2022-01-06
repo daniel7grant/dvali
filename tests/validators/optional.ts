@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { Failure, Success, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
 import validate from '../../src/validate';
 import optional from '../../src/validators/optional';
@@ -10,7 +10,7 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('optional validator if value is undefined, returns successfully without calling the inner validator', async (t) => {
+test('optional validator if value is undefined, returns successfully without calling the inner validator', async () => {
     let i = 0;
     const testValidation = (): ValidatorFunction<string> => async (value) => {
         i += 1;
@@ -21,22 +21,20 @@ test('optional validator if value is undefined, returns successfully without cal
     };
 
     const validateFunctionOptional = validate({ field: optional(testValidation()) });
-    t.deepEqual(await validateFunctionOptional({}), {} as any);
-    t.deepEqual(i, 0);
-    t.deepEqual(await validateFunctionOptional({ field: 'string' }), { field: 'string' });
-    t.deepEqual(i, 1);
+    expect(await validateFunctionOptional({})).toEqual({} as any);
+    expect(i).toEqual(0);
+    expect(await validateFunctionOptional({ field: 'string' })).toEqual({ field: 'string' });
+    expect(i).toEqual(1);
 
     i = 0;
 
     const validateListOptional = validate({
         field: optional([testValidation(), testValidation()]),
     });
-    t.deepEqual(await validateListOptional({}), {} as any);
-    t.deepEqual(i, 0);
-    t.deepEqual(await validateListOptional({ field: 'string' }), { field: 'string' });
-    t.deepEqual(i, 2);
-
-    t.pass();
+    expect(await validateListOptional({})).toEqual({} as any);
+    expect(i).toEqual(0);
+    expect(await validateListOptional({ field: 'string' })).toEqual({ field: 'string' });
+    expect(i).toEqual(2);
 
     // Let's check for the expected type with some TypeScript magic
     const validatedOptional = await validateFunctionOptional({ field: 'string' });
@@ -48,7 +46,7 @@ test('optional validator if value is undefined, returns successfully without cal
     const cond1: AssertExpectedType<typeof validatedOptional> = true;
 });
 
-test('optional validator without it, undefined fails', async (t) => {
+test('optional validator without it, undefined fails', async () => {
     const testValidation = (): ValidatorFunction<string> => async (value) => {
         if (value) {
             return Success();
@@ -56,12 +54,11 @@ test('optional validator without it, undefined fails', async (t) => {
         return Failure('This field is required.');
     };
 
+    const validateNotOptional = validate({ field: testValidation() });
+    await expect(validateNotOptional({ field: 'string' })).resolves.toEqual({ field: 'string' });
     try {
-        const validateNotOptional = validate({ field: testValidation() });
-        t.deepEqual(await validateNotOptional({ field: 'string' }), { field: 'string' });
         await validateNotOptional({});
-        t.fail("Not optional doesn't fail.");
-    } catch (ex) {
-        t.deepEqual(ex, ['This field is required.']);
+    } catch (err) {
+        expect(err).toEqual(['This field is required.']);
     }
 });

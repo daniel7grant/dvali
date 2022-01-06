@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import length from '../../../src/validators/string/length';
 
@@ -9,45 +9,39 @@ const conf: ValidatorConfiguration = {
     path: [],
 };
 
-test('length if passed words length is the same, returns success', async (t) => {
+test('length if passed words length is the same, returns success', async () => {
     const validateLength = length(5);
 
-    await validateLength('smart', conf);
-    await validateLength('young', conf);
-    await validateLength('brave', conf);
-
-    t.pass();
+    await expect(validateLength('smart', conf)).resolves.toBeUndefined();
+    await expect(validateLength('young', conf)).resolves.toBeUndefined();
+    await expect(validateLength('brave', conf)).resolves.toBeUndefined();
 });
 
-test('length if passed word is shorter or longer, fails', async (t) => {
+test('length if passed word is shorter or longer, fails', async () => {
     const validateLength = length(5);
 
     try {
         await validateLength('dull', conf);
-        t.fail("Shorter words doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField length should be exactly 5 characters.');
+    } catch (err) {
+        expect(err).toBe('Field strField length should be exactly 5 characters.');
     }
 
     try {
         await validateLength('supercalifragilisticexpialidocious', conf);
-        t.fail("Longer words doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField length should be exactly 5 characters.');
+    } catch (err) {
+        expect(err).toBe('Field strField length should be exactly 5 characters.');
     }
 });
 
-test('length if passed word is not a string, ignores', async (t) => {
+test('length if passed word is not a string, ignores', async () => {
     const validateLength = length(5);
 
-    await validateLength(8 as any, conf);
-    await validateLength(NaN as any, conf);
-    await validateLength(true as any, conf);
-    await validateLength([] as any, conf);
-    await validateLength(Array(8).fill('a') as any, conf);
-    await validateLength({} as any, conf);
-    await validateLength(undefined as any, conf);
-    await validateLength(null as any, conf);
-
-    t.pass();
+    await expect(validateLength(8 as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(NaN as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(true as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength([] as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(Array(8).fill('a') as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength({} as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(undefined as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(null as any, conf)).resolves.toBeUndefined();
 });

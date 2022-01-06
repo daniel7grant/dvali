@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import toDate from '../../../src/validators/date/toDate';
 
@@ -9,32 +9,32 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('toDate when date, string or number is passed returns the date', async (t) => {
+test('toDate when date, string or number is passed returns the date', async () => {
     const sanitizeDate = toDate();
 
     const dateString = '2021-08-27';
     const date = new Date(dateString);
 
     const dateByDate = await sanitizeDate(date, conf);
-    t.is(dateByDate?.getTime(), date.getTime());
+    expect(dateByDate?.getTime()).toBe(date.getTime());
     const dateByNumber = await sanitizeDate(date.getTime() as any, conf);
-    t.is(dateByNumber?.getTime(), date.getTime());
+    expect(dateByNumber?.getTime()).toBe(date.getTime());
     const dateByString = await sanitizeDate(dateString as any, conf);
-    t.is(dateByString?.getTime(), date.getTime());
+    expect(dateByString?.getTime()).toBe(date.getTime());
 });
 
-test('toDate with other values returns invalid date', async (t) => {
+test('toDate with other values returns invalid date', async () => {
     const sanitizeDate = toDate();
 
     const dateString = 'invalid';
     const date = new Date(dateString);
     const dateByDate = await sanitizeDate(date, conf);
-    t.is(dateByDate?.getTime(), NaN);
+    expect(dateByDate?.getTime()).toBe(NaN);
     const dateByString = await sanitizeDate(dateString as any, conf);
-    t.is(dateByString?.getTime(), NaN);
+    expect(dateByString?.getTime()).toBe(NaN);
 
     const dateByObject = await sanitizeDate({} as any, conf);
-    t.is(dateByObject?.getTime(), NaN);
+    expect(dateByObject?.getTime()).toBe(NaN);
     const dateByArray = await sanitizeDate({} as any, conf);
-    t.is(dateByArray?.getTime(), NaN);
+    expect(dateByArray?.getTime()).toBe(NaN);
 });

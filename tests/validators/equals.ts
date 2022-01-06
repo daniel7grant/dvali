@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../src/types';
 import equals from '../../src/validators/equals';
 
@@ -9,83 +9,74 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('equals validator if the value is equals to the param, returns successfully', async (t) => {
+test('equals validator if the value is equals to the param, returns successfully', async () => {
     const validateStringEquality = equals('asdasd');
-    await validateStringEquality('asdasd', conf);
+    await expect(validateStringEquality('asdasd', conf)).resolves.toBeUndefined();
 
     const validateNumberEquality = equals(100);
-    await validateNumberEquality(100, conf);
+    await expect(validateNumberEquality(100, conf)).resolves.toBeUndefined();
 
     const validateBoolEquality = equals(true);
-    await validateBoolEquality(true, conf);
+    await expect(validateBoolEquality(true, conf)).resolves.toBeUndefined();
 
     const obj = {};
     const validateObjectEquality = equals(obj);
-    await validateObjectEquality(obj, conf);
+    await expect(validateObjectEquality(obj, conf)).resolves.toBeUndefined();
 
     const validateNullEquality = equals(null);
-    await validateNullEquality(null, conf);
+    await expect(validateNullEquality(null, conf)).resolves.toBeUndefined();
 
     const validateUndefinedEquality = equals(undefined);
-    await validateUndefinedEquality(undefined, conf);
-
-    t.pass();
+    await expect(validateUndefinedEquality(undefined, conf)).resolves.toBeUndefined();
 });
 
-test('equals validator if the value is not equals, fails', async (t) => {
+test('equals validator if the value is not equals, fails', async () => {
+    const validateStringEquality = equals('asdasd');
     try {
-        const validateStringEquality = equals('asdasd');
         await validateStringEquality('dsadsa', conf);
-        t.fail("Not equal strings doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to asdasd.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to asdasd.');
     }
 
+    const validateCapitalizedStringEquality = equals('asdasd');
     try {
-        const validateStringEquality = equals('asdasd');
-        await validateStringEquality('ASDASD', conf);
-        t.fail("Differently cased strings doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to asdasd.');
+        await validateCapitalizedStringEquality('ASDASD', conf);
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to asdasd.');
     }
 
+    const validateNumberEquality = equals(100);
     try {
-        const validateNumberEquality = equals(100);
         await validateNumberEquality(101, conf);
-        t.fail("Not equal numbers doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to 100.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to 100.');
     }
 
+    const validateFloatEquality = equals(0.3);
     try {
-        const validateNumberEquality = equals(0.3);
-        await validateNumberEquality(0.1 + 0.2, conf);
-        t.fail("Floating point error doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to 0.3.');
+        await validateFloatEquality(0.1 + 0.2, conf);
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to 0.3.');
     }
 
+    const validateBoolEquality = equals(true);
     try {
-        const validateBoolEquality = equals(true);
         await validateBoolEquality(false, conf);
-        t.fail("Not equal booleans doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to true.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to true.');
     }
 
+    const validateNaNEquality = equals(NaN);
     try {
-        const validateNaNEquality = equals(NaN);
         await validateNaNEquality(NaN, conf);
-        t.fail("NaN equality doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to NaN.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to NaN.');
     }
 
+    const validateObjectEquality = equals({});
     try {
-        const validateObjectEquality = equals({});
         await validateObjectEquality({}, conf);
-        t.fail("Object equality doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to [object Object].');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to [object Object].');
     }
 });

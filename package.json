@@ -14,8 +14,8 @@
         "build": "tsc -p tsconfig.json && tsc -p tsconfig.es.json",
         "prepare": "npm run build",
         "size": "npm run build && size-limit",
-        "test": "nyc ava -v",
-        "test:watch": "ava -v --watch"
+        "test": "jest",
+        "test:watch": "jest --watch --coverage=false"
     },
     "keywords": [
         "validation",
@@ -35,46 +35,14 @@
         "url": "https://github.com/daniel7grant/dvali"
     },
     "devDependencies": {
-        "@ava/typescript": "^3.0.1",
         "@size-limit/preset-small-lib": "^7.0.4",
-        "ava": "^4.0.0-rc.1",
+        "@types/jest": "^27.4.0",
         "doctoc": "^2.1.0",
-        "nyc": "^15.1.0",
+        "jest": "^27.4.7",
         "prettier": "^2.3.2",
         "size-limit": "^7.0.4",
+        "ts-jest": "^27.1.2",
         "ts-node": "^10.1.0",
         "typescript": "^4.5.4"
-    },
-    "ava": {
-        "typescript": {
-            "rewritePaths": {
-                "src/": "dist/"
-            },
-            "compile": false
-        },
-        "require": [
-            "ts-node/register"
-        ]
-    },
-    "nyc": {
-        "all": true,
-        "include": [
-            "src/**"
-        ],
-        "reporter": [
-            "lcov"
-        ],
-        "report-dir": ".coverage"
-    },
-    "size-limit": [
-        {
-            "path": "es/index.js",
-            "limit": "1 kB",
-            "import": "validate"
-        },
-        {
-            "path": "es/index.js",
-            "limit": "5 kB"
-        }
-    ]
+    }
 }

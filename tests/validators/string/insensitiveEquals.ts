@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import insensitiveEquals from '../../../src/validators/string/insensitiveEquals';
 
@@ -9,53 +9,48 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('insensitiveEquals, if the two strings are the same, returns successfully', async (t) => {
+test('insensitiveEquals, if the two strings are the same, returns successfully', async () => {
     const validateInsensitiveEquals = insensitiveEquals('AsdasD');
 
-    await validateInsensitiveEquals('asdasd', conf);
-    await validateInsensitiveEquals('AsdasD', conf);
-    await validateInsensitiveEquals('ASDASD', conf);
-    await validateInsensitiveEquals('AsDaSd', conf);
-
-    t.pass();
+    await expect(validateInsensitiveEquals('asdasd', conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals('AsdasD', conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals('ASDASD', conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals('AsDaSd', conf)).resolves.toBeUndefined();
 });
 
-test('insensitiveEquals, if the two string are the same, fails', async (t) => {
+test('insensitiveEquals, if the two string are the same, fails', async () => {
     const validateInsensitiveEquals = insensitiveEquals('AsdasD');
 
     try {
         await validateInsensitiveEquals('dsadsa', conf);
-        t.fail("Completely different string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to AsdasD.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to AsdasD.');
     }
 
     try {
         await validateInsensitiveEquals('asd@asd', conf);
-        t.fail("String with special characters doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to AsdasD.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to AsdasD.');
     }
 
     try {
         await validateInsensitiveEquals('äsdäsd', conf);
-        t.fail("Address with accents doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be equal to AsdasD.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be equal to AsdasD.');
     }
 });
 
-test('insensitiveEquals, if not a string is given, ignores', async (t) => {
+test('insensitiveEquals, if not a string is given, ignores', async () => {
     const validateInsensitiveEquals = insensitiveEquals('AsdasD');
 
-    await validateInsensitiveEquals(6 as any, conf);
-    await validateInsensitiveEquals(NaN as any, conf);
-    await validateInsensitiveEquals(true as any, conf);
-    await validateInsensitiveEquals([] as any, conf);
-    await validateInsensitiveEquals(['A', 's', 'd', 'a', 's', 'D'] as any, conf);
-    await validateInsensitiveEquals({} as any, conf);
-    await validateInsensitiveEquals(undefined as any, conf);
-    await validateInsensitiveEquals(null as any, conf);
-
-    t.pass();
+    await expect(validateInsensitiveEquals(6 as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals(NaN as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals(true as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals([] as any, conf)).resolves.toBeUndefined();
+    await expect(
+        validateInsensitiveEquals(['A', 's', 'd', 'a', 's', 'D'] as any, conf)
+    ).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals({} as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals(undefined as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals(null as any, conf)).resolves.toBeUndefined();
 });

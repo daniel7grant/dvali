@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import isDate from '../../../src/validators/date/isDate';
 
@@ -9,44 +9,39 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('isDate when date is passed returns successfully', async (t) => {
+test('isDate when date is passed returns successfully', async () => {
     const sanitizeDate = isDate();
 
     const dateString = '2021-08-27';
     const date = new Date(dateString);
 
-    await sanitizeDate(date, conf);
-
-    t.pass();
+    await expect(sanitizeDate(date, conf)).resolves.toBeUndefined();
 });
 
-test('isDate when invalid date is passed fails', async (t) => {
+test('isDate when invalid date is passed fails', async () => {
     const sanitizeDate = isDate();
 
     const dateString = 'invalid';
     const date = new Date(dateString);
     try {
         await sanitizeDate(date, conf);
-        t.fail("Invalid date for date doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field dateField should be a valid date.');
+    } catch (err) {
+        expect(err).toBe('Field dateField should be a valid date.');
     }
 });
 
-test('isDate when other data is passed fails', async (t) => {
+test('isDate when other data is passed fails', async () => {
     const sanitizeDate = isDate();
 
     try {
         await sanitizeDate({} as any, conf);
-        t.fail("Object as date doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field dateField should be a valid date.');
+    } catch (err) {
+        expect(err).toBe('Field dateField should be a valid date.');
     }
 
     try {
         await sanitizeDate([] as any, conf);
-        t.fail("Array as date doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field dateField should be a valid date.');
+    } catch (err) {
+        expect(err).toBe('Field dateField should be a valid date.');
     }
 });

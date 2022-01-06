@@ -1,0 +1,11 @@
+[
+    {
+        "path": "es/index.js",
+        "limit": "1 kB",
+        "import": "validate"
+    },
+    {
+        "path": "es/index.js",
+        "limit": "5 kB"
+    }
+]

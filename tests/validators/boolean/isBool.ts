@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import isBool from '../../../src/validators/boolean/isBool';
 
@@ -9,51 +9,43 @@ const conf: ValidatorConfiguration = {
     path: [],
 };
 
-test('isBool with true or false returns success', async (t) => {
+test('isBool with true or false returns success', async () => {
     const validateBool = isBool();
 
-    await validateBool(true, conf);
-    await validateBool(false, conf);
-    t.pass();
+    await expect(validateBool(true, conf)).resolves.toBeUndefined();
+    await expect(validateBool(false, conf)).resolves.toBeUndefined();
 });
 
-test('isBool with anything other fails', async (t) => {
+test('isBool with anything other fails', async () => {
     const validateBool = isBool();
 
     try {
         await validateBool('string' as any, conf);
-        t.fail("Validating string didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
         await validateBool(123 as any, conf);
-        t.fail("Validating number didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
         await validateBool(null as any, conf);
-        t.fail("Validating null didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
         await validateBool(undefined as any, conf);
-        t.fail("Validating null didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
         await validateBool(NaN as any, conf);
-        t.fail("Validating NaN didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be a boolean.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be a boolean.');
     }
-
-    t.pass();
 });

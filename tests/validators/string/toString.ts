@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import toString from '../../../src/validators/string/toString';
 
@@ -9,17 +9,17 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('toString returns the stringified value', async (t) => {
+test('toString returns the stringified value', async () => {
     const sanitizeString = toString();
 
-    t.is(await sanitizeString('string', conf), 'string');
-    t.is(await sanitizeString('0', conf), '0');
-    t.is(await sanitizeString(123 as any, conf), '123');
-    t.is(await sanitizeString(9.9 as any, conf), '9.9');
-    t.is(await sanitizeString([1, 2, 3] as any, conf), '1,2,3');
-    t.is(await sanitizeString({} as any, conf), '[object Object]');
+    expect(await sanitizeString('string', conf)).toBe('string');
+    expect(await sanitizeString('0', conf)).toBe('0');
+    expect(await sanitizeString(123 as any, conf)).toBe('123');
+    expect(await sanitizeString(9.9 as any, conf)).toBe('9.9');
+    expect(await sanitizeString([1, 2, 3] as any, conf)).toBe('1,2,3');
+    expect(await sanitizeString({} as any, conf)).toBe('[object Object]');
     const date = new Date('2021-08-29');
-    t.is(await sanitizeString(date as any, conf), date.toString());
-    t.is(await sanitizeString(null as any, conf), 'null');
-    t.is(await sanitizeString(undefined as any, conf), 'undefined');
+    expect(await sanitizeString(date as any, conf)).toBe(date.toString());
+    expect(await sanitizeString(null as any, conf)).toBe('null');
+    expect(await sanitizeString(undefined as any, conf)).toBe('undefined');
 });

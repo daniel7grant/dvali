@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import isString from '../../../src/validators/string/isString';
 
@@ -9,65 +9,50 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('isString, when passed value is string returns success', async (t) => {
+test('isString, when passed value is string returns success', async () => {
     const sanitizeString = isString();
 
-    await sanitizeString('string', conf);
-    await sanitizeString('0', conf);
-
-    t.pass();
+    await expect(sanitizeString('string', conf)).resolves.toBeUndefined();
+    await expect(sanitizeString('0', conf)).resolves.toBeUndefined();
 });
 
-test('isString, when passed value is not string, fails', async (t) => {
+test('isString, when passed value is not string, fails', async () => {
     const sanitizeString = isString();
 
     try {
         await sanitizeString(123 as any, conf);
-        t.fail("Integer is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-
     try {
         await sanitizeString(9.9 as any, conf);
-        t.fail("Float is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-
     try {
         await sanitizeString([1, 2, 3] as any, conf);
-        t.fail("Array is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-
     try {
         await sanitizeString({} as any, conf);
-        t.fail("Object is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-    
+    const date = new Date('2021-08-29');
     try {
-        const date = new Date('2021-08-29');
         await sanitizeString(date as any, conf);
-        t.fail("Date is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-
     try {
         await sanitizeString(null as any, conf);
-        t.fail("Null is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
-
     try {
         await sanitizeString(undefined as any, conf);
-        t.fail("Undefined is string doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be string.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be string.');
     }
 });

@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import upper from '../../../src/transformers/string/upper';
 import { ValidatorConfiguration } from '../../../src/types';
 
@@ -9,30 +9,30 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('upper validator changes every letter to the uppercase equivalent', async (t) => {
+test('upper validator changes every letter to the uppercase equivalent', async () => {
     const validateUpper = upper();
 
-    t.is(await validateUpper('asdasd', conf), 'ASDASD');
-    t.is(await validateUpper('Asdasd', conf), 'ASDASD');
-    t.is(await validateUpper('aSdaSD', conf), 'ASDASD');
-    t.is(await validateUpper('ASDASD', conf), 'ASDASD');
+    await expect(validateUpper('asdasd', conf)).resolves.toBe('ASDASD');
+    await expect(validateUpper('Asdasd', conf)).resolves.toBe('ASDASD');
+    await expect(validateUpper('aSdaSD', conf)).resolves.toBe('ASDASD');
+    await expect(validateUpper('ASDASD', conf)).resolves.toBe('ASDASD');
 });
 
-test('upper validator works with locale-strings', async (t) => {
+test('upper validator works with locale-strings', async () => {
     const validateUpper = upper();
 
-    t.is(await validateUpper('weiß', conf), 'WEISS');
-    t.is(await validateUpper('cSütÖrtÖk', conf), 'CSÜTÖRTÖK');
+    await expect(validateUpper('weiß', conf)).resolves.toBe('WEISS');
+    await expect(validateUpper('cSütÖrtÖk', conf)).resolves.toBe('CSÜTÖRTÖK');
 });
-test('upper if passed word is not a string, ignores', async (t) => {
+test('upper if passed word is not a string, ignores', async () => {
     const validateUpper = upper();
 
-    t.is(await validateUpper(8 as any, conf), undefined);
-    t.is(await validateUpper(NaN as any, conf), undefined);
-    t.is(await validateUpper(true as any, conf), undefined);
-    t.is(await validateUpper([] as any, conf), undefined);
-    t.is(await validateUpper(Array(8).fill('a') as any, conf), undefined);
-    t.is(await validateUpper({} as any, conf), undefined);
-    t.is(await validateUpper(undefined as any, conf), undefined);
-    t.is(await validateUpper(null as any, conf), undefined);
+    await expect(validateUpper(8 as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper(NaN as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper(true as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper([] as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper(Array(8).fill('a') as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper({} as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper(undefined as any, conf)).resolves.toBe(undefined);
+    await expect(validateUpper(null as any, conf)).resolves.toBe(undefined);
 });

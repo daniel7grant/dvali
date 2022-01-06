@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import tryNumber from '../../../src/validators/number/tryNumber';
 
@@ -9,59 +9,53 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('tryNumber, when number is passed, returns the value', async (t) => {
+test('tryNumber, when number is passed, returns the value', async () => {
     const validateNumber = tryNumber();
 
-    await validateNumber(-1, conf);
-    await validateNumber(0, conf);
-    await validateNumber(123, conf);
-    await validateNumber(1e10, conf);
-    await validateNumber(123.45, conf);
-    await validateNumber(1 / 10, conf);
-    await validateNumber(Infinity, conf);
-    await validateNumber(-Infinity, conf);
-
-    t.pass();
+    await expect(validateNumber(-1, conf)).resolves.toBe(-1);
+    await expect(validateNumber(0, conf)).resolves.toBe(0);
+    await expect(validateNumber(123, conf)).resolves.toBe(123);
+    await expect(validateNumber(1e10, conf)).resolves.toBe(1e10);
+    await expect(validateNumber(123.45, conf)).resolves.toBe(123.45);
+    await expect(validateNumber(1 / 10, conf)).resolves.toBe(1 / 10);
+    await expect(validateNumber(Infinity, conf)).resolves.toBe(Infinity);
+    await expect(validateNumber(-Infinity, conf)).resolves.toBe(-Infinity);
 });
 
-test('tryNumber, when numeric string is passed, returns the parsed value', async (t) => {
+test('tryNumber, when numeric string is passed, returns the parsed value', async () => {
     const validateNumber = tryNumber();
 
-    t.is(await validateNumber('-1' as any, conf), -1);
-    t.is(await validateNumber('0' as any, conf), 0);
-    t.is(await validateNumber('123' as any, conf), 123);
-    t.is(await validateNumber('1e10' as any, conf), 1e10);
-    t.is(await validateNumber('123.45' as any, conf), 123.45);
+    await expect(validateNumber('-1' as any, conf)).resolves.toBe(-1);
+    await expect(validateNumber('0' as any, conf)).resolves.toBe(0);
+    await expect(validateNumber('123' as any, conf)).resolves.toBe(123);
+    await expect(validateNumber('1e10' as any, conf)).resolves.toBe(1e10);
+    await expect(validateNumber('123.45' as any, conf)).resolves.toBe(123.45);
 });
 
-test('tryNumber, when not a number is passed, fails', async (t) => {
+test('tryNumber, when not a number is passed, fails', async () => {
     const validateNumber = tryNumber();
 
     try {
         await validateNumber(NaN as any, conf);
-        t.fail("NaN is number doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be numeric.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be numeric.');
     }
 
     try {
         await validateNumber([] as any, conf);
-        t.fail("Array is number doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be numeric.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be numeric.');
     }
 
     try {
         await validateNumber({} as any, conf);
-        t.fail("Object is number doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be numeric.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be numeric.');
     }
 
     try {
         await validateNumber(null as any, conf);
-        t.fail("Null is number doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be numeric.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be numeric.');
     }
 });

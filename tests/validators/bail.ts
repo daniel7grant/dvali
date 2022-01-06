@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { Failure, Success, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
 import validate from '../../src/validate';
 import bail from '../../src/validators/bail';
@@ -10,7 +10,7 @@ const conf: ValidatorConfiguration = {
     path: [],
 };
 
-test('bail runs over each test if they are not failing', async (t) => {
+test('bail runs over each test if they are not failing', async () => {
     let i = 0;
 
     const increment = (): ValidatorFunction<void> => async () => {
@@ -18,7 +18,7 @@ test('bail runs over each test if they are not failing', async (t) => {
         return Success();
     };
 
-	// To test whether it works with returning value
+    // To test whether it works with returning value
     const increment2 = (): ValidatorFunction<void> => async (value) => {
         i += 1;
         return Success(value);
@@ -26,11 +26,11 @@ test('bail runs over each test if they are not failing', async (t) => {
 
     const validateBail = validate(bail([increment(), increment2(), increment()]));
 
-    await validateBail(null);
-    t.is(i, 3);
+    await expect(validateBail(null)).resolves.toBe(null);
+    expect(i).toBe(3);
 });
 
-test('bail stops after first failing test', async (t) => {
+test('bail stops after first failing test', async () => {
     let i = 0;
 
     const failIncrement = (): ValidatorFunction<void> => async () => {
@@ -42,31 +42,27 @@ test('bail stops after first failing test', async (t) => {
 
     try {
         await validateBail(null);
-        t.fail('Failing validation passed.');
-    } catch (ex) {
-        t.deepEqual(ex, ['Incrementation failed.']);
-        t.is(i, 1);
+    } catch (err) {
+        expect(err).toEqual(['Incrementation failed.']);
     }
+    expect(i).toBe(1);
 });
 
-test('bail just passes to validate if the passed value is not an array', async (t) => {
-    const increment =
-        (): ValidatorFunction<boolean> =>
-        async (value) => {
-            if (value) {
-                return Success();
-            } else {
-                return Failure("This shouldn't pass.");
-            }
-        };
+test('bail just passes to validate if the passed value is not an array', async () => {
+    const increment = (): ValidatorFunction<boolean> => async (value) => {
+        if (value) {
+            return Success();
+        } else {
+            return Failure("This shouldn't pass.");
+        }
+    };
 
     const validateBail = validate(bail(increment() as any));
 
-    t.is(await validateBail(true), true);
-
+    await expect(validateBail(true)).resolves.toBe(true);
     try {
-		await validateBail(false);
-    } catch (ex) {
-        t.deepEqual(ex, ["This shouldn't pass."]);
+        await validateBail(false);
+    } catch (err) {
+        expect(err).toEqual(["This shouldn't pass."]);
     }
 });

@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import isInt from '../../../src/validators/number/isInt';
 
@@ -9,73 +9,63 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('isInt, when integer is passed, returns success', async (t) => {
+test('isInt, when integer is passed, returns success', async () => {
     const validateInteger = isInt();
 
-    await validateInteger(-1, conf);
-    await validateInteger(0, conf);
-    await validateInteger(123, conf);
-    await validateInteger(1e10, conf);
-
-    t.pass();
+    await expect(validateInteger(-1, conf)).resolves.toBeUndefined();
+    await expect(validateInteger(0, conf)).resolves.toBeUndefined();
+    await expect(validateInteger(123, conf)).resolves.toBeUndefined();
+    await expect(validateInteger(1e10, conf)).resolves.toBeUndefined();
 });
 
-test('isInt, when not an integer is passed, fails', async (t) => {
+test('isInt, when not an integer is passed, fails', async () => {
     const validateInteger = isInt();
 
     try {
         await validateInteger(Infinity as any, conf);
-        t.fail("Infinity is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger(-Infinity as any, conf);
-        t.fail("Negative infinity is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger(66.6 as any, conf);
-        t.fail("Decimal is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger('66' as any, conf);
-        t.fail("String is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger(NaN as any, conf);
-        t.fail("NaN is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger([] as any, conf);
-        t.fail("Array is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger({} as any, conf);
-        t.fail("Object is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 
     try {
         await validateInteger(null as any, conf);
-        t.fail("Null is integer doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field numField should be an integer.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be an integer.');
     }
 });

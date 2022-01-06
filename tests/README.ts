@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import validate, {
     isString,
     isEmail,
@@ -10,7 +10,7 @@ import validate, {
     Validator,
 } from '../src/index';
 
-test('README: Validation functions', async (t) => {
+test('README: Validation functions', async () => {
     const validatePassword = validate([isString(), minLength(8)]); // this will only return if all of them succeeds, and collects all failures
 
     const validateUser = validate({
@@ -32,7 +32,7 @@ test('README: Validation functions', async (t) => {
         additionalProperties: 'stripped',
     });
 
-    t.deepEqual(validatedUser, {
+    expect(validatedUser).toEqual({
         email: 'jdoe@example.net',
         password: 'asdasd69',
         address: { city: 'Washington DC', street: 'Pennsylvania Avenue' },
@@ -49,7 +49,7 @@ test('README: Validation functions', async (t) => {
     const cond1: AssertExpectedType<typeof validatedUser> = true;
 });
 
-test('README: Bring your own validator - isUniqueEmail starting', async (t) => {
+test('README: Bring your own validator - isUniqueEmail starting', async () => {
     // Mock database call
     const db = {
         users: {
@@ -72,15 +72,15 @@ test('README: Bring your own validator - isUniqueEmail starting', async (t) => {
         email: [isString(), isUniqueEmail()],
     });
 
-    t.deepEqual(await validateRegistration({ email: 'dsa@asd.asd' }), { email: 'dsa@asd.asd' });
+    expect(await validateRegistration({ email: 'dsa@asd.asd' })).toEqual({ email: 'dsa@asd.asd' });
     try {
         await validateRegistration({ email: 'asd@asd.asd' });
-    } catch (ex) {
-        t.deepEqual(ex, ['This email already in use. Try your alternate address.']);
+    } catch (err) {
+        expect(err).toEqual(['This email already in use. Try your alternate address.']);
     }
 });
 
-test('README: Bring your own validator - isUniqueEmail full', async (t) => {
+test('README: Bring your own validator - isUniqueEmail full', async () => {
     // Mock database call
     const db = {
         users: {
@@ -107,11 +107,11 @@ test('README: Bring your own validator - isUniqueEmail full', async (t) => {
     });
 
     const validatedRegistration = await validateRegistration({ email: 'dsa@asd.asd' });
-    t.deepEqual(validatedRegistration, { email: 'dsa@asd.asd' });
+    expect(validatedRegistration).toEqual({ email: 'dsa@asd.asd' });
     try {
         await validateRegistration({ email: 'asd@asd.asd' });
-    } catch (ex) {
-        t.deepEqual(ex, ['This email already in use. Try your alternate address.']);
+    } catch (err) {
+        expect(err).toEqual(['This email already in use. Try your alternate address.']);
     }
 
     // Let's check for the expected type with some TypeScript magic
@@ -123,7 +123,7 @@ test('README: Bring your own validator - isUniqueEmail full', async (t) => {
     const cond1: AssertExpectedType<typeof validatedRegistration> = true;
 });
 
-test('README: Sanitize and transform - hash', async (t) => {
+test('README: Sanitize and transform - hash', async () => {
     // Mock database call
     const db = {
         users: {
@@ -171,7 +171,10 @@ test('README: Sanitize and transform - hash', async (t) => {
         password: 'asdasd69',
     });
 
-    t.deepEqual(validatedRegistration, { email: 'asd2@asd.asd', password: '$2b$08$4S0b.0ut...' });
+    expect(validatedRegistration).toEqual({
+        email: 'asd2@asd.asd',
+        password: '$2b$08$4S0b.0ut...',
+    });
 
     // Let's check for the expected type with some TypeScript magic
     type ExpectedType = {
@@ -183,7 +186,7 @@ test('README: Sanitize and transform - hash', async (t) => {
     const cond1: AssertExpectedType<typeof validatedRegistration> = true;
 });
 
-test('README: Higher-order validators - confirmPassword', async (t) => {
+test('README: Higher-order validators - confirmPassword', async () => {
     // Mock database call
     const db = {
         users: {
@@ -245,7 +248,10 @@ test('README: Higher-order validators - confirmPassword', async (t) => {
         password_confirm: 'asdasd69',
     });
 
-    t.deepEqual(validatedRegistration, { email: 'asd2@asd.asd', password: '$2b$08$4S0b.0ut...' });
+    expect(validatedRegistration).toEqual({
+        email: 'asd2@asd.asd',
+        password: '$2b$08$4S0b.0ut...',
+    });
 
     // Let's check for the expected type with some TypeScript magic
     type ExpectedType = {

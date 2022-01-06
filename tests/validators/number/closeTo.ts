@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import closeTo from '../../../src/validators/number/closeTo';
 
@@ -9,63 +9,61 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('closeTo when the two values are closer than an epsilon, returns the exact value', async (t) => {
+test('closeTo when the two values are closer than an epsilon, returns the exact value', async () => {
     const validateCloseTo = closeTo(0.3);
 
-    t.is(await validateCloseTo(0.3, conf), 0.3);
-    t.is(await validateCloseTo(0.3 + 1e-16, conf), 0.3);
-    t.is(await validateCloseTo(0.2 + 0.1, conf), 0.3);
+    await expect(validateCloseTo(0.3, conf)).resolves.toBe(0.3);
+    await expect(validateCloseTo(0.3 + 1e-16, conf)).resolves.toBe(0.3);
+    await expect(validateCloseTo(0.2 + 0.1, conf)).resolves.toBe(0.3);
 });
 
-test('closeTo when the two values are farther than an epsilon, fails', async (t) => {
+test('closeTo when the two values are farther than an epsilon, fails', async () => {
     const validateCloseTo = closeTo(0.3);
 
     try {
         await validateCloseTo(0.4, conf);
-    } catch (ex) {
-        t.is(ex, 'Field numField should be approximately 0.3.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be approximately 0.3.');
     }
 
     try {
         await validateCloseTo(0.31, conf);
-    } catch (ex) {
-        t.is(ex, 'Field numField should be approximately 0.3.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be approximately 0.3.');
     }
 
     try {
         await validateCloseTo(0.3 + 1e-10, conf);
-    } catch (ex) {
-        t.is(ex, 'Field numField should be approximately 0.3.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be approximately 0.3.');
     }
 
     try {
         await validateCloseTo(Infinity, conf);
-    } catch (ex) {
-        t.is(ex, 'Field numField should be approximately 0.3.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be approximately 0.3.');
     }
 });
 
-test('closeTo when can configure the epsilon', async (t) => {
+test('closeTo when can configure the epsilon', async () => {
     const validateCloseTo = closeTo(0.3, 0.001);
 
-    t.is(await validateCloseTo(0.3, conf), 0.3);
-    t.is(await validateCloseTo(0.3 + 1e-10, conf), 0.3);
-    t.is(await validateCloseTo(0.2 + 0.1, conf), 0.3);
-    t.is(await validateCloseTo(0.3 - 0.0001, conf), 0.3);
+    await expect(validateCloseTo(0.3, conf)).resolves.toBe(0.3);
+    await expect(validateCloseTo(0.3 + 1e-10, conf)).resolves.toBe(0.3);
+    await expect(validateCloseTo(0.2 + 0.1, conf)).resolves.toBe(0.3);
+    await expect(validateCloseTo(0.3 - 0.0001, conf)).resolves.toBe(0.3);
 
     try {
         await validateCloseTo(0.4, conf);
-    } catch (ex) {
-        t.is(ex, 'Field numField should be approximately 0.3.');
+    } catch (err) {
+        expect(err).toBe('Field numField should be approximately 0.3.');
     }
 });
 
-test('closeTo when the passed value is not a number, ignores', async (t) => {
+test('closeTo when the passed value is not a number, ignores', async () => {
     const validateCloseTo = closeTo(0.3);
 
-    await validateCloseTo('string' as any, conf);
-    await validateCloseTo(null as any, conf);
-    await validateCloseTo({} as any, conf);
-
-    t.pass();
+    await expect(validateCloseTo('string' as any, conf)).resolves.toBeUndefined();
+    await expect(validateCloseTo(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateCloseTo({} as any, conf)).resolves.toBeUndefined();
 });

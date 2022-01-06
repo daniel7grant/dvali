@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import toNumber from '../../../src/validators/number/toNumber';
 
@@ -9,35 +9,35 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('toNumber, when number is passed, returns the value', async (t) => {
+test('toNumber, when number is passed, returns the value', async () => {
     const validateNumber = toNumber();
 
-    t.is(await validateNumber(-1, conf), -1);
-    t.is(await validateNumber(0, conf), 0);
-    t.is(await validateNumber(123, conf), 123);
-    t.is(await validateNumber(1e10, conf), 1e10);
-    t.is(await validateNumber(123.45, conf), 123.45);
-    t.is(await validateNumber(1 / 10, conf), 1 / 10);
-    t.is(await validateNumber(Infinity, conf), Infinity);
-    t.is(await validateNumber(-Infinity, conf), -Infinity);
+    await expect(validateNumber(-1, conf)).resolves.toBe(-1);
+    await expect(validateNumber(0, conf)).resolves.toBe(0);
+    await expect(validateNumber(123, conf)).resolves.toBe(123);
+    await expect(validateNumber(1e10, conf)).resolves.toBe(1e10);
+    await expect(validateNumber(123.45, conf)).resolves.toBe(123.45);
+    await expect(validateNumber(1 / 10, conf)).resolves.toBe(1 / 10);
+    await expect(validateNumber(Infinity, conf)).resolves.toBe(Infinity);
+    await expect(validateNumber(-Infinity, conf)).resolves.toBe(-Infinity);
 });
 
-test('toNumber, when numeric string is passed, returns the parsed value', async (t) => {
+test('toNumber, when numeric string is passed, returns the parsed value', async () => {
     const validateNumber = toNumber();
 
-    t.is(await validateNumber('-1' as any, conf), -1);
-    t.is(await validateNumber('0' as any, conf), 0);
-    t.is(await validateNumber('123' as any, conf), 123);
-    t.is(await validateNumber('1e10' as any, conf), 1e10);
-    t.is(await validateNumber('123.45' as any, conf), 123.45);
+    await expect(validateNumber('-1' as any, conf)).resolves.toBe(-1);
+    await expect(validateNumber('0' as any, conf)).resolves.toBe(0);
+    await expect(validateNumber('123' as any, conf)).resolves.toBe(123);
+    await expect(validateNumber('1e10' as any, conf)).resolves.toBe(1e10);
+    await expect(validateNumber('123.45' as any, conf)).resolves.toBe(123.45);
 });
 
-test('toNumber, when not convertible value is passed, returns NaN', async (t) => {
+test('toNumber, when not convertible value is passed, returns NaN', async () => {
     const validateNumber = toNumber();
 
-    t.is(await validateNumber('string' as any, conf), NaN);
-    t.is(await validateNumber(NaN as any, conf), NaN);
-    t.is(await validateNumber([] as any, conf), NaN);
-    t.is(await validateNumber({} as any, conf), NaN);
-    t.is(await validateNumber(null as any, conf), NaN);
+    await expect(validateNumber('string' as any, conf)).resolves.toBe(NaN);
+    await expect(validateNumber(NaN as any, conf)).resolves.toBe(NaN);
+    await expect(validateNumber([] as any, conf)).resolves.toBe(NaN);
+    await expect(validateNumber({} as any, conf)).resolves.toBe(NaN);
+    await expect(validateNumber(null as any, conf)).resolves.toBe(NaN);
 });

@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import falsey from '../../../src/validators/boolean/falsey';
 
@@ -9,64 +9,54 @@ const conf: ValidatorConfiguration = {
     path: [],
 };
 
-test('falsey with false, zero, empty string or nullish returns success', async (t) => {
+test('falsey with false, zero, empty string or nullish returns success', async () => {
     const validateFalsey = falsey();
 
-    await validateFalsey(false, conf);
-    await validateFalsey(0 as any, conf);
-    await validateFalsey(-0 as any, conf);
-    await validateFalsey('' as any, conf);
-    await validateFalsey(null as any, conf);
-    await validateFalsey(undefined as any, conf);
-    await validateFalsey(NaN as any, conf);
-
-    t.pass();
+    await expect(validateFalsey(false, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(0 as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(-0 as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey('' as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(undefined as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(NaN as any, conf)).resolves.toBeUndefined();
 });
 
-test('falsey with anything other fails', async (t) => {
+test('falsey with anything other fails', async () => {
     const validateFalsey = falsey();
 
     try {
         await validateFalsey(true as any, conf);
-        t.fail("True is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
         await validateFalsey(-1 as any, conf);
-        t.fail("Number is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey("string" as any, conf);
-        t.fail("String is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+        await validateFalsey('string' as any, conf);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
         await validateFalsey({} as any, conf);
-        t.fail("Object is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
         await validateFalsey([] as any, conf);
-        t.fail("Array is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey((() => {}) as any, conf);
-        t.fail("Function is falsey didn't fail.");
-    } catch (ex) {
-        t.is('Field boolField should be falsey.', ex as any);
+        validateFalsey((() => {}) as any, conf);
+    } catch (err) {
+        expect(err).toBe('Field boolField should be falsey.');
     }
-
-    t.pass();
 });

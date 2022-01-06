@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import before from '../../../src/validators/date/before';
 
@@ -9,75 +9,64 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('before when the date is before the date returns success', async (t) => {
+test('before when the date is before the date returns success', async () => {
     const end = new Date('2099-12-31');
     const validateInRange = before(end);
 
-    await validateInRange(new Date('2000-01-02'), conf);
-    await validateInRange(new Date('2021-08-27'), conf);
-    await validateInRange(new Date('2099-01-01'), conf);
-
-    t.pass();
+    await expect(validateInRange(new Date('2000-01-02'), conf)).resolves.toBeUndefined();
+    await expect(validateInRange(new Date('2021-08-27'), conf)).resolves.toBeUndefined();
+    await expect(validateInRange(new Date('2099-01-01'), conf)).resolves.toBeUndefined();
 });
 
-test('before definition can convert from string or number', async (t) => {
+test('before definition can convert from string or number', async () => {
     const validateInStringRange = before('2099-12-31');
 
-    await validateInStringRange(new Date('2021-08-27'), conf);
+    await expect(validateInStringRange(new Date('2021-08-27'), conf)).resolves.toBeUndefined();
 
     const validateInNumberRange = before(4102358400000);
 
-    await validateInNumberRange(new Date('2021-08-27'), conf);
-
-    t.pass();
+    await expect(validateInNumberRange(new Date('2021-08-27'), conf)).resolves.toBeUndefined();
 });
 
-test('before when the date is after or equal to the date, fails', async (t) => {
+test('before when the date is after or equal to the date, fails', async () => {
     const end = new Date('2099-12-31');
     const validateInRange = before(end);
 
     try {
         await validateInRange(new Date('2222-12-31'), conf);
-        t.fail("Later date than range doesn't fail.");
-    } catch (ex) {
-        t.is(ex, `Field dateField should be before ${end.toString()}.`);
+    } catch (err) {
+        expect(err).toBe(`Field dateField should be before ${end.toString()}.`);
     }
 
     try {
         await validateInRange(new Date('2099-12-31'), conf);
-        t.fail("Date equal to upper range doesn't fail.");
-    } catch (ex) {
-        t.is(ex, `Field dateField should be before ${end.toString()}.`);
+    } catch (err) {
+        expect(err).toBe(`Field dateField should be before ${end.toString()}.`);
     }
 
     try {
         await validateInRange(new Date('invalid'), conf);
-        t.fail("Invalid date doesn't fail.");
-    } catch (ex) {
-        t.is(ex, `Field dateField should be before ${end.toString()}.`);
+    } catch (err) {
+        expect(err).toBe(`Field dateField should be before ${end.toString()}.`);
     }
 });
 
-test('before, when inclusive is set, returns success for limit', async (t) => {
+test('before, when inclusive is set, returns success for limit', async () => {
     const end = new Date('2099-12-31');
     const validateInRange = before(end, { inclusive: true });
 
-    await validateInRange(new Date('2099-12-31'), conf);
-
-    t.pass();
+    await expect(validateInRange(new Date('2099-12-31'), conf)).resolves.toBeUndefined();
 });
 
-test('before ignores non-date inputs', async (t) => {
+test('before ignores non-date inputs', async () => {
     const end = new Date('2099-12-31');
     const validateInRange = before(end);
 
-    await validateInRange("string" as any, conf);
-    await validateInRange(123 as any, conf);
-    await validateInRange(NaN as any, conf);
-    await validateInRange({} as any, conf);
-    await validateInRange([] as any, conf);
-    await validateInRange(null as any, conf);
-    await validateInRange(undefined as any, conf);
-
-    t.pass();    
+    await expect(validateInRange('string' as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange(123 as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange(NaN as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange({} as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange([] as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateInRange(undefined as any, conf)).resolves.toBeUndefined();
 });

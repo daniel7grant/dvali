@@ -1,35 +1,24 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../src/types';
 import validateRegex from '../../src/validators/validateRegex';
 
 const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {}, path: [] };
 
-test('validateRegex function returns undefined if regex applies', async (t) => {
+test('validateRegex function returns undefined if regex applies', async () => {
     const validateTest = validateRegex(/[a-z].*/);
-    try {
-        const validated = await validateTest('asdasd', conf);
-        t.is(typeof validated, 'undefined');
-    } catch (ex) {
-        t.fail();
-    }
+    await expect(validateTest('asdasd', conf)).resolves.toBeUndefined();
 });
 
-test('validateRegex function throws error if regex fails', async (t) => {
+test('validateRegex function throws error if regex fails', async () => {
     const validateTest = validateRegex(/[a-z].*/);
     try {
         await validateTest('123', conf);
-        t.fail();
-    } catch (ex) {
-        t.pass();
+    } catch (err) {
+        expect(err).not.toBeUndefined();
     }
 });
 
-test('validateRegex function ignores if passed value is not a string', async (t) => {
+test('validateRegex function ignores if passed value is not a string', async () => {
     const validateTest = validateRegex(/[a-z].*/);
-    try {
-        const validated = await validateTest(123 as any, conf);
-        t.is(typeof validated, 'undefined');
-    } catch (ex) {
-        t.fail();
-    }
+    await expect(validateTest(123 as any, conf)).resolves.toBeUndefined();
 });

@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import validate from '../src/validate';
 import { Failure, Success, ValidatorFunction } from '../src/types';
 
@@ -17,130 +17,96 @@ const testTransformValidation = (): ValidatorFunction =>
         return Success(value + value);
     };
 
-test('validate with function returns the value on success', async (t) => {
+test('validate with function returns the value on success', async () => {
     const value = 'asdasd';
     const validateTest = validate(testSuccessfulValidation());
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.is(validatedValue, value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toBe(value);
 });
 
-test('validate with function throws array of error messages on failure', async (t) => {
+test('validate with function throws array of error messages on failure', async () => {
     const value = 'asdasd';
     const validateTest = validate(testFailingValidation());
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.deepEqual(ex, ['test failed']);
+    } catch (err) {
+        expect(err).toEqual(['test failed']);
     }
 });
 
-test('validate with function transforms the value on success', async (t) => {
+test('validate with function transforms the value on success', async () => {
     const value = 'asdasd';
     const validateTest = validate(testTransformValidation());
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.is(validatedValue, value + value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toBe(value + value);
 });
 
-test('validate with array of functions returns the value on success', async (t) => {
+test('validate with array of functions returns the value on success', async () => {
     const value = 'asdasd';
     const validateTest = validate([testSuccessfulValidation()]);
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.is(validatedValue, value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toBe(value);
 });
 
-test('validate with array of functions throws array of error messages', async (t) => {
+test('validate with array of functions throws array of error messages', async () => {
     const value = 'asdasd';
     const validateTest = validate([testFailingValidation()]);
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.deepEqual(ex, ['test failed']);
+    } catch (err) {
+        expect(err).toEqual(['test failed']);
     }
 });
 
-test('validate with array of functions can throw multiple error messages', async (t) => {
+test('validate with array of functions can throw multiple error messages', async () => {
     const value = 'asdasd';
     const validateTest = validate([testFailingValidation(), testFailingValidation()]);
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.deepEqual(ex, ['test failed', 'test failed']);
+    } catch (err) {
+        expect(err).toEqual(['test failed', 'test failed']);
     }
 });
 
-test('validate with array of functions throws when one of them fails', async (t) => {
+test('validate with array of functions throws when one of them fails', async () => {
     const value = 'asdasd';
     const validateTest = validate([testSuccessfulValidation(), testFailingValidation()]);
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.deepEqual(ex, ['test failed']);
+    } catch (err) {
+        expect(err).toEqual(['test failed']);
     }
 });
 
-test('validate with array of functions transforms the value on success', async (t) => {
+test('validate with array of functions transforms the value on success', async () => {
     const value = 'asdasd';
     const validateTest = validate([testTransformValidation()]);
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.is(validatedValue, value + value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toBe(value + value);
 });
 
-test('validate with array of functions can transform multiple times', async (t) => {
+test('validate with array of functions can transform multiple times', async () => {
     const value = 'asdasd';
     const validateTest = validate([testTransformValidation(), testTransformValidation()]);
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.is(validatedValue, value + value + value + value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toBe(value + value + value + value);
 });
 
-test('validate with object returns the value on success', async (t) => {
+test('validate with object returns the value on success', async () => {
     const value = { key: 'asdasd', another: 'dsadas' };
     const validateTest = validate({
         key: [testSuccessfulValidation()],
         another: testSuccessfulValidation(),
     });
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.deepEqual(validatedValue, value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toEqual(value);
 });
 
-test('validate with object works with nested objects', async (t) => {
+test('validate with object works with nested objects', async () => {
     const value = { key: 'asdasd', nested: { and: 'tested' } };
     const validateTest = validate({
         key: [testSuccessfulValidation()],
@@ -149,15 +115,10 @@ test('validate with object works with nested objects', async (t) => {
         },
     });
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.deepEqual(validatedValue, value);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toEqual(value);
 });
 
-test('validate with object throws array of error messages', async (t) => {
+test('validate with object throws array of error messages', async () => {
     const value = { key: 'asdasd', another: 'dsadas' };
     const validateTest = validate({
         key: [testFailingValidation()],
@@ -166,13 +127,12 @@ test('validate with object throws array of error messages', async (t) => {
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.deepEqual(ex, ['test failed', 'test failed']);
+    } catch (err) {
+        expect(err).toEqual(['test failed', 'test failed']);
     }
 });
 
-test('validate with object throws if value is not an object', async (t) => {
+test('validate with object throws if value is not an object', async () => {
     const value = 'asdasd';
     const validateTest = validate({
         key: [testSuccessfulValidation()],
@@ -181,13 +141,12 @@ test('validate with object throws if value is not an object', async (t) => {
 
     try {
         await validateTest(value);
-        t.fail();
-    } catch (ex) {
-        t.pass();
+    } catch (err) {
+        expect(err).not.toBeUndefined();
     }
 });
 
-test('validate with object strips extraneous keys', async (t) => {
+test('validate with object strips extraneous keys', async () => {
     const value = { key: 'asdasd', another: 'dsadas', extraKey: 'asd' };
     const strippedValue = { key: 'asdasd', another: 'dsadas' };
     const validateTest = validate({
@@ -195,23 +154,17 @@ test('validate with object strips extraneous keys', async (t) => {
         another: testSuccessfulValidation(),
     });
 
-    try {
-        const validatedValue = await validateTest(value);
-        t.deepEqual(validatedValue, strippedValue);
-    } catch {
-        t.fail();
-    }
+    await expect(validateTest(value)).resolves.toEqual(strippedValue);
 });
 
-test('validate should throw if validator is not an object, function or array', async (t) => {
+test('validate should throw if validator is not an object, function or array', async () => {
     const value = 'asdasd';
     const validateTest = validate(
         'asdasd' as any // TypeScript is pretty cool
     );
     try {
         await validateTest(value);
-        t.fail();
-    } catch {
-        t.pass();
+    } catch (err) {
+        expect(err).not.toBeUndefined();
     }
 });

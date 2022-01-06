@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import trim from '../../../src/transformers/string/trim';
 
@@ -9,24 +9,24 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('trim validator removes whitespace from the start and end', async (t) => {
+test('trim validator removes whitespace from the start and end', async () => {
     const validateTrim = trim();
 
-    t.is(await validateTrim(' asdasd    ', conf), 'asdasd');
-    t.is(await validateTrim(' asdasd\r\n\t', conf), 'asdasd');
-    t.is(await validateTrim(' asd asd\t', conf), 'asd asd');
-    t.is(await validateTrim(' asd\r\nasd\t', conf), 'asd\r\nasd');
+    await expect(validateTrim(' asdasd    ', conf)).resolves.toBe('asdasd');
+    await expect(validateTrim(' asdasd\r\n\t', conf)).resolves.toBe('asdasd');
+    await expect(validateTrim(' asd asd\t', conf)).resolves.toBe('asd asd');
+    await expect(validateTrim(' asd\r\nasd\t', conf)).resolves.toBe('asd\r\nasd');
 });
 
-test('trim if passed word is not a string, ignores', async (t) => {
+test('trim if passed word is not a string, ignores', async () => {
     const validateTrim = trim();
 
-    t.is(await validateTrim(8 as any, conf), undefined);
-    t.is(await validateTrim(NaN as any, conf), undefined);
-    t.is(await validateTrim(true as any, conf), undefined);
-    t.is(await validateTrim([] as any, conf), undefined);
-    t.is(await validateTrim(Array(8).fill('a') as any, conf), undefined);
-    t.is(await validateTrim({} as any, conf), undefined);
-    t.is(await validateTrim(undefined as any, conf), undefined);
-    t.is(await validateTrim(null as any, conf), undefined);
+    await expect(validateTrim(8 as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim(NaN as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim(true as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim([] as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim(Array(8).fill('a') as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim({} as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim(undefined as any, conf)).resolves.toBe(undefined);
+    await expect(validateTrim(null as any, conf)).resolves.toBe(undefined);
 });

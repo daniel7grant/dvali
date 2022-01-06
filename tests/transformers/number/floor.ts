@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../../src/types';
 import floor from '../../../src/transformers/number/floor';
 
@@ -9,21 +9,21 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('floor validator rounds down the number to the nearest integer', async (t) => {
+test('floor validator rounds down the number to the nearest integer', async () => {
     const validateFloor = floor();
 
-    t.is(await validateFloor(5, conf), 5);
-    t.is(await validateFloor(6.1, conf), 6);
-    t.is(await validateFloor(6.9, conf), 6);
-    t.is(await validateFloor(7.00000000001, conf), 7);
+    await expect(validateFloor(5, conf)).resolves.toBe(5);
+    await expect(validateFloor(6.1, conf)).resolves.toBe(6);
+    await expect(validateFloor(6.9, conf)).resolves.toBe(6);
+    await expect(validateFloor(7.00000000001, conf)).resolves.toBe(7);
 });
 
-test('floor ignores non-number inputs', async (t) => {
+test('floor ignores non-number inputs', async () => {
     const validateFloor = floor();
 
-	t.is(await validateFloor('6' as any, conf), undefined);
-    t.is(await validateFloor(NaN as any, conf), undefined);
-    t.is(await validateFloor(undefined as any, conf), undefined);
-    t.is(await validateFloor(null as any, conf), undefined);
-    t.is(await validateFloor({} as any, conf), undefined);
+    expect(validateFloor('6' as any, conf)).resolves.toBe(undefined);
+    await expect(validateFloor(NaN as any, conf)).resolves.toBe(undefined);
+    await expect(validateFloor(undefined as any, conf)).resolves.toBe(undefined);
+    await expect(validateFloor(null as any, conf)).resolves.toBe(undefined);
+    await expect(validateFloor({} as any, conf)).resolves.toBe(undefined);
 });

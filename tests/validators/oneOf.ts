@@ -1,4 +1,4 @@
-import test from 'ava';
+import { describe, expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../src/types';
 import oneOf from '../../src/validators/oneOf';
 
@@ -9,94 +9,84 @@ const conf: ValidatorConfiguration = {
     parent: {},
 };
 
-test('oneOf validator if the value is one of the list, returns successfully', async (t) => {
+test('oneOf validator if the value is one of the list, returns successfully', async () => {
     const validateStringEquality = oneOf(['one', 'two', 'three']);
-    await validateStringEquality('one', conf);
-    await validateStringEquality('two', conf);
-    await validateStringEquality('three', conf);
+    await expect(validateStringEquality('one', conf)).resolves.toBeUndefined();
+    await expect(validateStringEquality('two', conf)).resolves.toBeUndefined();
+    await expect(validateStringEquality('three', conf)).resolves.toBeUndefined();
 
     const validateNumberEquality = oneOf([100, 101, 102]);
-    await validateNumberEquality(100, conf);
-    await validateNumberEquality(101, conf);
-    await validateNumberEquality(102, conf);
+    await expect(validateNumberEquality(100, conf)).resolves.toBeUndefined();
+    await expect(validateNumberEquality(101, conf)).resolves.toBeUndefined();
+    await expect(validateNumberEquality(102, conf)).resolves.toBeUndefined();
 
     const validateBoolEquality = oneOf([true, false]);
-    await validateBoolEquality(true, conf);
-    await validateBoolEquality(false, conf);
+    await expect(validateBoolEquality(true, conf)).resolves.toBeUndefined();
+    await expect(validateBoolEquality(false, conf)).resolves.toBeUndefined();
 
     const obj = {};
     const validateObjectEquality = oneOf([obj]);
-    await validateObjectEquality(obj, conf);
+    await expect(validateObjectEquality(obj, conf)).resolves.toBeUndefined();
 
     const validateNullEquality = oneOf([null, undefined]);
-    await validateNullEquality(null, conf);
-    await validateNullEquality(undefined, conf);
-
-    t.pass();
+    await expect(validateNullEquality(null, conf)).resolves.toBeUndefined();
+    await expect(validateNullEquality(undefined, conf)).resolves.toBeUndefined();
 });
 
-test('oneOf validator if the value is not in the list, fails', async (t) => {
+test('oneOf validator if the value is not in the list, fails', async () => {
+    const validateStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        const validateStringEquality = oneOf(['one', 'two', 'three']);
         await validateStringEquality('four', conf);
-        t.fail("Not equal strings doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of one, two, three.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
+    const validateCapitalizedStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        const validateStringEquality = oneOf(['one', 'two', 'three']);
-        await validateStringEquality('ONE', conf);
-        t.fail("Differently cased strings doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of one, two, three.');
+        await validateCapitalizedStringEquality('ONE', conf);
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
+    const validateEmptyStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        const validateStringEquality = oneOf(['one', 'two', 'three']);
-        await validateStringEquality('', conf);
-        t.fail("Empty strings doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of one, two, three.');
+        await validateEmptyStringEquality('', conf);
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
+    const validateNumberEquality = oneOf([100, 101, 102]);
     try {
-        const validateNumberEquality = oneOf([100, 101, 102]);
         await validateNumberEquality(99, conf);
-        t.fail("Not equal numbers doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of 100, 101, 102.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of 100, 101, 102.');
     }
 
+    const validateFloatNumberEquality = oneOf([0.1, 0.2, 0.3]);
     try {
-        const validateNumberEquality = oneOf([0.1, 0.2, 0.3]);
-        await validateNumberEquality(0.1 + 0.2, conf);
-        t.fail("Floating point error doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of 0.1, 0.2, 0.3.');
+        await validateFloatNumberEquality(0.1 + 0.2, conf);
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of 0.1, 0.2, 0.3.');
     }
 
+    const validateBoolEquality = oneOf([true]);
     try {
-        const validateBoolEquality = oneOf([true]);
         await validateBoolEquality(false, conf);
-        t.fail("Not equal booleans doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of true.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of true.');
     }
 
+    const validateNaNEquality = oneOf([NaN]);
     try {
-        const validateNaNEquality = oneOf([NaN]);
         await validateNaNEquality(NaN, conf);
-        t.fail("NaN equality doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of NaN.');
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of NaN.');
     }
 
+    const validateObjectEquality = oneOf([{}]);
     try {
-        const validateObjectEquality = oneOf([{}]);
         await validateObjectEquality({}, conf);
-        t.fail("Object equality doesn't fail.");
-    } catch (ex) {
-        t.is(ex, 'Field strField should be one of [object Object].');
+    } catch (err) {
+        expect(err).toBe('Field strField should be one of [object Object].');
     }
 });
