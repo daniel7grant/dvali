@@ -10,9 +10,17 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
-export interface ValidatorFunction<T = any, U = any> {
+export interface ValidatorFunctionSync<T = any, U = any> {
+    (value: U, conf: ValidatorConfiguration): T | undefined | void;
+}
+
+export interface ValidatorFunctionAsync<T = any, U = any> {
     (value: U, conf: ValidatorConfiguration): Promise<T | undefined | void>;
 }
+
+export type ValidatorFunction<T = any, U = any> =
+    | ValidatorFunctionSync<T, U>
+    | ValidatorFunctionAsync<T, U>;
 
 export type ValidatorObject<T> = {
     [key in keyof T]: Validator<T[key]>;

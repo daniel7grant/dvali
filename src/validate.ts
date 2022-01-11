@@ -5,6 +5,12 @@ import {
     ValidatorObject,
     ValidatorState,
 } from './types.js';
+import {
+    isValidatorFunction,
+    isValidatorFunctionList,
+    isValidatorObject,
+    promisifyValidator,
+} from './utils';
 
 const resolveValidatorList = function <T>(
     validators: ValidatorFunction<T>[],
@@ -12,6 +18,7 @@ const resolveValidatorList = function <T>(
     conf: ValidatorConfiguration
 ): Promise<T> {
     return validators
+        .map(promisifyValidator)
         .reduce<Promise<ValidatorState<T>>>((previousPromise, validator) => {
             return previousPromise.then(({ value, failures }) =>
                 validator(value, conf).then(
@@ -73,20 +80,6 @@ const resolveValidatorObject = function <T>(
     });
 };
 
-const isValidatorFunctionList = <T>(
-    validator: Validator<T>
-): validator is ValidatorFunction<T>[] => {
-    return typeof validator === 'object' && Array.isArray(validator);
-};
-
-const isValidatorObject = <T>(validator: Validator<T>): validator is ValidatorObject<T> => {
-    return typeof validator === 'object' && !Array.isArray(validator);
-};
-
-const isValidatorFunction = <T>(validator: Validator<T>): validator is ValidatorFunction<T> => {
-    return typeof validator === 'function';
-};
-
 const validate = function <T>(
     validator: Validator<T>,
     validateConf?: Partial<ValidatorConfiguration>
@@ -115,7 +108,7 @@ const validate = function <T>(
             return resolveValidatorObject(validator, testValue, conf);
         } else if (isValidatorFunction(validator)) {
             // It is a function, validate with it
-            return validator(testValue, conf)
+            return promisifyValidator(validator)(testValue, conf)
                 .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
                 .catch((failures) => {
                     if (Array.isArray(failures)) {

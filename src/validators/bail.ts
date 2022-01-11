@@ -1,5 +1,6 @@
 import { ValidatorFunction, ValidatorState } from '../types.js';
 import validate from '../validate.js';
+import { promisifyValidator } from '../utils.js';
 
 const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
     if (!Array.isArray(validators)) {
@@ -12,7 +13,7 @@ const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
                 return previousPromise.then(({ value, failures }) =>
                     failures.length > 0
                         ? { value, failures } // Short-circuit for any error
-                        : validator(value, conf).then(
+                        : promisifyValidator(validator)(value, conf).then(
                               (newValue) => ({
                                   value: typeof newValue !== 'undefined' ? newValue : value,
                                   failures,
