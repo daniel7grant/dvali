@@ -5,6 +5,9 @@
     "main": "./dist/index.js",
     "module": "./es/index.js",
     "types": "./dist/index.d.ts",
+    "engines": {
+        "node": "14<"
+    },
     "exports": {
         "require": "./dist/index.js",
         "import": "./es/index.js",
