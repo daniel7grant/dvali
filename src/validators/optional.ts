@@ -1,8 +1,8 @@
 import validate from '../validate.js';
-import { ValidatorFunction, Validator, Success } from '../types.js';
+import { ValidatorFunctionAsync, Validator, Success } from '../types.js';
 
 const optional =
-    <T>(validators: Validator<T>): ValidatorFunction<T | undefined> =>
+    <T>(validators: Validator<T>): ValidatorFunctionAsync<T | undefined> =>
     (value, conf) => {
         if (typeof value === 'undefined') {
             return Success();

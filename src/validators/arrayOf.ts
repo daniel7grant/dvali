@@ -1,8 +1,8 @@
 import validate from '../validate.js';
-import { Validator, ValidatorFunction, ValidatorState } from '../types.js';
+import { Validator, ValidatorFunctionAsync, ValidatorState } from '../types.js';
 
 const arrayOf =
-    <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
+    <T>(validator: Validator<T>): ValidatorFunctionAsync<T[]> =>
     (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValues !== 'object' || !Array.isArray(testValues)) {

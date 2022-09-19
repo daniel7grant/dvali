@@ -1,6 +1,6 @@
-import { Failure, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Success, ValidatorFunctionAsync } from '../../types.js';
 
-const tryInt = (): ValidatorFunction<number> => (value, conf) => {
+const tryInt = (): ValidatorFunctionAsync<number> => (value, conf) => {
     const parsed = Number.parseInt(value as any);
     if (!Number.isNaN(parsed)) {
         return Success(parsed);

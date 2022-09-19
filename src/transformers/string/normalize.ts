@@ -1,7 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Ignore, Success, ValidatorFunctionAsync } from '../../types.js';
 
 const normalize =
-    (form?: 'NFC' | 'NFD' | 'NFKC' | 'NFKD'): ValidatorFunction<string> =>
+    (form?: 'NFC' | 'NFD' | 'NFKC' | 'NFKD'): ValidatorFunctionAsync<string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

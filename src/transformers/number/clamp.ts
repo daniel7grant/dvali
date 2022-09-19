@@ -1,7 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Ignore, Success, ValidatorFunctionAsync } from '../../types.js';
 
 const clamp =
-    (min: number, max: number): ValidatorFunction<number> =>
+    (min: number, max: number): ValidatorFunctionAsync<number> =>
     (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();

@@ -1,6 +1,6 @@
-import { Success, ValidatorFunction } from '../../types.js';
+import { Success, ValidatorFunctionAsync } from '../../types.js';
 
-const toBool = (): ValidatorFunction<boolean> => (value) => {
+const toBool = (): ValidatorFunctionAsync<boolean> => (value) => {
     return Success(!!value);
 };
 

@@ -1,6 +1,6 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Ignore, Success, ValidatorFunctionAsync } from '../../types.js';
 
-const floor = (): ValidatorFunction<number> => (value, conf) => {
+const floor = (): ValidatorFunctionAsync<number> => (value, conf) => {
     if (typeof value !== 'number' || Number.isNaN(value)) {
         return Ignore();
     }

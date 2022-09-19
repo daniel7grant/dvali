@@ -1,10 +1,10 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, ValidatorFunctionAsync } from '../../types.js';
 
 const before: (
     date: string | number | Date,
     opts?: { inclusive?: boolean }
-) => ValidatorFunction<Date> =
-    (date, opts = { inclusive: false }): ValidatorFunction<Date> =>
+) => ValidatorFunctionAsync<Date> =
+    (date, opts = { inclusive: false }): ValidatorFunctionAsync<Date> =>
     (value, conf) => {
         if (!(value instanceof Date)) {
             return Ignore();

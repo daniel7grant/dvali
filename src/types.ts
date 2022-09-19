@@ -10,6 +10,8 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
+export type Promisey<T> = T extends Promise<infer U> ? T : Promise<T>;
+
 export interface ValidatorFunctionSync<T = any, U = any> {
     (value: U, conf: ValidatorConfiguration): T | undefined | void;
 }
@@ -32,7 +34,7 @@ export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
 }
 
-export type inferValidation<S extends ValidatorFunction<T>, T> = T;
+export type inferValidation<S extends Validator<T>, T> = T;
 
 export const Success = function <T>(t?: T): Promise<T | undefined> {
     return Promise.resolve(t);

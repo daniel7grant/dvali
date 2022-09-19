@@ -1,6 +1,6 @@
-import { Success, ValidatorFunction } from '../../types.js';
+import { Success, ValidatorFunctionAsync } from '../../types.js';
 
-const toDate = (): ValidatorFunction<Date> => (value, conf) => {
+const toDate = (): ValidatorFunctionAsync<Date> => (value, conf) => {
     const parsed = value instanceof Date ? value : new Date(value);
     return Success(parsed);
 };

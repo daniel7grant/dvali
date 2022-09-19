@@ -1,8 +1,8 @@
-import { ValidatorFunction, ValidatorState } from '../types.js';
+import { ValidatorFunctionAsync, ValidatorState } from '../types.js';
 import validate from '../validate.js';
 import { promisifyValidator } from '../utils.js';
 
-const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
+const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunctionAsync<T> => {
     if (!Array.isArray(validators)) {
         // If not an array is passed, simply continue validation
         return validate(validators);

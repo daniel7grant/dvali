@@ -1,6 +1,6 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Ignore, Success, ValidatorFunctionAsync } from '../../types.js';
 
-const upper = (): ValidatorFunction<string> => (value, conf) => {
+const upper = (): ValidatorFunctionAsync<string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

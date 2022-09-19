@@ -1,19 +1,19 @@
 import {
     Validator,
     ValidatorConfiguration,
-    ValidatorFunction,
+    ValidatorFunctionAsync,
     ValidatorObject,
     ValidatorState,
 } from './types.js';
 import {
-    isValidatorFunction,
-    isValidatorFunctionList,
+    isValidatorFunctionAsync,
+    isValidatorFunctionAsyncList,
     isValidatorObject,
     promisifyValidator,
-} from './utils';
+} from './utils.js';
 
 const resolveValidatorList = function <T>(
-    validators: ValidatorFunction<T>[],
+    validators: ValidatorFunctionAsync<T>[],
     value: any,
     conf: ValidatorConfiguration
 ): Promise<T> {
@@ -96,7 +96,7 @@ const validate = function <T>(
         };
 
         // Start the validation
-        if (isValidatorFunctionList(validator)) {
+        if (isValidatorFunctionAsyncList(validator)) {
             // Array of functions mean a list of validators
             return resolveValidatorList(validator, testValue, conf);
         } else if (isValidatorObject(validator)) {
@@ -106,10 +106,9 @@ const validate = function <T>(
             }
 
             return resolveValidatorObject(validator, testValue, conf);
-        } else if (isValidatorFunction(validator)) {
+        } else if (isValidatorFunctionAsync(validator)) {
             // It is a function, validate with it
             return promisifyValidator(validator)(testValue, conf)
-                .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
                 .catch((failures) => {
                     if (Array.isArray(failures)) {
                         throw failures;

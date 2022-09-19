@@ -73,7 +73,7 @@ import {
     Success,
     Validator,
     ValidatorConfiguration,
-    ValidatorFunction,
+    ValidatorFunctionAsync,
     ValidatorObject,
     ValidatorState,
 } from './types.js';
@@ -82,7 +82,7 @@ export type {
     FailureFunction,
     Validator,
     ValidatorConfiguration,
-    ValidatorFunction,
+    ValidatorFunctionAsync,
     ValidatorObject,
     ValidatorState,
 };
