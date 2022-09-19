@@ -3,6 +3,7 @@ import validate from './validate.js';
 // Generic validators
 import arrayOf from './validators/arrayOf.js';
 import bail from './validators/bail.js';
+import either from './validators/either.js';
 import equals from './validators/equals.js';
 import oneOf from './validators/oneOf.js';
 import optional from './validators/optional.js';
@@ -94,6 +95,7 @@ export {
     validate,
     arrayOf,
     bail,
+    either,
     falsey,
     isBool,
     truthy,
