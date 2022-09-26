@@ -24,7 +24,7 @@ export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
 }
 
-export type inferValidation<S extends ValidatorFunction<T>, T> = T;
+export type InferValidator<T> = T extends Validator<infer U> ? U : never;
 
 export const Success = function <T>(t?: T): Promise<T | undefined> {
     return Promise.resolve(t);

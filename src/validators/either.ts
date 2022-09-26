@@ -1,20 +1,26 @@
-import { Success, Validator, ValidatorFunction } from '../types.js';
+import { InferValidator, Success, Validator, ValidatorFunction } from '../types.js';
 import validate from '../validate.js';
 
 const either =
-    <T, U>(validatorT: Validator<T>, validatorU: Validator<U>): ValidatorFunction<T | U> =>
+    <V extends Validator<unknown>>(validators: V[]): ValidatorFunction<InferValidator<V>> =>
     async (value, conf) => {
-        const [valueT, valueU] = await Promise.allSettled([
-            validate(validatorT, conf)(value, conf),
-            validate(validatorU, conf)(value, conf),
-        ]);
-        if (valueT.status === 'fulfilled') {
-            return Success(valueT.value);
+        const results = await Promise.allSettled(
+            validators.map(
+                (validator) => validate(validator, conf)(value, conf) as InferValidator<V>
+            )
+        );
+        const fulfilledPromise = results.find(
+            <T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> =>
+                result.status === 'fulfilled'
+        );
+        if (fulfilledPromise) {
+            return Success(fulfilledPromise.value);
         }
-        if (valueU.status === 'fulfilled') {
-            return Success(valueU.value);
-        }
-        throw [].concat(valueT.reason).concat(valueU.reason);
+        const rejectedPromises = results.filter(
+            <T>(result: PromiseSettledResult<T>): result is PromiseRejectedResult =>
+                result.status === 'rejected'
+        );
+        throw rejectedPromises.flatMap((result) => result.reason);
     };
 
 export default either;
