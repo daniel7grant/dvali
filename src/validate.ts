@@ -115,14 +115,21 @@ const validate = function <T>(
             return resolveValidatorObject(validator, testValue, conf);
         } else if (isValidatorFunction(validator)) {
             // It is a function, validate with it
-            return validator(testValue, conf)
-                .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
-                .catch((failures) => {
-                    if (Array.isArray(failures)) {
-                        throw failures;
-                    }
-                    throw [failures];
-                });
+            try {
+                return validator(testValue, conf)
+                    .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
+                    .catch((failures) => {
+                        if (Array.isArray(failures)) {
+                            return Promise.reject(failures);
+                        }
+                        return Promise.reject([failures]);
+                    });
+            } catch (failures) {
+                if (Array.isArray(failures)) {
+                    return Promise.reject(failures);
+                }
+                return Promise.reject([failures]);
+            }
         } else {
             // Shouldn't go on here
             throw new Error('Validator should be an array, object or function.');
