@@ -10,6 +10,10 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
+export type SyncValidatingFunction<I, O> = O extends Promise<infer P> ? never : (t: I, cc?: Partial<ValidatorConfiguration>) => O;
+export type AsyncValidatingFunction<I, O> = (t: I, cc?: Partial<ValidatorConfiguration>) => Promise<O>;
+export type ValidatingFunction<I, O> = SyncValidatingFunction<I, O> | AsyncValidatingFunction<I, O>;
+
 export type SyncValidatorFunction<I, O> = O extends Promise<infer P> ? never : (value: I, conf: ValidatorConfiguration) => O | undefined | void;
 export type AsyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => Promise<O | undefined | void>;
 export type ValidatorFunction<I, O> = SyncValidatorFunction<I, O> | AsyncValidatorFunction<I, O>;
@@ -42,7 +46,7 @@ export type SyncValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M
 
 
 export type ValidatorFunctionList1<I, O> = [ValidatorFunction<I, O>];
-export type ValidatorFunctionList2<I, O, A> = [ValidatorFunction<I, A>, ...ValidatorFunctionList1<A, O, >];
+export type ValidatorFunctionList2<I, O, A> = [ValidatorFunction<I, A>, ...ValidatorFunctionList1<A, O>];
 export type ValidatorFunctionList3<I, O, A, B> = [ValidatorFunction<I, A>, ...ValidatorFunctionList2<A, O, B>];
 export type ValidatorFunctionList4<I, O, A, B, C> = [ValidatorFunction<I, A>, ...ValidatorFunctionList3<A, O, B, C>];
 export type ValidatorFunctionList5<I, O, A, B, C, D> = [ValidatorFunction<I, A>, ...ValidatorFunctionList4<A, O, B, C, D>];
@@ -95,6 +99,7 @@ export type SyncValueValidator<O> =
     | SyncValidatorFunctionList24<any, O, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
     | SyncValidatorFunctionList25<any, O, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
 	| SyncValidatorObject<O>
+    // | SyncValidatingFunction<any, O>
 	;
 
 export type ValueValidator<O> =
@@ -125,6 +130,7 @@ export type ValueValidator<O> =
     | ValidatorFunctionList24<any, O, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
     | ValidatorFunctionList25<any, O, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
 	| ValidatorObject<O>
+    | ValidatingFunction<any, O>
 	;
 
 export type SyncValidatorObject<T> = {
@@ -134,6 +140,36 @@ export type SyncValidatorObject<T> = {
 export type ValidatorObject<T> = {
 	[key in keyof T]: ValueValidator<Awaited<T[key]>>;
 };
+
+export type SyncValidator<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z> =
+	| SyncValidatorFunction<I, O>
+    | SyncValidatingFunction<I, O>
+	| SyncValidatorFunctionList1<I, O>
+	| SyncValidatorFunctionList2<I, O, A>
+	| SyncValidatorFunctionList3<I, O, A, B>
+	| SyncValidatorFunctionList4<I, O, A, B, C>
+	| SyncValidatorFunctionList5<I, O, A, B, C, D>
+	| SyncValidatorFunctionList6<I, O, A, B, C, D, E>
+	| SyncValidatorFunctionList7<I, O, A, B, C, D, E, F>
+	| SyncValidatorFunctionList8<I, O, A, B, C, D, E, F, G>
+	| SyncValidatorFunctionList9<I, O, A, B, C, D, E, F, G, H>
+	| SyncValidatorFunctionList10<I, O, A, B, C, D, E, F, G, H, J>
+	| SyncValidatorFunctionList11<I, O, A, B, C, D, E, F, G, H, J, K>
+	| SyncValidatorFunctionList12<I, O, A, B, C, D, E, F, G, H, J, K, L>
+	| SyncValidatorFunctionList13<I, O, A, B, C, D, E, F, G, H, J, K, L, M>
+	| SyncValidatorFunctionList14<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>
+	| SyncValidatorFunctionList15<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>
+	| SyncValidatorFunctionList16<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>
+	| SyncValidatorFunctionList17<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>
+	| SyncValidatorFunctionList18<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>
+	| SyncValidatorFunctionList19<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>
+	| SyncValidatorFunctionList20<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>
+	| SyncValidatorFunctionList21<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>
+	| SyncValidatorFunctionList22<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>
+	| SyncValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>
+	| SyncValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>
+	| SyncValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>
+	| SyncValidatorObject<O>
 
 export type Validator<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z> =
 	| SyncValidatorFunction<I, O>
@@ -188,6 +224,8 @@ export type Validator<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T
     | ValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>
     | ValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>
     | ValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>
+    | SyncValidatingFunction<I, O>
+    | ValidatingFunction<I, O>
 	| SyncValidatorObject<O>
 	| ValidatorObject<O>
 	;
@@ -214,61 +252,63 @@ export const Failure = function (t: string): never {
 
 
 
-export function validate<I, O>(v: SyncValidatorFunction<I, O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O>(v: SyncValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A>(v: SyncValidatorFunctionList2<I, O, A>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B>(v: SyncValidatorFunctionList3<I, O, A, B>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C>(v: SyncValidatorFunctionList4<I, O, A, B, C>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D>(v: SyncValidatorFunctionList5<I, O, A, B, C, D>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E>(v: SyncValidatorFunctionList6<I, O, A, B, C, D, E>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F>(v: SyncValidatorFunctionList7<I, O, A, B, C, D, E, F>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G>(v: SyncValidatorFunctionList8<I, O, A, B, C, D, E, F, G>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H>(v: SyncValidatorFunctionList9<I, O, A, B, C, D, E, F, G, H>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J>(v: SyncValidatorFunctionList10<I, O, A, B, C, D, E, F, G, H, J>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K>(v: SyncValidatorFunctionList11<I, O, A, B, C, D, E, F, G, H, J, K>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L>(v: SyncValidatorFunctionList12<I, O, A, B, C, D, E, F, G, H, J, K, L>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M>(v: SyncValidatorFunctionList13<I, O, A, B, C, D, E, F, G, H, J, K, L, M>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>(v: SyncValidatorFunctionList14<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>(v: SyncValidatorFunctionList15<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>(v: SyncValidatorFunctionList16<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>(v: SyncValidatorFunctionList17<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>(v: SyncValidatorFunctionList18<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>(v: SyncValidatorFunctionList19<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>(v: SyncValidatorFunctionList20<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>(v: SyncValidatorFunctionList21<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>(v: SyncValidatorFunctionList22<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>(v: SyncValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>(v: SyncValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: SyncValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<I, O>(v: ValidatorFunction<I, O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O>(v: ValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A>(v: ValidatorFunctionList2<I, O, A>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B>(v: ValidatorFunctionList3<I, O, A, B>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C>(v: ValidatorFunctionList4<I, O, A, B, C>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D>(v: ValidatorFunctionList5<I, O, A, B, C, D>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E>(v: ValidatorFunctionList6<I, O, A, B, C, D, E>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F>(v: ValidatorFunctionList7<I, O, A, B, C, D, E, F>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G>(v: ValidatorFunctionList8<I, O, A, B, C, D, E, F, G>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H>(v: ValidatorFunctionList9<I, O, A, B, C, D, E, F, G, H>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J>(v: ValidatorFunctionList10<I, O, A, B, C, D, E, F, G, H, J>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K>(v: ValidatorFunctionList11<I, O, A, B, C, D, E, F, G, H, J, K>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L>(v: ValidatorFunctionList12<I, O, A, B, C, D, E, F, G, H, J, K, L>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M>(v: ValidatorFunctionList13<I, O, A, B, C, D, E, F, G, H, J, K, L, M>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>(v: ValidatorFunctionList14<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>(v: ValidatorFunctionList15<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>(v: ValidatorFunctionList16<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>(v: ValidatorFunctionList17<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>(v: ValidatorFunctionList18<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>(v: ValidatorFunctionList19<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>(v: ValidatorFunctionList20<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>(v: ValidatorFunctionList21<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>(v: ValidatorFunctionList22<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>(v: ValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>(v: ValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: ValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<O>(v: SyncValidatorObject<O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O
-export function validate<O>(v: ValidatorObject<O>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => Promise<O>
-export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: Validator<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): (t: any, cc?: Partial<ValidatorConfiguration>) => O | Promise<O>
+export function validate<I, O>(v: SyncValidatorFunction<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O>(v: SyncValidatingFunction<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O>(v: SyncValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A>(v: SyncValidatorFunctionList2<I, O, A>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B>(v: SyncValidatorFunctionList3<I, O, A, B>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C>(v: SyncValidatorFunctionList4<I, O, A, B, C>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D>(v: SyncValidatorFunctionList5<I, O, A, B, C, D>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E>(v: SyncValidatorFunctionList6<I, O, A, B, C, D, E>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F>(v: SyncValidatorFunctionList7<I, O, A, B, C, D, E, F>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G>(v: SyncValidatorFunctionList8<I, O, A, B, C, D, E, F, G>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H>(v: SyncValidatorFunctionList9<I, O, A, B, C, D, E, F, G, H>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J>(v: SyncValidatorFunctionList10<I, O, A, B, C, D, E, F, G, H, J>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K>(v: SyncValidatorFunctionList11<I, O, A, B, C, D, E, F, G, H, J, K>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L>(v: SyncValidatorFunctionList12<I, O, A, B, C, D, E, F, G, H, J, K, L>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M>(v: SyncValidatorFunctionList13<I, O, A, B, C, D, E, F, G, H, J, K, L, M>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>(v: SyncValidatorFunctionList14<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>(v: SyncValidatorFunctionList15<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>(v: SyncValidatorFunctionList16<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>(v: SyncValidatorFunctionList17<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>(v: SyncValidatorFunctionList18<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>(v: SyncValidatorFunctionList19<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>(v: SyncValidatorFunctionList20<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>(v: SyncValidatorFunctionList21<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>(v: SyncValidatorFunctionList22<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>(v: SyncValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>(v: SyncValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: SyncValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>
+export function validate<I, O>(v: ValidatorFunction<I, O>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O>(v: ValidatingFunction<I, O>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O>(v: ValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A>(v: ValidatorFunctionList2<I, O, A>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B>(v: ValidatorFunctionList3<I, O, A, B>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C>(v: ValidatorFunctionList4<I, O, A, B, C>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D>(v: ValidatorFunctionList5<I, O, A, B, C, D>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E>(v: ValidatorFunctionList6<I, O, A, B, C, D, E>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F>(v: ValidatorFunctionList7<I, O, A, B, C, D, E, F>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G>(v: ValidatorFunctionList8<I, O, A, B, C, D, E, F, G>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H>(v: ValidatorFunctionList9<I, O, A, B, C, D, E, F, G, H>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J>(v: ValidatorFunctionList10<I, O, A, B, C, D, E, F, G, H, J>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K>(v: ValidatorFunctionList11<I, O, A, B, C, D, E, F, G, H, J, K>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L>(v: ValidatorFunctionList12<I, O, A, B, C, D, E, F, G, H, J, K, L>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M>(v: ValidatorFunctionList13<I, O, A, B, C, D, E, F, G, H, J, K, L, M>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>(v: ValidatorFunctionList14<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>(v: ValidatorFunctionList15<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>(v: ValidatorFunctionList16<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>(v: ValidatorFunctionList17<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>(v: ValidatorFunctionList18<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>(v: ValidatorFunctionList19<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>(v: ValidatorFunctionList20<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>(v: ValidatorFunctionList21<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>(v: ValidatorFunctionList22<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>(v: ValidatorFunctionList23<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>(v: ValidatorFunctionList24<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: ValidatorFunctionList25<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<I, O>
+export function validate<O>(v: SyncValidatorObject<O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<unknown, O>
+export function validate<O>(v: ValidatorObject<O>, c?: Partial<ValidatorConfiguration>): AsyncValidatingFunction<unknown, O>
+export function validate<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>(v: Validator<I, O, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, Y, Z>, c?: Partial<ValidatorConfiguration>): ValidatingFunction<I, O>
 {
 	throw 'testing';
 }
@@ -304,12 +344,14 @@ async function test () {
 	const list2: number = validate([isString, toNumber])("")
 	const list3: string = validate([isString, toNumber, intoString])("")
 	const obj: {a: number, b: string} = validate({ a: validate([isString, toNumber]), b: isString })("")
+	const objObj: {a: { c: number }, b: string} = validate({ a: { c: validate([isString, toNumber]) }, b: isString })("")
 	
 	const fnP: Promise<string> = validate(isStringP)("")
 	const list1P: Promise<string> = validate([isStringP])("")
 	const list2P: Promise<number> = validate([isStringP, toNumberP])("")
 	const list3P: Promise<string> = validate([isStringP, toNumberP, intoStringP])("")
 	const objP: Promise<{a: number, b: string}> = validate({ a: [isStringP, toNumberP], b: isStringP })("")
+    const objObjP: Promise<{a: { c: number }, b: string}> = validate({ a: { c: validate([isStringP, toNumberP]) }, b: isString })("")
 	
 	const fnM: Promise<string> = validate(isStringP)("")
 	const list1M: Promise<string> = validate([isStringP])("")
@@ -317,11 +359,15 @@ async function test () {
 	const list2M2: Promise<number> = validate([isStringP, toNumber])("")
 	const list3M: Promise<string> = validate([isString, toNumberP, intoString])("")
 
-	// similar issue to playground? (last one is )
-	const objM: Promise<{a: number, b: string}> = validate({ a: [isStringP, toNumber], b: isString })("")
+	const objV: {a: string, b: string} = validate({ a: validate(isString), b: isString })("")
+	const objL: Promise<string> = validate(validate(isStringP))("")
+	const objVF: Promise<{a: string}> = validate({ a: isStringP })("")
+    const objA: Promise<string> = validate(validate([isStringP]))("");
+	const objI: Promise<{a: string}> = validate({ a: validate([isStringP]) })("")
+	const objD: Promise<{a: string, b: string}> = validate({ a: [isStringP, isString], b: isString })("")
 
-	// can be fixed with adding awaited around ValueValidator
-	const objI: Promise<{a: number, b: string}> = validate({ a: validate([isStringP, toNumberP]), b: validate(isStringP) })("")
+    const objE: Promise<{a: {c: string}, b: string}> = validate({ a: { c: [isStringP, isString] }, b: isString })("")
 
+    const objE: Promise<{a: {c: string}, b: string}> = validate({ a: { c: [isStringP, isString] }, b: isString })("")
 }
 
