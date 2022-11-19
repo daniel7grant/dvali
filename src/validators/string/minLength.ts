@@ -1,7 +1,7 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const minLength =
-    (min: number): ValidatorFunction<string> =>
+    (min: number): ValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

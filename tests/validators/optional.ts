@@ -12,7 +12,7 @@ const conf: ValidatorConfiguration = {
 
 test('optional validator if value is undefined, returns successfully without calling the inner validator', async () => {
     let i = 0;
-    const testValidation = (): ValidatorFunction<string> => async (value) => {
+    const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
         i += 1;
         if (value) {
             return Success();
@@ -47,7 +47,7 @@ test('optional validator if value is undefined, returns successfully without cal
 });
 
 test('optional validator without it, undefined fails', async () => {
-    const testValidation = (): ValidatorFunction<string> => async (value) => {
+    const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
         if (value) {
             return Success();
         }

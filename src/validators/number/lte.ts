@@ -1,7 +1,7 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const lte =
-    (max: number): ValidatorFunction<number> =>
+    (max: number): ValidatorFunction<unknown, number> =>
     (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();

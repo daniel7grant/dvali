@@ -1,7 +1,6 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
-import validateRegex from '../validateRegex.js';
 
-const isUrl = (): ValidatorFunction<string> => (value, conf) => {
+const isUrl = (): ValidatorFunction<unknown, string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

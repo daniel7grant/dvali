@@ -1,6 +1,6 @@
 import { Failure, Success, ValidatorFunction } from '../../types.js';
 
-const tryBool: (t?: any[], f?: any[]) => ValidatorFunction<boolean> =
+const tryBool: (t?: any[], f?: any[]) => ValidatorFunction<unknown, boolean> =
     (truthy = [true, 1], falsey = [false, 0]) =>
     (value, conf) => {
         if (truthy.indexOf(value) !== -1) {

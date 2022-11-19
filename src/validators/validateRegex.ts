@@ -3,7 +3,7 @@ import { Failure, FailureFunction, Ignore, Success, ValidatorFunction } from '..
 const validateRegex = (
     regex: RegExp,
     errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<string> => {
+): ValidatorFunction<unknown, string> => {
     return function (field, conf) {
         if (typeof field !== 'string') {
             return Ignore();

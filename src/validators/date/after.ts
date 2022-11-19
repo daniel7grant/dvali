@@ -3,7 +3,7 @@ import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 const after: (
     date: string | number | Date,
     opts?: { inclusive: boolean }
-) => ValidatorFunction<Date> =
+) => ValidatorFunction<unknown, Date> =
     (date, opts = { inclusive: false }) =>
     (value, conf) => {
         if (!(value instanceof Date)) {

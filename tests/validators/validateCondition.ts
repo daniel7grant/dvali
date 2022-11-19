@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { expect, test } from '@jest/globals';
 import { ValidatorConfiguration } from '../../src/types';
 import validateCondition from '../../src/validators/validateCondition';
 

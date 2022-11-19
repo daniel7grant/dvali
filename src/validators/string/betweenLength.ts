@@ -1,7 +1,7 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const betweenLength =
-    (min: number, max: number): ValidatorFunction<string> =>
+    (min: number, max: number): ValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

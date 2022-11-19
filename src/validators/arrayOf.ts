@@ -2,7 +2,7 @@ import validate from '../validate.js';
 import { Validator, ValidatorFunction, ValidatorState } from '../types.js';
 
 const arrayOf =
-    <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
+    <I, A, B, O>(validator: Validator<I, A, B, O>): ValidatorFunction<unknown, O[]> =>
     (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValues !== 'object' || !Array.isArray(testValues)) {
@@ -10,7 +10,7 @@ const arrayOf =
         }
 
         return Promise.all(
-            testValues.map<Promise<ValidatorState<T>>>((testValue, i) =>
+            testValues.map<Promise<ValidatorState<O>>>((testValue, i) =>
                 validate(validator, {
                     ...conf,
                     name: `${conf.name}[${i}]`,
@@ -30,7 +30,7 @@ const arrayOf =
                 throw validationFailures;
             }
 
-            return results.map(({ value }) => value) as T[];
+            return results.map(({ value }) => value) as O[];
         });
     };
 

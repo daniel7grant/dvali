@@ -1,7 +1,7 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const maxLength =
-    (max: number): ValidatorFunction<string> =>
+    (max: number): ValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

@@ -3,17 +3,17 @@ import arrayOf from '../../src/validators/arrayOf';
 import validate from '../../src/validate';
 import { Failure, Success, ValidatorFunction } from '../../src/types';
 
-const testSuccessfulValidation = (): ValidatorFunction =>
+const testSuccessfulValidation = (): ValidatorFunction<unknown, unknown> =>
     async function (_value, _conf) {
         return Success();
     };
 
-const testFailingValidation = (): ValidatorFunction =>
+const testFailingValidation = (): ValidatorFunction<unknown, unknown> =>
     async function (_value, _conf) {
         return Failure('test failed');
     };
 
-const testMinimumValidation = (): ValidatorFunction =>
+const testMinimumValidation = (): ValidatorFunction<number, unknown> =>
     async function (value, _conf) {
         if (value > 2) {
             return Success();

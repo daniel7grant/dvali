@@ -2,17 +2,21 @@ import {
     Validator,
     ValidatorConfiguration,
     ValidatorFunction,
+    ValidatorFunctionList,
+    ValidatorFunctionList1,
+    ValidatorFunctionList2,
+    ValidatorFunctionList3,
     ValidatorObject,
     ValidatorState,
 } from './types.js';
 
-const resolveValidatorList = function <T>(
-    validators: ValidatorFunction<T>[],
+const resolveValidatorList = function <I, A, B, O>(
+    validators: ValidatorFunctionList<I, A, B, O>,
     value: any,
     conf: ValidatorConfiguration
-): Promise<T> {
-    return validators
-        .reduce<Promise<ValidatorState<T>>>((previousPromise, validator) => {
+): Promise<O> {
+    return (validators as ValidatorFunction<unknown, unknown>[])
+        .reduce<Promise<ValidatorState<unknown>>>((previousPromise, validator) => {
             return previousPromise.then(({ value, failures }) =>
                 validator(value, conf).then(
                     (newValue) => ({
@@ -30,19 +34,19 @@ const resolveValidatorList = function <T>(
             if (failures.length > 0) {
                 throw failures;
             }
-            return value;
+            return value as O;
         });
 };
 
-const resolveValidatorObject = function <T>(
-    validator: ValidatorObject<T>,
+const resolveValidatorObject = function <O>(
+    validator: ValidatorObject<O>,
     testValue: any,
     conf: ValidatorConfiguration
-): Promise<T> {
-    const keys = Object.keys(validator) as (keyof T)[];
+): Promise<O> {
+    const keys = Object.keys(validator) as (keyof O)[];
     return Promise.all(
-        keys.map<Promise<ValidatorState<[keyof T, T[keyof T]]>>>((i) =>
-            validate(validator[i], {
+        keys.map<Promise<ValidatorState<[keyof O, O[keyof O]]>>>((i: keyof O) =>
+            validate<any, any, any, O[keyof O]>(validator[i as keyof O], {
                 ...conf,
                 name: i as string,
                 path: conf.path.concat(i as string),
@@ -53,7 +57,7 @@ const resolveValidatorObject = function <T>(
             )
         )
     ).then((results) => {
-        let sanitizedObject: { [key in keyof T]?: T[key] } = {};
+        let sanitizedObject: { [key in keyof O]?: O[key] } = {};
         let validationFailures: string[] = [];
 
         results.forEach((result) => {
@@ -69,29 +73,30 @@ const resolveValidatorObject = function <T>(
         if (validationFailures.length > 0) {
             throw validationFailures;
         }
-        return sanitizedObject as T;
+        return sanitizedObject as O;
     });
 };
 
-const isValidatorFunctionList = <T>(
-    validator: Validator<T>
-): validator is ValidatorFunction<T>[] => {
+const isValidatorFunctionList = <I, A, B, O>(validator: Validator<I, A, B, O>): validator is ValidatorFunctionList<I, A, B, O> => {
     return typeof validator === 'object' && Array.isArray(validator);
 };
 
-const isValidatorObject = <T>(validator: Validator<T>): validator is ValidatorObject<T> => {
+const isValidatorObject = <I, A, B, O>(validator: Validator<I, A, B, O>): validator is ValidatorObject<O> => {
     return typeof validator === 'object' && !Array.isArray(validator);
 };
 
-const isValidatorFunction = <T>(validator: Validator<T>): validator is ValidatorFunction<T> => {
+const isValidatorFunction = <I, A, B, O>(validator: Validator<I, A, B, O>): validator is ValidatorFunction<I, O> => {
     return typeof validator === 'function';
 };
 
-const validate = function <T>(
-    validator: Validator<T>,
-    validateConf?: Partial<ValidatorConfiguration>
-) {
-    return function (testValue: any, testConf?: Partial<ValidatorConfiguration>): Promise<T> {
+export function validate<I, O>(v: ValidatorFunction<I, O>, c?: Partial<ValidatorConfiguration>): (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>
+export function validate<I, O>(v: ValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>
+export function validate<I, A, O>(v: ValidatorFunctionList2<I, A, O>, c?: Partial<ValidatorConfiguration>): (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>
+export function validate<I, A, B, O>(v: ValidatorFunctionList3<I, A, B, O>, c?: Partial<ValidatorConfiguration>): (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>
+export function validate<I, O>(v: ValidatorObject<O>, c?: Partial<ValidatorConfiguration>): (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>
+export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateConf?: Partial<ValidatorConfiguration>): (val: I, testConf?: Partial<ValidatorConfiguration>) => Promise<O> 
+export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateConf?: Partial<ValidatorConfiguration>): (val: I, testConf?: Partial<ValidatorConfiguration>) => Promise<O> {
+    return function (testValue: any, testConf?: Partial<ValidatorConfiguration>): Promise<O> {
         // Set defaults to configuration
         const conf: ValidatorConfiguration = {
             name: 'object',

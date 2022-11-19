@@ -2,7 +2,7 @@ import { InferValidator, Success, Validator, ValidatorFunction } from '../types.
 import validate from '../validate.js';
 
 const either =
-    <V extends Validator<unknown>>(validators: V[]): ValidatorFunction<InferValidator<V>> =>
+    <V extends Validator<unknown, unknown, unknown, unknown>>(validators: V[]): ValidatorFunction<unknown, InferValidator<V>> =>
         (value, conf) => {
             return Promise.allSettled(
                 validators.map(

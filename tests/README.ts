@@ -8,6 +8,7 @@ import validate, {
     Failure,
     Ignore,
     Validator,
+    ValidatorObject,
 } from '../src/index';
 
 test('README: Validation functions', async () => {
@@ -59,7 +60,7 @@ test('README: Bring your own validator - isUniqueEmail starting', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
             const exists = await db.users.find({ email }); // User | null
             if (!exists) {
@@ -90,7 +91,7 @@ test('README: Bring your own validator - isUniqueEmail full', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
             if (typeof email !== 'string') {
                 return Ignore();
@@ -133,7 +134,7 @@ test('README: Sanitize and transform - hash', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
             if (typeof email !== 'string') {
                 return Ignore();
@@ -152,7 +153,7 @@ test('README: Sanitize and transform - hash', async () => {
         },
     };
 
-    const hash = (): ValidatorFunction<string> =>
+    const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
             if (typeof password !== 'string') {
                 return Ignore();
@@ -196,7 +197,7 @@ test('README: Higher-order validators - confirmPassword', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
             if (typeof email !== 'string') {
                 return Ignore();
@@ -215,7 +216,7 @@ test('README: Higher-order validators - confirmPassword', async () => {
         },
     };
 
-    const hash = (): ValidatorFunction<string> =>
+    const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
             if (typeof password !== 'string') {
                 return Ignore();
@@ -224,7 +225,12 @@ test('README: Higher-order validators - confirmPassword', async () => {
             return Success(hashedPassword);
         };
 
-    const confirmPassword = <T>(validator: Validator<T>): ValidatorFunction<T> =>
+    const confirmPassword = <
+        I extends { email: string; password: string; password_confirm: string },
+        O extends { email: string; password: string }
+    >(
+        validator: ValidatorObject<O>
+    ): ValidatorFunction<I, O> =>
         async function (user, conf) {
             if (!user?.password_confirm) {
                 return Failure('You should confirm your password.');

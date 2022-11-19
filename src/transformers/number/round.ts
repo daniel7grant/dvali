@@ -1,6 +1,6 @@
 import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
-const round = (): ValidatorFunction<number> => (value, conf) => {
+const round = (): ValidatorFunction<unknown, number> => (value, conf) => {
     if (typeof value !== 'number' || Number.isNaN(value)) {
         return Ignore();
     }

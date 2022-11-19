@@ -1,6 +1,6 @@
 import { Success, ValidatorFunction } from '../../types.js';
 
-const toString = (): ValidatorFunction<string> => (value, conf) => {
+const toString = (): ValidatorFunction<unknown, string> => (value, conf) => {
     return Success('' + value);
 };
 

@@ -4,12 +4,12 @@ const inRange: (
     minDate: string | number | Date,
     maxDate: string | number | Date,
     opts?: { minInclusive?: boolean; maxInclusive?: boolean }
-) => ValidatorFunction<Date> =
+) => ValidatorFunction<unknown, Date> =
     (
         minDate,
         maxDate,
         opts = { minInclusive: false, maxInclusive: false }
-    ): ValidatorFunction<Date> =>
+    ): ValidatorFunction<unknown, Date> =>
     (value, conf) => {
         if (!(value instanceof Date)) {
             return Ignore();

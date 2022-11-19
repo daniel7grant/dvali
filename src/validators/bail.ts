@@ -1,14 +1,14 @@
-import { ValidatorFunction, ValidatorState } from '../types.js';
+import { ValidatorFunction, ValidatorFunctionList, ValidatorState } from '../types.js';
 import validate from '../validate.js';
 
-const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
+const bail = <I, A, O, B>(validators: ValidatorFunctionList<I, A, O, B>): ValidatorFunction<unknown, O> => {
     if (!Array.isArray(validators)) {
         // If not an array is passed, simply continue validation
         return validate(validators);
     }
     return (value, conf) => {
-        return validators
-            .reduce<Promise<ValidatorState<T>>>((previousPromise, validator) => {
+        return (validators as ValidatorFunction<unknown, unknown>[])
+            .reduce<Promise<ValidatorState<unknown>>>((previousPromise, validator) => {
                 return previousPromise.then(({ value, failures }) =>
                     failures.length > 0
                         ? { value, failures } // Short-circuit for any error
@@ -28,7 +28,7 @@ const bail = <T>(validators: ValidatorFunction<T>[]): ValidatorFunction<T> => {
                 if (failures.length > 0) {
                     throw failures;
                 }
-                return value;
+                return value as O;
             });
     };
 };

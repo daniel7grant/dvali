@@ -2,7 +2,9 @@ import validate from '../validate.js';
 import { ValidatorFunction, Validator, Success } from '../types.js';
 
 const optional =
-    <T>(validators: Validator<T>): ValidatorFunction<T | undefined> =>
+    <O>(
+        validators: Validator<unknown, unknown, unknown, O>
+    ): ValidatorFunction<unknown, O | undefined> =>
     (value, conf) => {
         if (typeof value === 'undefined') {
             return Success();

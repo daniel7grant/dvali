@@ -13,13 +13,13 @@ const conf: ValidatorConfiguration = {
 test('bail runs over each test if they are not failing', async () => {
     let i = 0;
 
-    const increment = (): ValidatorFunction<void> => async () => {
+    const increment = (): ValidatorFunction<unknown, unknown> => async () => {
         i += 1;
         return Success();
     };
 
     // To test whether it works with returning value
-    const increment2 = (): ValidatorFunction<void> => async (value) => {
+    const increment2 = (): ValidatorFunction<unknown, unknown> => async (value) => {
         i += 1;
         return Success(value);
     };
@@ -33,7 +33,7 @@ test('bail runs over each test if they are not failing', async () => {
 test('bail stops after first failing test', async () => {
     let i = 0;
 
-    const failIncrement = (): ValidatorFunction<void> => async () => {
+    const failIncrement = (): ValidatorFunction<unknown, unknown> => async () => {
         i += 1;
         return Failure('Incrementation failed.');
     };
@@ -49,7 +49,7 @@ test('bail stops after first failing test', async () => {
 });
 
 test('bail just passes to validate if the passed value is not an array', async () => {
-    const increment = (): ValidatorFunction<boolean> => async (value) => {
+    const increment = (): ValidatorFunction<unknown, boolean> => async (value) => {
         if (value) {
             return Success();
         } else {

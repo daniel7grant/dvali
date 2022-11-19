@@ -1,6 +1,6 @@
 import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
-const lower = (): ValidatorFunction<string> => (value, conf) => {
+const lower = (): ValidatorFunction<unknown, string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

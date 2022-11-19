@@ -1,6 +1,6 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
-const closeTo: (v: number, e?: number) => ValidatorFunction<number> =
+const closeTo: (v: number, e?: number) => ValidatorFunction<unknown, number> =
     (exactValue, epsilon = Number.EPSILON) =>
     (value, conf) => {
         if (typeof value !== 'number') {

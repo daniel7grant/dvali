@@ -1,7 +1,7 @@
 import { Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const truncate =
-    (n: number): ValidatorFunction<string> =>
+    (n: number): ValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

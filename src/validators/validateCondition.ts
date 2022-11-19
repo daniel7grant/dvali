@@ -6,14 +6,14 @@ import {
     ValidatorFunction,
 } from '../types.js';
 
-interface ConditionFunction<T> {
-    (v: T, conf: ValidatorConfiguration): boolean;
+interface ConditionFunction<I> {
+    (v: I, conf: ValidatorConfiguration): boolean;
 }
 
-const validateCondition = <T>(
-    condition: ConditionFunction<T>,
-    errorMsg: FailureFunction<T> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<T> => {
+const validateCondition = <I, O>(
+    condition: ConditionFunction<I>,
+    errorMsg: FailureFunction<I> = (_, { name }) => `Field ${name} format is invalid.`
+): ValidatorFunction<I, O> => {
     return function (field, conf) {
         if (condition(field, conf)) {
             return Success();

@@ -1,7 +1,7 @@
 import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
 
 const isMultipleOf =
-    (n: number): ValidatorFunction<number> =>
+    (n: number): ValidatorFunction<unknown, number> =>
     (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();
