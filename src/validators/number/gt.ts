@@ -1,7 +1,7 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const gt =
-    (min: number): ValidatorFunction<unknown, number> =>
+    (min: number): SyncValidatorFunction<unknown, number> =>
     (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();

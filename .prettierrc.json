@@ -2,5 +2,11 @@
     "tabWidth": 4,
     "singleQuote": true,
     "printWidth": 100,
-    "semi": true
+    "semi": true,
+    "overrides": [
+        {
+            "files": ["**/types.ts", "**/validate.ts"],
+            "options": { "printWidth": 1000 }
+        }
+    ]
 }

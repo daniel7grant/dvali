@@ -1,7 +1,7 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const insensitiveEquals =
-    (to: string): ValidatorFunction<unknown, string> =>
+    (to: string): SyncValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

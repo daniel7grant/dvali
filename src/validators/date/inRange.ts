@@ -1,15 +1,15 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const inRange: (
     minDate: string | number | Date,
     maxDate: string | number | Date,
     opts?: { minInclusive?: boolean; maxInclusive?: boolean }
-) => ValidatorFunction<unknown, Date> =
+) => SyncValidatorFunction<unknown, Date> =
     (
         minDate,
         maxDate,
         opts = { minInclusive: false, maxInclusive: false }
-    ): ValidatorFunction<unknown, Date> =>
+    ): SyncValidatorFunction<unknown, Date> =>
     (value, conf) => {
         if (!(value instanceof Date)) {
             return Ignore();

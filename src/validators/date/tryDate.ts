@@ -1,6 +1,6 @@
-import { Failure, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Success, SyncValidatorFunction } from '../../types.js';
 
-const tryDate = (): ValidatorFunction<string | number | Date, Date> => (value, conf) => {
+const tryDate = (): SyncValidatorFunction<string | number | Date, Date> => (value, conf) => {
     const parsed = value instanceof Date ? value : new Date(value);
     if (!Number.isNaN(parsed.getTime())) {
         return Success(parsed);

@@ -1,7 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const toMultipleOf =
-    (n: number, round = Math.round): ValidatorFunction<unknown, number> =>
+    (n: number, round = Math.round):SyncValidatorFunction<unknown, number> =>
     (value, conf) => {
         if (typeof value !== 'number' || Number.isNaN(value)) {
             return Ignore();

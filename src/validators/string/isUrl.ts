@@ -1,6 +1,6 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
-const isUrl = (): ValidatorFunction<unknown, string> => (value, conf) => {
+const isUrl = (): SyncValidatorFunction<unknown, string> => (value, conf) => {
     if (typeof value !== 'string') {
         return Ignore();
     }

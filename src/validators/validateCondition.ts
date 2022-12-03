@@ -3,7 +3,7 @@ import {
     FailureFunction,
     Success,
     ValidatorConfiguration,
-    ValidatorFunction,
+    SyncValidatorFunction,
 } from '../types.js';
 
 interface ConditionFunction<I> {
@@ -13,7 +13,7 @@ interface ConditionFunction<I> {
 const validateCondition = <I, O>(
     condition: ConditionFunction<I>,
     errorMsg: FailureFunction<I> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<I, O> => {
+): SyncValidatorFunction<I, O> => {
     return function (field, conf) {
         if (condition(field, conf)) {
             return Success();

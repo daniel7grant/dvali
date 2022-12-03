@@ -1,7 +1,7 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const betweenLength =
-    (min: number, max: number): ValidatorFunction<unknown, string> =>
+    (min: number, max: number): SyncValidatorFunction<unknown, string> =>
     (value, conf) => {
         if (typeof value !== 'string') {
             return Ignore();

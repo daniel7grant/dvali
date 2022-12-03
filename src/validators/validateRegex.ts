@@ -1,9 +1,9 @@
-import { Failure, FailureFunction, Ignore, Success, ValidatorFunction } from '../types.js';
+import { Failure, FailureFunction, Ignore, Success, SyncValidatorFunction } from '../types.js';
 
 const validateRegex = (
     regex: RegExp,
     errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
-): ValidatorFunction<unknown, string> => {
+): SyncValidatorFunction<unknown, string> => {
     return function (field, conf) {
         if (typeof field !== 'string') {
             return Ignore();

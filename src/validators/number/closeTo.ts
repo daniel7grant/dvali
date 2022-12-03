@@ -1,6 +1,6 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
-const closeTo: (v: number, e?: number) => ValidatorFunction<unknown, number> =
+const closeTo: (v: number, e?: number) => SyncValidatorFunction<unknown, number> =
     (exactValue, epsilon = Number.EPSILON) =>
     (value, conf) => {
         if (typeof value !== 'number') {

@@ -1,15 +1,15 @@
 import validate from '../validate.js';
-import { ValidatorFunction, Validator, Success } from '../types.js';
+import { Validator, Success, SyncValidator, ValidatorConfiguration } from '../types.js';
 
-const optional =
-    <O>(
-        validators: Validator<unknown, unknown, unknown, O>
-    ): ValidatorFunction<unknown, O | undefined> =>
-    (value, conf) => {
+function optional<I, O>(
+    validators: Validator<I, unknown, unknown, O>
+): (val: I, c: ValidatorConfiguration) => O | undefined | Promise<O | undefined> {
+    return (value, conf) => {
         if (typeof value === 'undefined') {
             return Success();
         }
         return validate(validators, conf)(value);
     };
+}
 
 export default optional;
