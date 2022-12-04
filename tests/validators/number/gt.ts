@@ -12,10 +12,10 @@ const conf: ValidatorConfiguration = {
 test('gt when the number is greater returns success', async () => {
     const validateGreaterThanTen = gt(10);
 
-    await expect(validateGreaterThanTen(20, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(500, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(1000, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(Infinity, conf)).resolves.toBeUndefined();
+    await expect(validateGreaterThanTen(20, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(500, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(1000, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(Infinity, conf)).toBeUndefined();
 });
 
 test('gt when the number is lower or equal fails', async () => {
@@ -46,9 +46,9 @@ test('gt when the number is lower or equal fails', async () => {
 test('gt ignores non-number inputs', async () => {
     const validateGreaterThanTen = gt(10);
 
-    await expect(validateGreaterThanTen('6' as any, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen(null as any, conf)).resolves.toBeUndefined();
-    await expect(validateGreaterThanTen({} as any, conf)).resolves.toBeUndefined();
+    await expect(validateGreaterThanTen('6' as any, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(NaN as any, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(undefined as any, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen(null as any, conf)).toBeUndefined();
+    await expect(validateGreaterThanTen({} as any, conf)).toBeUndefined();
 });

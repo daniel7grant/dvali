@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('minLength if passed words length is as at least long as the limit, returns success', async () => {
     const validateLength = minLength(5);
 
-    await expect(validateLength('smart', conf)).resolves.toBeUndefined();
-    await expect(validateLength('serious', conf)).resolves.toBeUndefined();
-    await expect(validateLength('attractive', conf)).resolves.toBeUndefined();
+    await expect(validateLength('smart', conf)).toBeUndefined();
+    await expect(validateLength('serious', conf)).toBeUndefined();
+    await expect(validateLength('attractive', conf)).toBeUndefined();
 });
 
 test('minLength if passed word is shorter, fails', async () => {
@@ -36,12 +36,12 @@ test('minLength if passed word is shorter, fails', async () => {
 test('minLength if passed word is not a string, ignores', async () => {
     const validateLength = minLength(5);
 
-    await expect(validateLength(8 as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(true as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength([] as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(Array(8).fill('a') as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(8 as any, conf)).toBeUndefined();
+    await expect(validateLength(NaN as any, conf)).toBeUndefined();
+    await expect(validateLength(true as any, conf)).toBeUndefined();
+    await expect(validateLength([] as any, conf)).toBeUndefined();
+    await expect(validateLength(Array(8).fill('a') as any, conf)).toBeUndefined();
+    await expect(validateLength({} as any, conf)).toBeUndefined();
+    await expect(validateLength(undefined as any, conf)).toBeUndefined();
+    await expect(validateLength(null as any, conf)).toBeUndefined();
 });

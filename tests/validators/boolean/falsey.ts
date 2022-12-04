@@ -12,13 +12,13 @@ const conf: ValidatorConfiguration = {
 test('falsey with false, zero, empty string or nullish returns success', async () => {
     const validateFalsey = falsey();
 
-    await expect(validateFalsey(false, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey(0 as any, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey(-0 as any, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey('' as any, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey(null as any, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateFalsey(NaN as any, conf)).resolves.toBeUndefined();
+    await expect(validateFalsey(false, conf)).toBeUndefined();
+    await expect(validateFalsey(0 as any, conf)).toBeUndefined();
+    await expect(validateFalsey(-0 as any, conf)).toBeUndefined();
+    await expect(validateFalsey('' as any, conf)).toBeUndefined();
+    await expect(validateFalsey(null as any, conf)).toBeUndefined();
+    await expect(validateFalsey(undefined as any, conf)).toBeUndefined();
+    await expect(validateFalsey(NaN as any, conf)).toBeUndefined();
 });
 
 test('falsey with anything other fails', async () => {

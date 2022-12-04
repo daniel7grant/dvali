@@ -12,14 +12,14 @@ const conf: ValidatorConfiguration = {
 test('isNumber, when number is passed, returns success', async () => {
     const validateNumber = isNumber();
 
-    await expect(validateNumber(-1, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(0, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(123, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(1e10, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(123.45, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(1 / 10, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(Infinity, conf)).resolves.toBeUndefined();
-    await expect(validateNumber(-Infinity, conf)).resolves.toBeUndefined();
+    await expect(validateNumber(-1, conf)).toBeUndefined();
+    await expect(validateNumber(0, conf)).toBeUndefined();
+    await expect(validateNumber(123, conf)).toBeUndefined();
+    await expect(validateNumber(1e10, conf)).toBeUndefined();
+    await expect(validateNumber(123.45, conf)).toBeUndefined();
+    await expect(validateNumber(1 / 10, conf)).toBeUndefined();
+    await expect(validateNumber(Infinity, conf)).toBeUndefined();
+    await expect(validateNumber(-Infinity, conf)).toBeUndefined();
 });
 
 test('isNumber, when not a number is passed, fails', async () => {

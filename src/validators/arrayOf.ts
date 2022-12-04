@@ -1,4 +1,4 @@
-import validate, { isAllNonPromise, isPromise } from '../validate.js';
+import validate, { hasNoPromise, isPromise } from '../validate.js';
 import {
     Validator,
     SyncValidatorFunction,
@@ -10,13 +10,13 @@ import {
 
 function arrayOf<I, A, B, O>(
     validator: SyncValidator<I, A, B, O>
-): (val: I, c: ValidatorConfiguration) => O[];
+): (val: unknown, c: ValidatorConfiguration) => O[];
 function arrayOf<I, A, B, O>(
     validator: Validator<I, A, B, O>
-): (val: I, c: ValidatorConfiguration) => Promise<O[]>;
+): (val: unknown, c: ValidatorConfiguration) => Promise<O[]>;
 function arrayOf<I, A, B, O>(
     validator: Validator<I, A, B, O>
-): (val: I, c: ValidatorConfiguration) => O[] | Promise<O[]> {
+): (val: unknown, c: ValidatorConfiguration) => O[] | Promise<O[]> {
     return (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValues !== 'object' || !Array.isArray(testValues)) {
@@ -44,7 +44,7 @@ function arrayOf<I, A, B, O>(
             }
         );
 
-        if (!isAllNonPromise(results)) {
+        if (!hasNoPromise(results)) {
             return Promise.all(results).then((results) => {
                 const failures = results.flatMap((result) => result.failures);
                 if (failures.length > 0) {

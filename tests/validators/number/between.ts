@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('between, when the number is between the two values, return success', async () => {
     const validateBetween = between(1, 10);
 
-    await expect(validateBetween(2, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(5, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(8, conf)).resolves.toBeUndefined();
+    await expect(validateBetween(2, conf)).toBeUndefined();
+    await expect(validateBetween(5, conf)).toBeUndefined();
+    await expect(validateBetween(8, conf)).toBeUndefined();
 });
 
 test('between, when the number is not between or equal the two values, throws', async () => {
@@ -60,7 +60,7 @@ test('between, when the number is not between or equal the two values, throws', 
 test('between, when min inclusive is set, returns success for min and failure for max', async () => {
     const validateBetween = between(1, 10, { minInclusive: true });
 
-    await expect(validateBetween(1, conf)).resolves.toBeUndefined();
+    await expect(validateBetween(1, conf)).toBeUndefined();
 
     try {
         await validateBetween(10, conf);
@@ -72,7 +72,7 @@ test('between, when min inclusive is set, returns success for min and failure fo
 test('between, when max inclusive is set, returns failure for min and success for max', async () => {
     const validateBetween = between(1, 10, { maxInclusive: true });
 
-    await expect(validateBetween(10, conf)).resolves.toBeUndefined();
+    await expect(validateBetween(10, conf)).toBeUndefined();
 
     try {
         await validateBetween(1, conf);
@@ -84,16 +84,16 @@ test('between, when max inclusive is set, returns failure for min and success fo
 test('between, when both inclusive is set, returns success for both limits', async () => {
     const validateBetween = between(1, 10, { minInclusive: true, maxInclusive: true });
 
-    await expect(validateBetween(1, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(10, conf)).resolves.toBeUndefined();
+    await expect(validateBetween(1, conf)).toBeUndefined();
+    await expect(validateBetween(10, conf)).toBeUndefined();
 });
 
 test('between ignores non-number inputs', async () => {
     const validateBetween = between(1, 10);
 
-    await expect(validateBetween('6' as any, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateBetween(null as any, conf)).resolves.toBeUndefined();
-    await expect(validateBetween({} as any, conf)).resolves.toBeUndefined();
+    await expect(validateBetween('6' as any, conf)).toBeUndefined();
+    await expect(validateBetween(NaN as any, conf)).toBeUndefined();
+    await expect(validateBetween(undefined as any, conf)).toBeUndefined();
+    await expect(validateBetween(null as any, conf)).toBeUndefined();
+    await expect(validateBetween({} as any, conf)).toBeUndefined();
 });

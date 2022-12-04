@@ -2,17 +2,17 @@ import { describe, expect, test } from '@jest/globals';
 import validate from '../src/validate';
 import { Failure, Success, ValidatorFunction } from '../src/types';
 
-const testSuccessfulValidation = (): ValidatorFunction<unknown, unknown> =>
+const testSuccessfulValidation = (): ValidatorFunction<string, string> =>
     async function (_value, _conf) {
         return Success();
     };
 
-const testFailingValidation = (): ValidatorFunction<unknown, unknown> =>
+const testFailingValidation = (): ValidatorFunction<string, string> =>
     async function (_value, _conf) {
         return Failure('test failed');
     };
 
-const testTransformValidation = (): ValidatorFunction<string, unknown> =>
+const testTransformValidation = (): ValidatorFunction<string, string> =>
     async function (value, _conf) {
         return Success(value + value);
     };
@@ -121,7 +121,7 @@ test('validate with object works with nested objects', async () => {
 test('validate with object throws array of error messages', async () => {
     const value = { key: 'asdasd', another: 'dsadas' };
     const validateTest = validate({
-        key: [testFailingValidation()],
+        key: testFailingValidation(),
         another: testFailingValidation(),
     });
 

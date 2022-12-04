@@ -15,7 +15,7 @@ test('isDate when date is passed returns successfully', async () => {
     const dateString = '2021-08-27';
     const date = new Date(dateString);
 
-    await expect(sanitizeDate(date, conf)).resolves.toBeUndefined();
+    await expect(sanitizeDate(date, conf)).toBeUndefined();
 });
 
 test('isDate when invalid date is passed fails', async () => {

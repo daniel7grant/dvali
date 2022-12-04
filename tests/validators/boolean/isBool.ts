@@ -12,8 +12,8 @@ const conf: ValidatorConfiguration = {
 test('isBool with true or false returns success', async () => {
     const validateBool = isBool();
 
-    await expect(validateBool(true, conf)).resolves.toBeUndefined();
-    await expect(validateBool(false, conf)).resolves.toBeUndefined();
+    await expect(validateBool(true, conf)).toBeUndefined();
+    await expect(validateBool(false, conf)).toBeUndefined();
 });
 
 test('isBool with anything other fails', async () => {

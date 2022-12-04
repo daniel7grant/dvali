@@ -12,10 +12,10 @@ const conf: ValidatorConfiguration = {
 test('insensitiveEquals, if the two strings are the same, returns successfully', async () => {
     const validateInsensitiveEquals = insensitiveEquals('AsdasD');
 
-    await expect(validateInsensitiveEquals('asdasd', conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals('AsdasD', conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals('ASDASD', conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals('AsDaSd', conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals('asdasd', conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals('AsdasD', conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals('ASDASD', conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals('AsDaSd', conf)).toBeUndefined();
 });
 
 test('insensitiveEquals, if the two string are the same, fails', async () => {
@@ -43,14 +43,14 @@ test('insensitiveEquals, if the two string are the same, fails', async () => {
 test('insensitiveEquals, if not a string is given, ignores', async () => {
     const validateInsensitiveEquals = insensitiveEquals('AsdasD');
 
-    await expect(validateInsensitiveEquals(6 as any, conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals(true as any, conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals([] as any, conf)).resolves.toBeUndefined();
+    await expect(validateInsensitiveEquals(6 as any, conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals(NaN as any, conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals(true as any, conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals([] as any, conf)).toBeUndefined();
     await expect(
         validateInsensitiveEquals(['A', 's', 'd', 'a', 's', 'D'] as any, conf)
-    ).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateInsensitiveEquals(null as any, conf)).resolves.toBeUndefined();
+    ).toBeUndefined();
+    await expect(validateInsensitiveEquals({} as any, conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals(undefined as any, conf)).toBeUndefined();
+    await expect(validateInsensitiveEquals(null as any, conf)).toBeUndefined();
 });

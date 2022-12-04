@@ -6,7 +6,7 @@ const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {},
 
 test('validateCondition function returns undefined if regex applies', async () => {
     const validateTest = validateCondition(() => true);
-    await expect(validateTest('', conf)).resolves.toBeUndefined();
+    await expect(validateTest('', conf)).toBeUndefined();
 });
 
 test('validateCondition function throws error if regex fails', async () => {

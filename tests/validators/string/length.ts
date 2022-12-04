@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('length if passed words length is the same, returns success', async () => {
     const validateLength = length(5);
 
-    await expect(validateLength('smart', conf)).resolves.toBeUndefined();
-    await expect(validateLength('young', conf)).resolves.toBeUndefined();
-    await expect(validateLength('brave', conf)).resolves.toBeUndefined();
+    await expect(validateLength('smart', conf)).toBeUndefined();
+    await expect(validateLength('young', conf)).toBeUndefined();
+    await expect(validateLength('brave', conf)).toBeUndefined();
 });
 
 test('length if passed word is shorter or longer, fails', async () => {
@@ -36,12 +36,12 @@ test('length if passed word is shorter or longer, fails', async () => {
 test('length if passed word is not a string, ignores', async () => {
     const validateLength = length(5);
 
-    await expect(validateLength(8 as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(true as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength([] as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(Array(8).fill('a') as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(8 as any, conf)).toBeUndefined();
+    await expect(validateLength(NaN as any, conf)).toBeUndefined();
+    await expect(validateLength(true as any, conf)).toBeUndefined();
+    await expect(validateLength([] as any, conf)).toBeUndefined();
+    await expect(validateLength(Array(8).fill('a') as any, conf)).toBeUndefined();
+    await expect(validateLength({} as any, conf)).toBeUndefined();
+    await expect(validateLength(undefined as any, conf)).toBeUndefined();
+    await expect(validateLength(null as any, conf)).toBeUndefined();
 });

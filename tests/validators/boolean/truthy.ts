@@ -12,12 +12,12 @@ const conf: ValidatorConfiguration = {
 test('truthy with other values returns success', async () => {
     const validateTruthy = truthy();
 
-    await expect(validateTruthy(true, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy(1 as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy(-1 as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy('string' as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy([] as any, conf)).resolves.toBeUndefined();
+    await expect(validateTruthy(true, conf)).toBeUndefined();
+    await expect(validateTruthy(1 as any, conf)).toBeUndefined();
+    await expect(validateTruthy(-1 as any, conf)).toBeUndefined();
+    await expect(validateTruthy('string' as any, conf)).toBeUndefined();
+    await expect(validateTruthy({} as any, conf)).toBeUndefined();
+    await expect(validateTruthy([] as any, conf)).toBeUndefined();
 });
 
 test('truthy with false, zero, empty string or nullish other fails', async () => {

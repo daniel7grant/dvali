@@ -11,23 +11,23 @@ const conf: ValidatorConfiguration = {
 
 test('equals validator if the value is equals to the param, returns successfully', async () => {
     const validateStringEquality = equals('asdasd');
-    await expect(validateStringEquality('asdasd', conf)).resolves.toBeUndefined();
+    await expect(validateStringEquality('asdasd', conf)).toBeUndefined();
 
     const validateNumberEquality = equals(100);
-    await expect(validateNumberEquality(100, conf)).resolves.toBeUndefined();
+    await expect(validateNumberEquality(100, conf)).toBeUndefined();
 
     const validateBoolEquality = equals(true);
-    await expect(validateBoolEquality(true, conf)).resolves.toBeUndefined();
+    await expect(validateBoolEquality(true, conf)).toBeUndefined();
 
     const obj = {};
     const validateObjectEquality = equals(obj);
-    await expect(validateObjectEquality(obj, conf)).resolves.toBeUndefined();
+    await expect(validateObjectEquality(obj, conf)).toBeUndefined();
 
     const validateNullEquality = equals(null);
-    await expect(validateNullEquality(null, conf)).resolves.toBeUndefined();
+    await expect(validateNullEquality(null, conf)).toBeUndefined();
 
     const validateUndefinedEquality = equals(undefined);
-    await expect(validateUndefinedEquality(undefined, conf)).resolves.toBeUndefined();
+    await expect(validateUndefinedEquality(undefined, conf)).toBeUndefined();
 });
 
 test('equals validator if the value is not equals, fails', async () => {

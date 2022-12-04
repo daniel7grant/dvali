@@ -1,5 +1,5 @@
 import { InferValidator, Success, Validator, ValidatorConfiguration } from '../types.js';
-import validate, { isAllNonPromise } from '../validate.js';
+import validate, { hasNoPromise } from '../validate.js';
 
 function either<V extends Validator<unknown, unknown, unknown, unknown>>(
     validators: V[]
@@ -18,7 +18,7 @@ function either<V extends Validator<unknown, unknown, unknown, unknown>>(
                     | Promise<InferValidator<V>>;
             });
 
-            if (!isAllNonPromise(results)) {
+            if (!hasNoPromise(results)) {
                 return Promise.allSettled(results).then((results) => {
                     const fulfilledPromise = results.find(
                         <T>(result: PromiseSettledResult<T>): result is PromiseFulfilledResult<T> =>

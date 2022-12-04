@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('isEmail, if valid email is given, returns successfully', async () => {
     const validateEmail = isEmail();
 
-    await expect(validateEmail('support@gmail.com', conf)).resolves.toBeUndefined();
-    await expect(validateEmail('cat@dog.ninja', conf)).resolves.toBeUndefined();
-    await expect(validateEmail('asd@asd.asd', conf)).resolves.toBeUndefined();
+    await expect(validateEmail('support@gmail.com', conf)).toBeUndefined();
+    await expect(validateEmail('cat@dog.ninja', conf)).toBeUndefined();
+    await expect(validateEmail('asd@asd.asd', conf)).toBeUndefined();
 });
 
 test('isEmail, if invalid email is given, fails', async () => {
@@ -60,14 +60,14 @@ test('isEmail, if invalid email is given, fails', async () => {
 test('isEmail, if not a string is given, ignores', async () => {
     const validateEmail = isEmail();
 
-    await expect(validateEmail(8 as any, conf)).resolves.toBeUndefined();
-    await expect(validateEmail(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateEmail(true as any, conf)).resolves.toBeUndefined();
-    await expect(validateEmail([] as any, conf)).resolves.toBeUndefined();
+    await expect(validateEmail(8 as any, conf)).toBeUndefined();
+    await expect(validateEmail(NaN as any, conf)).toBeUndefined();
+    await expect(validateEmail(true as any, conf)).toBeUndefined();
+    await expect(validateEmail([] as any, conf)).toBeUndefined();
     await expect(
         validateEmail(['a', 's', 'd', '@', 'a', 's', 'd', '.', 'a', 's', 'd'] as any, conf)
-    ).resolves.toBeUndefined();
-    await expect(validateEmail({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateEmail(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateEmail(null as any, conf)).resolves.toBeUndefined();
+    ).toBeUndefined();
+    await expect(validateEmail({} as any, conf)).toBeUndefined();
+    await expect(validateEmail(undefined as any, conf)).toBeUndefined();
+    await expect(validateEmail(null as any, conf)).toBeUndefined();
 });

@@ -12,17 +12,17 @@ const conf: ValidatorConfiguration = {
 test('betweenLength if passed words length is between its limits, returns success', async () => {
     const validateLength = betweenLength(5, 10);
 
-    await expect(validateLength('smart', conf)).resolves.toBeUndefined();
-    await expect(validateLength('serious', conf)).resolves.toBeUndefined();
-    await expect(validateLength('attractive', conf)).resolves.toBeUndefined();
+    await expect(validateLength('smart', conf)).toBeUndefined();
+    await expect(validateLength('serious', conf)).toBeUndefined();
+    await expect(validateLength('attractive', conf)).toBeUndefined();
 });
 
 test('betweenLength still works if the parameters are switched up', async () => {
     const validateLength = betweenLength(10, 5);
 
-    await expect(validateLength('smart', conf)).resolves.toBeUndefined();
-    await expect(validateLength('serious', conf)).resolves.toBeUndefined();
-    await expect(validateLength('attractive', conf)).resolves.toBeUndefined();
+    await expect(validateLength('smart', conf)).toBeUndefined();
+    await expect(validateLength('serious', conf)).toBeUndefined();
+    await expect(validateLength('attractive', conf)).toBeUndefined();
 });
 
 test('betweenLength if passed word is shorter or longer, fails', async () => {
@@ -44,12 +44,12 @@ test('betweenLength if passed word is shorter or longer, fails', async () => {
 test('betweenLength if passed word is not a string, ignores', async () => {
     const validateLength = betweenLength(5, 10);
 
-    await expect(validateLength(8 as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(NaN as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(true as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength([] as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(Array(8).fill('a') as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(undefined as any, conf)).resolves.toBeUndefined();
-    await expect(validateLength(null as any, conf)).resolves.toBeUndefined();
+    await expect(validateLength(8 as any, conf)).toBeUndefined();
+    await expect(validateLength(NaN as any, conf)).toBeUndefined();
+    await expect(validateLength(true as any, conf)).toBeUndefined();
+    await expect(validateLength([] as any, conf)).toBeUndefined();
+    await expect(validateLength(Array(8).fill('a') as any, conf)).toBeUndefined();
+    await expect(validateLength({} as any, conf)).toBeUndefined();
+    await expect(validateLength(undefined as any, conf)).toBeUndefined();
+    await expect(validateLength(null as any, conf)).toBeUndefined();
 });

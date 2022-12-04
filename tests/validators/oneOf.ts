@@ -11,26 +11,26 @@ const conf: ValidatorConfiguration = {
 
 test('oneOf validator if the value is one of the list, returns successfully', async () => {
     const validateStringEquality = oneOf(['one', 'two', 'three']);
-    await expect(validateStringEquality('one', conf)).resolves.toBeUndefined();
-    await expect(validateStringEquality('two', conf)).resolves.toBeUndefined();
-    await expect(validateStringEquality('three', conf)).resolves.toBeUndefined();
+    await expect(validateStringEquality('one', conf)).toBeUndefined();
+    await expect(validateStringEquality('two', conf)).toBeUndefined();
+    await expect(validateStringEquality('three', conf)).toBeUndefined();
 
     const validateNumberEquality = oneOf([100, 101, 102]);
-    await expect(validateNumberEquality(100, conf)).resolves.toBeUndefined();
-    await expect(validateNumberEquality(101, conf)).resolves.toBeUndefined();
-    await expect(validateNumberEquality(102, conf)).resolves.toBeUndefined();
+    await expect(validateNumberEquality(100, conf)).toBeUndefined();
+    await expect(validateNumberEquality(101, conf)).toBeUndefined();
+    await expect(validateNumberEquality(102, conf)).toBeUndefined();
 
     const validateBoolEquality = oneOf([true, false]);
-    await expect(validateBoolEquality(true, conf)).resolves.toBeUndefined();
-    await expect(validateBoolEquality(false, conf)).resolves.toBeUndefined();
+    await expect(validateBoolEquality(true, conf)).toBeUndefined();
+    await expect(validateBoolEquality(false, conf)).toBeUndefined();
 
     const obj = {};
     const validateObjectEquality = oneOf([obj]);
-    await expect(validateObjectEquality(obj, conf)).resolves.toBeUndefined();
+    await expect(validateObjectEquality(obj, conf)).toBeUndefined();
 
     const validateNullEquality = oneOf([null, undefined]);
-    await expect(validateNullEquality(null, conf)).resolves.toBeUndefined();
-    await expect(validateNullEquality(undefined, conf)).resolves.toBeUndefined();
+    await expect(validateNullEquality(null, conf)).toBeUndefined();
+    await expect(validateNullEquality(undefined, conf)).toBeUndefined();
 });
 
 test('oneOf validator if the value is not in the list, fails', async () => {

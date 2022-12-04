@@ -26,7 +26,7 @@ function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A
                     };
                 });
             }
-            const result = validator(value, conf);
+            const result: unknown = validator(value, conf);
             if (isPromise(result)) {
                 return result.then(
                     (newValue) => ({
@@ -81,7 +81,7 @@ function resolveValidatorObject<O>(validator: ValidatorObject<O>, testValue: any
                         value: [key, typeof result === 'undefined' ? testValue[key] : value],
                         failures: [],
                     } as ValidatorState<[keyof O, O[keyof O]]>),
-                (failure) => ({ value: [key, testValue[key]], failures: [failure] } as ValidatorState<[keyof O, O[keyof O]]>)
+                (failure) => ({ value: [key, testValue[key]], failures: Array.isArray(failure) ? failure : [failure] } as ValidatorState<[keyof O, O[keyof O]]>)
             );
         }
         return {
@@ -90,7 +90,7 @@ function resolveValidatorObject<O>(validator: ValidatorObject<O>, testValue: any
         } as ValidatorState<[keyof O, O[keyof O]]>;
     });
 
-    if (!isAllNonPromise(results)) {
+    if (!hasNoPromise(results)) {
         return Promise.all(results).then((results) => {
             const failures = results.flatMap((result) => result.failures);
             if (failures.length > 0) {
@@ -111,8 +111,8 @@ export const isPromise = <T>(value: any): value is Promise<T> => {
     return typeof value === 'object' && value !== null && typeof value.then === 'function';
 };
 
-export const isAllNonPromise = <T>(value: (T | Promise<T>)[]): value is T[] => {
-    return value.some(isPromise);
+export const hasNoPromise = <T>(value: (T | Promise<T>)[]): value is T[] => {
+    return !value.some(isPromise);
 };
 
 const isValidatorFunctionList = <I, A, B, O>(validator: Validator<I, A, B, O>): validator is ValidatorFunctionList<I, A, B, O> => {
@@ -178,9 +178,9 @@ export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateC
                 return result !== 'undefined' ? result : testValue;
             } catch (failures) {
                 if (Array.isArray(failures)) {
-                    return Promise.reject(failures);
+                    throw failures;
                 }
-                return Promise.reject([failures]);
+                throw [failures];
             }
         } else {
             // Shouldn't go on here
