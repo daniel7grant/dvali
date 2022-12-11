@@ -59,11 +59,3 @@ test('closeTo when can configure the epsilon', async () => {
         expect(err).toBe('Field numField should be approximately 0.3.');
     }
 });
-
-test('closeTo when the passed value is not a number, ignores', async () => {
-    const validateCloseTo = closeTo(0.3);
-
-    await expect(validateCloseTo('string' as any, conf)).toBeUndefined();
-    await expect(validateCloseTo(null as any, conf)).toBeUndefined();
-    await expect(validateCloseTo({} as any, conf)).toBeUndefined();
-});

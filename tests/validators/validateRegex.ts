@@ -6,19 +6,14 @@ const conf: ValidatorConfiguration = { name: 'object', original: {}, parent: {},
 
 test('validateRegex function returns undefined if regex applies', async () => {
     const validateTest = validateRegex(/[a-z].*/);
-    await expect(validateTest('asdasd', conf)).toBeUndefined();
+    expect(validateTest('asdasd', conf)).toEqual('asdasd');
 });
 
 test('validateRegex function throws error if regex fails', async () => {
     const validateTest = validateRegex(/[a-z].*/);
     try {
-        await validateTest('123', conf);
+        validateTest('123', conf);
     } catch (err) {
         expect(err).not.toBeUndefined();
     }
-});
-
-test('validateRegex function ignores if passed value is not a string', async () => {
-    const validateTest = validateRegex(/[a-z].*/);
-    await expect(validateTest(123 as any, conf)).toBeUndefined();
 });

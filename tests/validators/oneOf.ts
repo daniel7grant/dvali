@@ -11,81 +11,81 @@ const conf: ValidatorConfiguration = {
 
 test('oneOf validator if the value is one of the list, returns successfully', async () => {
     const validateStringEquality = oneOf(['one', 'two', 'three']);
-    await expect(validateStringEquality('one', conf)).toBeUndefined();
-    await expect(validateStringEquality('two', conf)).toBeUndefined();
-    await expect(validateStringEquality('three', conf)).toBeUndefined();
+    expect(validateStringEquality('one', conf)).toEqual('one');
+    expect(validateStringEquality('two', conf)).toEqual('two');
+    expect(validateStringEquality('three', conf)).toEqual('three');
 
     const validateNumberEquality = oneOf([100, 101, 102]);
-    await expect(validateNumberEquality(100, conf)).toBeUndefined();
-    await expect(validateNumberEquality(101, conf)).toBeUndefined();
-    await expect(validateNumberEquality(102, conf)).toBeUndefined();
+    expect(validateNumberEquality(100, conf)).toEqual(100);
+    expect(validateNumberEquality(101, conf)).toEqual(101);
+    expect(validateNumberEquality(102, conf)).toEqual(102);
 
     const validateBoolEquality = oneOf([true, false]);
-    await expect(validateBoolEquality(true, conf)).toBeUndefined();
-    await expect(validateBoolEquality(false, conf)).toBeUndefined();
+    expect(validateBoolEquality(true, conf)).toEqual(true);
+    expect(validateBoolEquality(false, conf)).toEqual(false);
 
     const obj = {};
     const validateObjectEquality = oneOf([obj]);
-    await expect(validateObjectEquality(obj, conf)).toBeUndefined();
+    expect(validateObjectEquality(obj, conf)).toEqual(obj);
 
     const validateNullEquality = oneOf([null, undefined]);
-    await expect(validateNullEquality(null, conf)).toBeUndefined();
-    await expect(validateNullEquality(undefined, conf)).toBeUndefined();
+    expect(validateNullEquality(null, conf)).toEqual(null);
+    expect(validateNullEquality(undefined, conf)).toEqual(undefined);
 });
 
 test('oneOf validator if the value is not in the list, fails', async () => {
     const validateStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        await validateStringEquality('four', conf);
+        validateStringEquality('four', conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
     const validateCapitalizedStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        await validateCapitalizedStringEquality('ONE', conf);
+        validateCapitalizedStringEquality('ONE', conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
     const validateEmptyStringEquality = oneOf(['one', 'two', 'three']);
     try {
-        await validateEmptyStringEquality('', conf);
+        validateEmptyStringEquality('', conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of one, two, three.');
     }
 
     const validateNumberEquality = oneOf([100, 101, 102]);
     try {
-        await validateNumberEquality(99, conf);
+        validateNumberEquality(99, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of 100, 101, 102.');
     }
 
     const validateFloatNumberEquality = oneOf([0.1, 0.2, 0.3]);
     try {
-        await validateFloatNumberEquality(0.1 + 0.2, conf);
+        validateFloatNumberEquality(0.1 + 0.2, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of 0.1, 0.2, 0.3.');
     }
 
     const validateBoolEquality = oneOf([true]);
     try {
-        await validateBoolEquality(false, conf);
+        validateBoolEquality(false, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of true.');
     }
 
     const validateNaNEquality = oneOf([NaN]);
     try {
-        await validateNaNEquality(NaN, conf);
+        validateNaNEquality(NaN, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of NaN.');
     }
 
     const validateObjectEquality = oneOf([{}]);
     try {
-        await validateObjectEquality({}, conf);
+        validateObjectEquality({}, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be one of [object Object].');
     }

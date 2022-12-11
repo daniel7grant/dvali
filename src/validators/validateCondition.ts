@@ -3,46 +3,44 @@ import {
     FailureFunction,
     Success,
     ValidatorConfiguration,
-    SyncValidatorFunction,
     AsyncValidatorFunction,
+    SyncValidatorFunctionInner,
 } from '../types.js';
 import { isPromise } from '../validate.js';
 
-interface SyncConditionFunction<O> {
+interface SyncConditionFunction<T> {
     (v: unknown, conf: ValidatorConfiguration): boolean;
 }
-
-interface AsyncConditionFunction<O> {
+interface AsyncConditionFunction<T> {
     (v: unknown, conf: ValidatorConfiguration): Promise<boolean>;
 }
+type ConditionFunction<T> = SyncConditionFunction<T> | AsyncConditionFunction<T>;
 
-type ConditionFunction<O> = SyncConditionFunction<O> | AsyncConditionFunction<O>;
-
-function validateCondition<O>(
-    condition: SyncConditionFunction<O>,
+function validateCondition<T>(
+    condition: SyncConditionFunction<T>,
     errorMsg?: FailureFunction<unknown>
-): SyncValidatorFunction<unknown, O>;
-function validateCondition<O>(
-    condition: AsyncConditionFunction<O>,
+): SyncValidatorFunctionInner<unknown, T>;
+function validateCondition<T>(
+    condition: AsyncConditionFunction<T>,
     errorMsg?: FailureFunction<unknown>
-): AsyncValidatorFunction<unknown, O>;
-function validateCondition<O>(
-    condition: ConditionFunction<O>,
+): AsyncValidatorFunction<unknown, T>;
+function validateCondition<T>(
+    condition: ConditionFunction<T>,
     errorMsg: FailureFunction<unknown> = (_, { name }) => `Field ${name} format is invalid.`
-): (field: unknown, conf: ValidatorConfiguration) => O | undefined | Promise<O | undefined> {
+): (value: unknown, conf: ValidatorConfiguration) => T | Promise<T> {
     return function (field, conf) {
         const result = condition(field, conf);
         if (isPromise(result)) {
             return result.then((result) => {
                 if (result) {
-                    return Success();
+                    return Success(field as T);
                 } else {
                     return Failure(errorMsg(field, conf));
                 }
             });
         }
         if (result) {
-            return Success();
+            return Success(field as T);
         } else {
             return Failure(errorMsg(field, conf));
         }

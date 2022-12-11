@@ -12,10 +12,10 @@ const conf: ValidatorConfiguration = {
 test('lte when the number is less or equal returns success', async () => {
     const validateLessThanOrEqualToTen = lte(10);
 
-    await expect(validateLessThanOrEqualToTen(10, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(0, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(-5, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(-Infinity, conf)).toBeUndefined();
+    await expect(validateLessThanOrEqualToTen(10, conf)).toEqual(10);
+    await expect(validateLessThanOrEqualToTen(0, conf)).toEqual(0);
+    await expect(validateLessThanOrEqualToTen(-5, conf)).toEqual(-5);
+    await expect(validateLessThanOrEqualToTen(-Infinity, conf)).toEqual(-Infinity);
 });
 
 test('lte when the number is lower fails', async () => {
@@ -31,14 +31,4 @@ test('lte when the number is lower fails', async () => {
     } catch (err) {
         expect(err).toBe('Field numField should be less than or equal to 10.');
     }
-});
-
-test('lte ignores non-number inputs', async () => {
-    const validateLessThanOrEqualToTen = lte(10);
-
-    await expect(validateLessThanOrEqualToTen('6' as any, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(NaN as any, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(undefined as any, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen(null as any, conf)).toBeUndefined();
-    await expect(validateLessThanOrEqualToTen({} as any, conf)).toBeUndefined();
 });

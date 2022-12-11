@@ -17,13 +17,3 @@ test('floor validator rounds down the number to the nearest integer', async () =
     await expect(validateFloor(6.9, conf)).toBe(6);
     await expect(validateFloor(7.00000000001, conf)).toBe(7);
 });
-
-test('floor ignores non-number inputs', async () => {
-    const validateFloor = floor();
-
-    expect(validateFloor('6' as any, conf)).toBe(undefined);
-    await expect(validateFloor(NaN as any, conf)).toBe(undefined);
-    await expect(validateFloor(undefined as any, conf)).toBe(undefined);
-    await expect(validateFloor(null as any, conf)).toBe(undefined);
-    await expect(validateFloor({} as any, conf)).toBe(undefined);
-});

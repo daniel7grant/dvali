@@ -15,7 +15,7 @@ test('isDate when date is passed returns successfully', async () => {
     const dateString = '2021-08-27';
     const date = new Date(dateString);
 
-    await expect(sanitizeDate(date, conf)).toBeUndefined();
+    expect(sanitizeDate(date, conf)).toEqual(date);
 });
 
 test('isDate when invalid date is passed fails', async () => {
@@ -24,7 +24,7 @@ test('isDate when invalid date is passed fails', async () => {
     const dateString = 'invalid';
     const date = new Date(dateString);
     try {
-        await sanitizeDate(date, conf);
+        sanitizeDate(date, conf);
     } catch (err) {
         expect(err).toBe('Field dateField should be a valid date.');
     }
@@ -34,13 +34,13 @@ test('isDate when other data is passed fails', async () => {
     const sanitizeDate = isDate();
 
     try {
-        await sanitizeDate({} as any, conf);
+        sanitizeDate({} as any, conf);
     } catch (err) {
         expect(err).toBe('Field dateField should be a valid date.');
     }
 
     try {
-        await sanitizeDate([] as any, conf);
+        sanitizeDate([] as any, conf);
     } catch (err) {
         expect(err).toBe('Field dateField should be a valid date.');
     }

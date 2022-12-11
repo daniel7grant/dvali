@@ -30,16 +30,3 @@ test('truncate validator returns empty if n is zero', async () => {
 
     await expect(validateTruncate('123', conf)).toBe('');
 });
-
-test('truncate if passed word is not a string, ignores', async () => {
-    const validateTruncate = truncate(6);
-
-    await expect(validateTruncate(8 as any, conf)).toBe(undefined);
-    await expect(validateTruncate(NaN as any, conf)).toBe(undefined);
-    await expect(validateTruncate(true as any, conf)).toBe(undefined);
-    await expect(validateTruncate([] as any, conf)).toBe(undefined);
-    await expect(validateTruncate(Array(8).fill('a') as any, conf)).toBe(undefined);
-    await expect(validateTruncate({} as any, conf)).toBe(undefined);
-    await expect(validateTruncate(undefined as any, conf)).toBe(undefined);
-    await expect(validateTruncate(null as any, conf)).toBe(undefined);
-});

@@ -3,15 +3,12 @@ import { Failure, FailureFunction, Ignore, Success, SyncValidatorFunction } from
 const validateRegex = (
     regex: RegExp,
     errorMsg: FailureFunction<string> = (_, { name }) => `Field ${name} format is invalid.`
-): SyncValidatorFunction<unknown, string> => {
-    return function (field, conf) {
-        if (typeof field !== 'string') {
-            return Ignore();
-        }
-        if (regex.test(field)) {
-            return Success();
+): SyncValidatorFunction<string, string> => {
+    return function (value, conf) {
+        if (regex.test(value)) {
+            return Success(value);
         } else {
-            return Failure(errorMsg(field, conf));
+            return Failure(errorMsg(value, conf));
         }
     };
 };

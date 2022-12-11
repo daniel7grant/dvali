@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('isMultipleOf when the number is multiple of the given param returns success', async () => {
     const validateMultipleOfFive = isMultipleOf(5);
 
-    await expect(validateMultipleOfFive(10, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive(0, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive(-5, conf)).toBeUndefined();
+    await expect(validateMultipleOfFive(10, conf)).toEqual(10);
+    await expect(validateMultipleOfFive(0, conf)).toEqual(0);
+    await expect(validateMultipleOfFive(-5, conf)).toEqual(-5);
 });
 
 test('isMultipleOf when the number is not the multiple of the given param fails', async () => {
@@ -42,12 +42,3 @@ test('isMultipleOf when the number is not the multiple of the given param fails'
     }
 });
 
-test('isMultipleOf ignores non-number inputs', async () => {
-    const validateMultipleOfFive = isMultipleOf(5);
-
-    await expect(validateMultipleOfFive('10' as any, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive(NaN as any, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive(undefined as any, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive(null as any, conf)).toBeUndefined();
-    await expect(validateMultipleOfFive({} as any, conf)).toBeUndefined();
-});

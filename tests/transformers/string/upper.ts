@@ -24,15 +24,3 @@ test('upper validator works with locale-strings', async () => {
     await expect(validateUpper('weiß', conf)).toBe('WEISS');
     await expect(validateUpper('cSütÖrtÖk', conf)).toBe('CSÜTÖRTÖK');
 });
-test('upper if passed word is not a string, ignores', async () => {
-    const validateUpper = upper();
-
-    await expect(validateUpper(8 as any, conf)).toBe(undefined);
-    await expect(validateUpper(NaN as any, conf)).toBe(undefined);
-    await expect(validateUpper(true as any, conf)).toBe(undefined);
-    await expect(validateUpper([] as any, conf)).toBe(undefined);
-    await expect(validateUpper(Array(8).fill('a') as any, conf)).toBe(undefined);
-    await expect(validateUpper({} as any, conf)).toBe(undefined);
-    await expect(validateUpper(undefined as any, conf)).toBe(undefined);
-    await expect(validateUpper(null as any, conf)).toBe(undefined);
-});

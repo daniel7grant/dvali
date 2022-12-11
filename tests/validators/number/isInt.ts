@@ -12,10 +12,10 @@ const conf: ValidatorConfiguration = {
 test('isInt, when integer is passed, returns success', async () => {
     const validateInteger = isInt();
 
-    await expect(validateInteger(-1, conf)).toBeUndefined();
-    await expect(validateInteger(0, conf)).toBeUndefined();
-    await expect(validateInteger(123, conf)).toBeUndefined();
-    await expect(validateInteger(1e10, conf)).toBeUndefined();
+    await expect(validateInteger(-1, conf)).toEqual(-1);
+    await expect(validateInteger(0, conf)).toEqual(0);
+    await expect(validateInteger(123, conf)).toEqual(123);
+    await expect(validateInteger(1e10, conf)).toEqual(1e10);
 });
 
 test('isInt, when not an integer is passed, fails', async () => {

@@ -28,13 +28,3 @@ test('toMultipleOf validator rounds to the nearest multiple of n with the given 
     await expect(validateMultipleOfFive(10.00000000001, conf)).toBe(10);
     await expect(validateMultipleOfFive(-7.5, conf)).toBe(-10);
 });
-
-test('toMultipleOf ignores non-number inputs', async () => {
-    const validateMultipleOfFive = toMultipleOf(5);
-
-    await expect(validateMultipleOfFive('10' as any, conf)).toBe(undefined);
-    await expect(validateMultipleOfFive(NaN as any, conf)).toBe(undefined);
-    await expect(validateMultipleOfFive(undefined as any, conf)).toBe(undefined);
-    await expect(validateMultipleOfFive(null as any, conf)).toBe(undefined);
-    await expect(validateMultipleOfFive({} as any, conf)).toBe(undefined);
-});

@@ -1,13 +1,9 @@
 import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
-const isUrl = (): SyncValidatorFunction<unknown, string> => (value, conf) => {
-    if (typeof value !== 'string') {
-        return Ignore();
-    }
-
+const isUrl = (): SyncValidatorFunction<string, string> => (value, conf) => {
     try {
-        const url = new URL(value);
-        return Success();
+        new URL(value);
+        return Success(value);
     } catch {
         return Failure(`Field ${conf.name} should be an url.`);
     }

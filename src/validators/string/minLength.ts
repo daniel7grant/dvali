@@ -1,14 +1,10 @@
 import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const minLength =
-    (min: number): SyncValidatorFunction<unknown, string> =>
+    (min: number): SyncValidatorFunction<string, string> =>
     (value, conf) => {
-        if (typeof value !== 'string') {
-            return Ignore();
-        }
-
         if (value.length >= min) {
-            return Success();
+            return Success(value);
         }
         return Failure(`Field ${conf.name} length should be at least ${min} characters.`);
     };

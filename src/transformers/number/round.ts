@@ -1,9 +1,6 @@
 import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
-const round = ():SyncValidatorFunction<unknown, number> => (value, conf) => {
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-        return Ignore();
-    }
+const round = ():SyncValidatorFunction<number, number> => (value, conf) => {
     return Success(Math.round(value));
 };
 

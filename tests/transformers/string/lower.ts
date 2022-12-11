@@ -24,15 +24,3 @@ test('lower validator works with locale-strings', async () => {
     await expect(validateLower('cSütÖrtÖk', conf)).toBe('csütörtök');
 });
 
-test('lower if passed word is not a string, ignores', async () => {
-    const validateLower = lower();
-
-    await expect(validateLower(8 as any, conf)).toBe(undefined);
-    await expect(validateLower(NaN as any, conf)).toBe(undefined);
-    await expect(validateLower(true as any, conf)).toBe(undefined);
-    await expect(validateLower([] as any, conf)).toBe(undefined);
-    await expect(validateLower(Array(8).fill('a') as any, conf)).toBe(undefined);
-    await expect(validateLower({} as any, conf)).toBe(undefined);
-    await expect(validateLower(undefined as any, conf)).toBe(undefined);
-    await expect(validateLower(null as any, conf)).toBe(undefined);
-});

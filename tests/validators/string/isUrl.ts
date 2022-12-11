@@ -12,16 +12,20 @@ const conf: ValidatorConfiguration = {
 test('isUrl, if valid url is given, returns successfully', async () => {
     const validateUrl = isUrl();
 
-    await expect(validateUrl('https://google.com', conf)).toBeUndefined();
-    await expect(validateUrl('https://google.com/', conf)).toBeUndefined();
-    await expect(validateUrl('https://google.com:8443', conf)).toBeUndefined();
-    await expect(validateUrl('https://google.com/search?q=name', conf)).toBeUndefined();
-    await expect(validateUrl('https://google.com/#asdasd', conf)).toBeUndefined();
-    await expect(validateUrl('mailto:asd@asd.asd', conf)).toBeUndefined();
-    await expect(validateUrl('file:///etc/passwd', conf)).toBeUndefined();
-    await expect(
-        validateUrl('ftp://user:password@ftphost.com/directory', conf)
-    ).toBeUndefined();
+    await expect(validateUrl('https://google.com', conf)).toEqual('https://google.com');
+    await expect(validateUrl('https://google.com/', conf)).toEqual('https://google.com/');
+    await expect(validateUrl('https://google.com:8443', conf)).toEqual('https://google.com:8443');
+    await expect(validateUrl('https://google.com/search?q=name', conf)).toEqual(
+        'https://google.com/search?q=name'
+    );
+    await expect(validateUrl('https://google.com/#asdasd', conf)).toEqual(
+        'https://google.com/#asdasd'
+    );
+    await expect(validateUrl('mailto:asd@asd.asd', conf)).toEqual('mailto:asd@asd.asd');
+    await expect(validateUrl('file:///etc/passwd', conf)).toEqual('file:///etc/passwd');
+    await expect(validateUrl('ftp://user:password@ftphost.com/directory', conf)).toEqual(
+        'ftp://user:password@ftphost.com/directory'
+    );
 });
 
 test('isUrl, if invalid url is given, fails', async () => {
@@ -44,19 +48,4 @@ test('isUrl, if invalid url is given, fails', async () => {
     } catch (err) {
         expect(err).toBe('Field strField should be an url.');
     }
-});
-
-test('isUrl, if not a string is given, ignores', async () => {
-    const validateUrl = isUrl();
-
-    await expect(validateUrl(8 as any, conf)).toBeUndefined();
-    await expect(validateUrl(NaN as any, conf)).toBeUndefined();
-    await expect(validateUrl(true as any, conf)).toBeUndefined();
-    await expect(validateUrl([] as any, conf)).toBeUndefined();
-    await expect(
-        validateUrl(['a', 's', 'd', '@', 'a', 's', 'd', '.', 'a', 's', 'd'] as any, conf)
-    ).toBeUndefined();
-    await expect(validateUrl({} as any, conf)).toBeUndefined();
-    await expect(validateUrl(undefined as any, conf)).toBeUndefined();
-    await expect(validateUrl(null as any, conf)).toBeUndefined();
 });

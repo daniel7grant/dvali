@@ -12,39 +12,39 @@ const conf: ValidatorConfiguration = {
 test('isBool with true or false returns success', async () => {
     const validateBool = isBool();
 
-    await expect(validateBool(true, conf)).toBeUndefined();
-    await expect(validateBool(false, conf)).toBeUndefined();
+    expect(validateBool(true, conf)).toEqual(true);
+    expect(validateBool(false, conf)).toEqual(false);
 });
 
 test('isBool with anything other fails', async () => {
     const validateBool = isBool();
 
     try {
-        await validateBool('string' as any, conf);
+        validateBool('string', conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
-        await validateBool(123 as any, conf);
+        validateBool(123, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
-        await validateBool(null as any, conf);
+        validateBool(null, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
-        await validateBool(undefined as any, conf);
+        validateBool(undefined, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be a boolean.');
     }
 
     try {
-        await validateBool(NaN as any, conf);
+        validateBool(NaN, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be a boolean.');
     }

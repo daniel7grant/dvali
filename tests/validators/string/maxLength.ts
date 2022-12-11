@@ -12,9 +12,9 @@ const conf: ValidatorConfiguration = {
 test('maxLength if passed words length is between its limits, returns success', async () => {
     const validateLength = maxLength(10);
 
-    await expect(validateLength('smart', conf)).toBeUndefined();
-    await expect(validateLength('serious', conf)).toBeUndefined();
-    await expect(validateLength('attractive', conf)).toBeUndefined();
+    await expect(validateLength('smart', conf)).toEqual('smart');
+    await expect(validateLength('serious', conf)).toEqual('serious');
+    await expect(validateLength('attractive', conf)).toEqual('attractive');
 });
 
 test('maxLength if passed word is longer, fails', async () => {
@@ -31,17 +31,4 @@ test('maxLength if passed word is longer, fails', async () => {
     } catch (err) {
         expect(err).toBe('Field strField length should be at most 10 characters.');
     }
-});
-
-test('maxLength if passed word is not a string, ignores', async () => {
-    const validateLength = maxLength(10);
-
-    await expect(validateLength(8 as any, conf)).toBeUndefined();
-    await expect(validateLength(NaN as any, conf)).toBeUndefined();
-    await expect(validateLength(true as any, conf)).toBeUndefined();
-    await expect(validateLength([] as any, conf)).toBeUndefined();
-    await expect(validateLength(Array(8).fill('a') as any, conf)).toBeUndefined();
-    await expect(validateLength({} as any, conf)).toBeUndefined();
-    await expect(validateLength(undefined as any, conf)).toBeUndefined();
-    await expect(validateLength(null as any, conf)).toBeUndefined();
 });

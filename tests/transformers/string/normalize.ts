@@ -20,16 +20,3 @@ test('normalize validator normalizes the string with another normalization form'
 
     await expect(validateNormalize('\u00F1', conf)).toBe('\u006E\u0303'); // ñ
 });
-
-test('normalize if passed word is not a string, ignores', async () => {
-    const validateNormalize = normalize();
-
-    await expect(validateNormalize(8 as any, conf)).toBe(undefined);
-    await expect(validateNormalize(NaN as any, conf)).toBe(undefined);
-    await expect(validateNormalize(true as any, conf)).toBe(undefined);
-    await expect(validateNormalize([] as any, conf)).toBe(undefined);
-    await expect(validateNormalize(Array(8).fill('a') as any, conf)).toBe(undefined);
-    await expect(validateNormalize({} as any, conf)).toBe(undefined);
-    await expect(validateNormalize(undefined as any, conf)).toBe(undefined);
-    await expect(validateNormalize(null as any, conf)).toBe(undefined);
-});

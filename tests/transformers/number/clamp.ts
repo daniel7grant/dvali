@@ -36,13 +36,3 @@ test('clamp validator works with decimal limits too', async () => {
     await expect(validateClamp(6.3, conf)).toBe(6.3);
     await expect(validateClamp(999, conf)).toBe(6.9);
 });
-
-test('clamp ignores non-number inputs', async () => {
-    const validateClamp = clamp(5, 7);
-
-    await expect(validateClamp('6' as any, conf)).toBe(undefined);
-    await expect(validateClamp(NaN as any, conf)).toBe(undefined);
-    await expect(validateClamp(undefined as any, conf)).toBe(undefined);
-    await expect(validateClamp(null as any, conf)).toBe(undefined);
-    await expect(validateClamp({} as any, conf)).toBe(undefined);
-});

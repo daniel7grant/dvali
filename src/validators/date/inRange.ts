@@ -4,17 +4,9 @@ const inRange: (
     minDate: string | number | Date,
     maxDate: string | number | Date,
     opts?: { minInclusive?: boolean; maxInclusive?: boolean }
-) => SyncValidatorFunction<unknown, Date> =
-    (
-        minDate,
-        maxDate,
-        opts = { minInclusive: false, maxInclusive: false }
-    ): SyncValidatorFunction<unknown, Date> =>
+) => SyncValidatorFunction<Date, Date> =
+    (minDate, maxDate, opts = { minInclusive: false, maxInclusive: false }) =>
     (value, conf) => {
-        if (!(value instanceof Date)) {
-            return Ignore();
-        }
-
         const min = minDate instanceof Date ? minDate : new Date(minDate);
         const max = maxDate instanceof Date ? maxDate : new Date(maxDate);
 
@@ -22,7 +14,7 @@ const inRange: (
             ((opts.minInclusive && value >= min) || (!opts.minInclusive && value > min)) &&
             ((opts.maxInclusive && value <= max) || (!opts.maxInclusive && value < max))
         ) {
-            return Success();
+            return Success(value);
         }
 
         return Failure(

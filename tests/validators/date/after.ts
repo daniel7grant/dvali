@@ -13,19 +13,19 @@ test('after when the date is after the date returns success', async () => {
     const begin = new Date('2000-01-01');
     const validateInRange = after(begin);
 
-    await expect(validateInRange(new Date('2000-01-02'), conf)).toBeUndefined();
-    await expect(validateInRange(new Date('2021-08-27'), conf)).toBeUndefined();
-    await expect(validateInRange(new Date('2099-01-01'), conf)).toBeUndefined();
+    expect(validateInRange(new Date('2000-01-02'), conf)).toEqual(new Date('2000-01-02'));
+    expect(validateInRange(new Date('2021-08-27'), conf)).toEqual(new Date('2021-08-27'));
+    expect(validateInRange(new Date('2099-01-01'), conf)).toEqual(new Date('2099-01-01'));
 });
 
 test('after definition can convert from string or number', async () => {
     const validateInStringRange = after('2000-01-01');
 
-    await expect(validateInStringRange(new Date('2021-08-27'), conf)).toBeUndefined();
+    expect(validateInStringRange(new Date('2021-08-27'), conf)).toEqual(new Date('2021-08-27'));
 
     const validateInNumberRange = after(946684800000);
 
-    await expect(validateInNumberRange(new Date('2021-08-27'), conf)).toBeUndefined();
+    expect(validateInNumberRange(new Date('2021-08-27'), conf)).toEqual(new Date('2021-08-27'));
 });
 
 test('after when the date is before or equal to the date, fails', async () => {
@@ -55,18 +55,5 @@ test('after, when both inclusives are set, returns success for and upper lower l
     const begin = new Date('2000-01-01');
     const validateInRange = after(begin, { inclusive: true });
 
-    await expect(validateInRange(new Date('2000-01-01'), conf)).toBeUndefined();
-});
-
-test('after ignores non-date inputs', async () => {
-    const begin = new Date('2000-01-01');
-    const validateInRange = after(begin);
-
-    await expect(validateInRange('string' as any, conf)).toBeUndefined();
-    await expect(validateInRange(123 as any, conf)).toBeUndefined();
-    await expect(validateInRange(NaN as any, conf)).toBeUndefined();
-    await expect(validateInRange({} as any, conf)).toBeUndefined();
-    await expect(validateInRange([] as any, conf)).toBeUndefined();
-    await expect(validateInRange(null as any, conf)).toBeUndefined();
-    await expect(validateInRange(undefined as any, conf)).toBeUndefined();
+    expect(validateInRange(new Date('2000-01-01'), conf)).toEqual(new Date('2000-01-01'));
 });

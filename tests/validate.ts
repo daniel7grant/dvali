@@ -3,8 +3,8 @@ import validate from '../src/validate';
 import { Failure, Success, ValidatorFunction } from '../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction<string, string> =>
-    async function (_value, _conf) {
-        return Success();
+    async function (value, _conf) {
+        return Success(value);
     };
 
 const testFailingValidation = (): ValidatorFunction<string, string> =>

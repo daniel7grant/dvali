@@ -1,11 +1,8 @@
 import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const clamp =
-    (min: number, max: number):SyncValidatorFunction<unknown, number> =>
+    (min: number, max: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-            return Ignore();
-        }
         if (min >= value) {
             return Success(min);
         }

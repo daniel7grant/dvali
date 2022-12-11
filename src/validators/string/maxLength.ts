@@ -1,14 +1,10 @@
 import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const maxLength =
-    (max: number): SyncValidatorFunction<unknown, string> =>
+    (max: number): SyncValidatorFunction<string, string> =>
     (value, conf) => {
-        if (typeof value !== 'string') {
-            return Ignore();
-        }
-
         if (value.length <= max) {
-            return Success();
+            return Success(value);
         }
         return Failure(`Field ${conf.name} length should be at most ${max} characters.`);
     };

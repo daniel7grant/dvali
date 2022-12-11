@@ -12,11 +12,11 @@ const conf: ValidatorConfiguration = {
 test('gte when the number is greater or equal returns success', async () => {
     const validateGreaterThanOrEqualToTen = gte(10);
 
-    await expect(validateGreaterThanOrEqualToTen(10, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(20, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(500, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(1000, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(Infinity, conf)).toBeUndefined();
+    await expect(validateGreaterThanOrEqualToTen(10, conf)).toEqual(10);
+    await expect(validateGreaterThanOrEqualToTen(20, conf)).toEqual(20);
+    await expect(validateGreaterThanOrEqualToTen(500, conf)).toEqual(500);
+    await expect(validateGreaterThanOrEqualToTen(1000, conf)).toEqual(1000);
+    await expect(validateGreaterThanOrEqualToTen(Infinity, conf)).toEqual(Infinity);
 });
 
 test('gte when the number is lower fails', async () => {
@@ -37,14 +37,4 @@ test('gte when the number is lower fails', async () => {
     } catch (err) {
         expect(err).toBe('Field numField should be greater than or equal to 10.');
     }
-});
-
-test('gte ignores non-number inputs', async () => {
-    const validateGreaterThanOrEqualToTen = gte(10);
-
-    await expect(validateGreaterThanOrEqualToTen('6' as any, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(NaN as any, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(undefined as any, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen(null as any, conf)).toBeUndefined();
-    await expect(validateGreaterThanOrEqualToTen({} as any, conf)).toBeUndefined();
 });

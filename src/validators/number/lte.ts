@@ -1,14 +1,10 @@
 import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
 
 const lte =
-    (max: number): SyncValidatorFunction<unknown, number> =>
+    (max: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-            return Ignore();
-        }
-
         if (value <= max) {
-            return Success();
+            return Success(value);
         }
 
         return Failure(`Field ${conf.name} should be less than or equal to ${max}.`);

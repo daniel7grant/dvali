@@ -4,8 +4,8 @@ import validate from '../../src/validate';
 import { Failure, Success, ValidatorFunction } from '../../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction<unknown, unknown> =>
-    async function (_value, _conf) {
-        return Success();
+    async function (value, _conf) {
+        return Success(value);
     };
 
 const testFailingValidation = (): ValidatorFunction<unknown, unknown> =>
@@ -16,7 +16,7 @@ const testFailingValidation = (): ValidatorFunction<unknown, unknown> =>
 const testMinimumValidation = (): ValidatorFunction<number, unknown> =>
     async function (value, _conf) {
         if (value > 2) {
-            return Success();
+            return Success(value);
         } else {
             return Failure('test failed');
         }

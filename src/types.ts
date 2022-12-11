@@ -10,14 +10,14 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
-export type SyncValidatingFunction<I, O> = O extends void | undefined ? never : (val: I, c?: Partial<ValidatorConfiguration>) => O;
+export type SyncValidatingFunction<I, O> = (val: I, c?: Partial<ValidatorConfiguration>) => O;
 export type AsyncValidatingFunction<I, O> = (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>;
 export type ValidatingFunction<I, O> = SyncValidatingFunction<I, O> | AsyncValidatingFunction<I, O>;
 
-export type SyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => O | undefined | void;
+export type SyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => O;
 // This is necessary so sync validators don't eat async validators (SyncValidatorFunction<I, Promise<O>> instead of ValidatorFunction<I, O>)
 export type SyncValidatorFunctionInner<I, O> = O extends Promise<infer _> ? never : SyncValidatorFunction<I, O>;
-export type AsyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => Promise<O | undefined | void>;
+export type AsyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => Promise<O>;
 export type ValidatorFunction<I, O> = SyncValidatorFunctionInner<I, O> | AsyncValidatorFunction<I, O>;
 
 export type SyncValidatorFunctionList1<I, O> = [SyncValidatorFunctionInner<I, O>];
@@ -32,11 +32,11 @@ export type ValidatorFunctionList<I, A, B, O> = ValidatorFunctionList1<I, O> | V
 
 // Value validators are necessary, because we don't have generics in mapped types.
 // Validator object values only support the return type of last validator function.
-export type SyncValueValidator<O> = SyncValidatorFunctionList1<any, O> | SyncValidatorFunctionList2<any, any, O> | SyncValidatorFunctionList3<any, any, any, O> | SyncValidatorFunctionInner<any, O> | SyncValidatorObject<O>;
+export type SyncValueValidator<O> = SyncValidatorFunctionList1<any, O> | SyncValidatorFunctionList2<any, any, O> | SyncValidatorFunctionList3<any, any, any, O> | SyncValidatorFunctionInner<any, O> | SyncValidatingFunction<any, O> | SyncValidatorObject<O>;
 export type SyncValidatorObject<O> = {
     [key in keyof O]: SyncValueValidator<O[key]>;
 };
-export type ValueValidator<O> = ValidatorFunctionList1<any, O> | ValidatorFunctionList2<any, any, O> | ValidatorFunctionList3<any, any, any, O> | ValidatorFunction<any, O> | ValidatorObject<O>;
+export type ValueValidator<O> = ValidatorFunctionList1<any, O> | ValidatorFunctionList2<any, any, O> | ValidatorFunctionList3<any, any, any, O> | ValidatorFunction<any, O>  | ValidatingFunction<any, O> | ValidatorObject<O>;
 export type ValidatorObject<O> = {
     [key in keyof O]: ValueValidator<O[key]>;
 };
@@ -50,12 +50,12 @@ export interface FailureFunction<T> {
 
 export type InferValidator<T> = T extends Validator<unknown, infer O, unknown, unknown> ? O : never;
 
-export const Success = function <T>(t?: T): T | undefined {
+export const Success = function <T>(t: T): T {
     return t;
 };
 
-export const Ignore = function (): undefined {
-    return undefined;
+export const Ignore = function <T>(t: T): T {
+    return t;
 };
 
 export const Failure = function (t: string): never {

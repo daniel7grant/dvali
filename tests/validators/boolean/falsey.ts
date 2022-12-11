@@ -12,44 +12,44 @@ const conf: ValidatorConfiguration = {
 test('falsey with false, zero, empty string or nullish returns success', async () => {
     const validateFalsey = falsey();
 
-    await expect(validateFalsey(false, conf)).toBeUndefined();
-    await expect(validateFalsey(0 as any, conf)).toBeUndefined();
-    await expect(validateFalsey(-0 as any, conf)).toBeUndefined();
-    await expect(validateFalsey('' as any, conf)).toBeUndefined();
-    await expect(validateFalsey(null as any, conf)).toBeUndefined();
-    await expect(validateFalsey(undefined as any, conf)).toBeUndefined();
-    await expect(validateFalsey(NaN as any, conf)).toBeUndefined();
+    expect(validateFalsey(false, conf)).toEqual(false);
+    expect(validateFalsey(0, conf)).toEqual(0);
+    expect(validateFalsey(-0, conf)).toEqual(-0);
+    expect(validateFalsey('', conf)).toEqual('');
+    expect(validateFalsey(null, conf)).toEqual(null);
+    expect(validateFalsey(undefined, conf)).toEqual(undefined);
+    expect(validateFalsey(NaN, conf)).toEqual(NaN);
 });
 
 test('falsey with anything other fails', async () => {
     const validateFalsey = falsey();
 
     try {
-        await validateFalsey(true as any, conf);
+        validateFalsey(true as any, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey(-1 as any, conf);
+        validateFalsey(-1 as any, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey('string' as any, conf);
+        validateFalsey('string' as any, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey({} as any, conf);
+        validateFalsey({} as any, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be falsey.');
     }
 
     try {
-        await validateFalsey([] as any, conf);
+        validateFalsey([] as any, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be falsey.');
     }
