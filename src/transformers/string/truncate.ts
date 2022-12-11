@@ -1,4 +1,4 @@
-import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Success, SyncValidatorFunction } from '../../types.js';
 
 const truncate =
     (n: number): SyncValidatorFunction<string, string> =>

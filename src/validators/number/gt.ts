@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Failure, Success, SyncValidatorFunction } from '../../types.js';
 
 const gt =
     (min: number): SyncValidatorFunction<number, number> =>

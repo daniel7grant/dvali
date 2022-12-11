@@ -6,7 +6,6 @@ import validate, {
     ValidatorFunction,
     Success,
     Failure,
-    Ignore,
     Validator,
     ValidatorObject,
 } from '../src/index';
@@ -88,9 +87,6 @@ test('README: Bring your own validator - isUniqueEmail full', async () => {
 
     const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore(email);
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
                 return Success(email);
@@ -126,9 +122,6 @@ test('README: Sanitize and transform - hash', async () => {
 
     const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore(email);
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
                 return Success(email);
@@ -145,9 +138,6 @@ test('README: Sanitize and transform - hash', async () => {
 
     const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
-            if (typeof password !== 'string') {
-                return Ignore(password);
-            }
             const hashedPassword = await bcrypt.hash(password, 8);
             return Success(hashedPassword);
         };
@@ -184,9 +174,6 @@ test('README: Higher-order validators - confirmPassword', async () => {
 
     const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore(email);
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
                 return Success(email);
@@ -203,9 +190,6 @@ test('README: Higher-order validators - confirmPassword', async () => {
 
     const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
-            if (typeof password !== 'string') {
-                return Ignore(password);
-            }
             const hashedPassword = await bcrypt.hash(password, 8);
             return Success(hashedPassword);
         };

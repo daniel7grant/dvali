@@ -1,4 +1,4 @@
-import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Success, SyncValidatorFunction } from '../../types.js';
 
 const round = ():SyncValidatorFunction<number, number> => (value, conf) => {
     return Success(Math.round(value));

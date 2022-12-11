@@ -1,4 +1,4 @@
-import { Failure, FailureFunction, Ignore, Success, SyncValidatorFunction } from '../types.js';
+import { Failure, FailureFunction, Success, SyncValidatorFunction } from '../types.js';
 
 const validateRegex = (
     regex: RegExp,

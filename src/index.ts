@@ -69,7 +69,6 @@ import upper from './transformers/string/upper.js';
 
 import {
     Failure,
-    Ignore,
     FailureFunction,
     Success,
     Validator,
@@ -90,7 +89,6 @@ export type {
 
 export {
     Failure,
-    Ignore,
     Success,
     validate,
     arrayOf,

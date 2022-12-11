@@ -54,10 +54,6 @@ export const Success = function <T>(t: T): T {
     return t;
 };
 
-export const Ignore = function <T>(t: T): T {
-    return t;
-};
-
 export const Failure = function (t: string): never {
     throw t;
 };

@@ -1,4 +1,4 @@
-import { Failure, Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Failure, Success, SyncValidatorFunction } from '../../types.js';
 
 const betweenLength =
     (min: number, max: number): SyncValidatorFunction<string, string> =>

@@ -1,4 +1,4 @@
-import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Success, SyncValidatorFunction } from '../../types.js';
 
 const clamp =
     (min: number, max: number): SyncValidatorFunction<number, number> =>

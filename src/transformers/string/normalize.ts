@@ -1,4 +1,4 @@
-import { Ignore, Success, SyncValidatorFunction } from '../../types.js';
+import { Success, SyncValidatorFunction } from '../../types.js';
 
 const normalize =
     (form?: 'NFC' | 'NFD' | 'NFKC' | 'NFKD'): SyncValidatorFunction<string, string> =>

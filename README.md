@@ -106,16 +106,13 @@ const validateRegistration = validate({
 
 What you might notice is the extra parentheses before the async part: in Dvali it is customary to wrap the validator in an extra function. This allows to be consistent with other validation functions that need parameters (`minLength` for example).
 
-To make this `isUniqueEmail` validation function more expressive, we can use the `Success`, `Failure` and `Ignore` macros, exported from the library:
+To make this `isUniqueEmail` validation function more expressive, we can use the `Success` and `Failure` macros, exported from the library:
 
 ```js
-import validate, { Success, Failure, Ignore } from 'dvali';
+import validate, { Success, Failure } from 'dvali';
 
 const isUniqueEmail = () =>
     async function (email, conf) {
-        if (typeof email !== 'string') {
-            return Ignore();
-        }
         const exists = await db.users.find({ email });
         if (!exists) {
             return Success();
@@ -123,8 +120,6 @@ const isUniqueEmail = () =>
         return Failure('This email already in use. Try your alternate address.');
     };
 ```
-
-Why use this `Ignore` call? Composability is very important in Dvali, one function should only do one thing (but do that thing well). In this case, we let the `isString` function handle whether the email is a string, and our function only proceeds if it's valid. This is useful in cases like optional fields, when we want to the validation to pass, even if the tested value is undefined.
 
 To make writing validation functions easier, there are several helpers in the core library for example `validateCondition` for testing simple conditions, or `validateRegex` for testing against a regular expression. Before writing your own validation function for everything, check these out!
 
@@ -136,13 +131,10 @@ To go forth with our registration theme, check this feature out with a sanitizat
 
 ```js
 import bcrypt from 'bcrypt';
-import validate, { isString, minLength, Ignore, Success } from 'dvali';
+import validate, { isString, minLength, Success } from 'dvali';
 
 const hash = () =>
     async function (password, conf) {
-        if (typeof password !== 'string') {
-            return Ignore();
-        }
         const hashedPassword = await bcrypt.hash(password, 8);
         return Success(hashedPassword);
         // ... or just return the Promise:
