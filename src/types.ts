@@ -49,4 +49,7 @@ export interface FailureFunction<T> {
     (v: T, conf: ValidatorConfiguration): string;
 }
 
-export type InferValidator<T> = T extends Validator<unknown, infer O, unknown, unknown> ? O : never;
+export type InferValidator<T> = T extends Validator<infer _, infer _, infer _, infer O> ? O : never;
+
+type Inferred = InferValidator<SyncValidatingFunction<number, number> | SyncValidatingFunction<number, string>>;
+type Inferred2 = ValidatingFunction<number, number> extends SyncValidator<infer _, infer _, infer _, infer O> ? true : false;

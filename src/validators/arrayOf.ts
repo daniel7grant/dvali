@@ -1,22 +1,20 @@
 import validate, { hasNoPromise, isPromise } from '../validate.js';
 import {
     Validator,
-    SyncValidatorFunction,
     ValidatorState,
-    ValidatorFunction,
     SyncValidator,
     ValidatorConfiguration,
+    SyncValidatingFunction,
+    AsyncValidatingFunction,
 } from '../types.js';
 
 function arrayOf<I, A, B, O>(
     validator: SyncValidator<I, A, B, O>
-): (val: unknown, c: ValidatorConfiguration) => O[];
+): SyncValidatingFunction<I[], O[]>;
+function arrayOf<I, A, B, O>(validator: Validator<I, A, B, O>): AsyncValidatingFunction<I[], O[]>;
 function arrayOf<I, A, B, O>(
     validator: Validator<I, A, B, O>
-): (val: unknown, c: ValidatorConfiguration) => Promise<O[]>;
-function arrayOf<I, A, B, O>(
-    validator: Validator<I, A, B, O>
-): (val: unknown, c: ValidatorConfiguration) => O[] | Promise<O[]> {
+): (val: I[], c: ValidatorConfiguration) => O[] | Promise<O[]> {
     return (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValues !== 'object' || !Array.isArray(testValues)) {
@@ -25,22 +23,26 @@ function arrayOf<I, A, B, O>(
 
         const results = testValues.map<ValidatorState<O> | Promise<ValidatorState<O>>>(
             (testValue, i) => {
-                const result = validate(validator, {
-                    ...conf,
-                    name: `${conf.name}[${i}]`,
-                    path: conf.path.concat(i.toString()),
-                    parent: testValues,
-                })(testValue);
+                try {
+                    const result = validate(validator, {
+                        ...conf,
+                        name: `${conf.name}[${i}]`,
+                        path: conf.path.concat(i.toString()),
+                        parent: testValues,
+                    })(testValue);
 
-                if (isPromise(result)) {
-                    return result.then(
-                        (value) => ({ value, failures: [] }),
-                        (failures) => ({ value: testValue, failures })
-                    );
+                    if (isPromise(result)) {
+                        return result.then(
+                            (value) => ({ value, failures: [] }),
+                            (failures) => ({ value: testValue as any, failures })
+                        );
+                    }
+
+                    // TODO: handles multiple failures
+                    return { value: result, failures: [] };
+                } catch (failure) {
+                    return { value: testValue as any, failures: failure as string[] };
                 }
-
-                // TODO: handles multiple failures
-                return { value: result, failures: [] };
             }
         );
 

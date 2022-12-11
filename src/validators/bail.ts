@@ -30,45 +30,59 @@ function bail<I, A, O, B>(
                         if (failures.length > 0) {
                             return previousState;
                         }
-                        const result = validator(value, conf);
-                        if (isPromise(result)) {
-                            return result.then(
-                                (newValue) => ({
-                                    value: newValue,
-                                    failures,
-                                }),
-                                (failure) => ({
-                                    value,
-                                    failures: failures.concat(failure),
-                                })
-                            );
+                        try {
+                            const result = validator(value, conf);
+                            if (isPromise(result)) {
+                                return result.then(
+                                    (newValue) => ({
+                                        value: newValue,
+                                        failures,
+                                    }),
+                                    (failure) => ({
+                                        value,
+                                        failures: failures.concat(failure),
+                                    })
+                                );
+                            }
+                            return {
+                                value: result,
+                                failures: failures,
+                            };
+                        } catch (err) {
+                            return {
+                                value,
+                                failures: failures.concat(err as string[]),
+                            };
                         }
-                        return {
-                            value: result,
-                            failures: failures,
-                        };
                     });
                 }
                 if (previousState.failures.length > 0) {
                     return previousState;
                 }
-                const result = validator(value, conf);
-                if (isPromise(result)) {
-                    return result.then(
-                        (newValue) => ({
-                            value: newValue,
-                            failures: previousState.failures,
-                        }),
-                        (failure) => ({
-                            value,
-                            failures: previousState.failures.concat(failure),
-                        })
-                    );
+                try {
+                    const result = validator(value, conf);
+                    if (isPromise(result)) {
+                        return result.then(
+                            (newValue) => ({
+                                value: newValue,
+                                failures: previousState.failures,
+                            }),
+                            (failure) => ({
+                                value,
+                                failures: previousState.failures.concat(failure),
+                            })
+                        );
+                    }
+                    return {
+                        value: result,
+                        failures: previousState.failures,
+                    };
+                } catch (err) {
+                    return {
+                        value,
+                        failures: previousState.failures.concat(err as string[]),
+                    };
                 }
-                return {
-                    value: result,
-                    failures: previousState.failures,
-                };
             },
             { value, failures: [] } as ValidatorState<unknown>
         );
@@ -82,7 +96,6 @@ function bail<I, A, O, B>(
             });
         }
 
-        // TODO: handles multiple failures
         if (result.failures.length > 0) {
             throw result.failures;
         }
