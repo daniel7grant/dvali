@@ -3,7 +3,7 @@ import validateCondition from './validateCondition.js';
 
 const oneOf = <T>(items: T[]): SyncValidatorFunction<T, T> =>
     validateCondition(
-        (value) => items.indexOf(value) !== -1,
+        (value) => items.indexOf(value as T) !== -1,
         (_, conf) => `Field ${conf.name} should be one of ${items.join(', ')}.`
     );
 
