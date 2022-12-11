@@ -1,7 +1,7 @@
-import { Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const toString = (): SyncValidatorFunction<unknown, string> => (value, conf) => {
-    return Success('' + value);
+    return '' + value;
 };
 
 export default toString;

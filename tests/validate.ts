@@ -1,20 +1,20 @@
 import { describe, expect, test } from '@jest/globals';
 import validate from '../src/validate';
-import { Failure, Success, ValidatorFunction } from '../src/types';
+import { ValidatorFunction } from '../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction<string, string> =>
     async function (value, _conf) {
-        return Success(value);
+        return value;
     };
 
 const testFailingValidation = (): ValidatorFunction<string, string> =>
     async function (_value, _conf) {
-        return Failure('test failed');
+        throw 'test failed'
     };
 
 const testTransformValidation = (): ValidatorFunction<string, string> =>
     async function (value, _conf) {
-        return Success(value + value);
+        return value + value;
     };
 
 test('validate with function returns the value on success', async () => {

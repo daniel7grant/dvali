@@ -4,9 +4,6 @@ import validate, {
     isEmail,
     minLength,
     ValidatorFunction,
-    Success,
-    Failure,
-    Validator,
     ValidatorObject,
 } from '../src/index';
 
@@ -89,9 +86,9 @@ test('README: Bring your own validator - isUniqueEmail full', async () => {
         async function (email, conf) {
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success(email);
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     const validateRegistration = validate({
@@ -124,9 +121,9 @@ test('README: Sanitize and transform - hash', async () => {
         async function (email, conf) {
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success(email);
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     // Mock bcrypt
@@ -139,7 +136,7 @@ test('README: Sanitize and transform - hash', async () => {
     const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
             const hashedPassword = await bcrypt.hash(password, 8);
-            return Success(hashedPassword);
+            return hashedPassword;
         };
 
     const validateRegistration = validate({
@@ -176,9 +173,9 @@ test('README: Higher-order validators - confirmPassword', async () => {
         async function (email, conf) {
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success(email);
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     // Mock bcrypt
@@ -191,7 +188,7 @@ test('README: Higher-order validators - confirmPassword', async () => {
     const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
             const hashedPassword = await bcrypt.hash(password, 8);
-            return Success(hashedPassword);
+            return hashedPassword;
         };
 
     const confirmPassword = <
@@ -202,10 +199,10 @@ test('README: Higher-order validators - confirmPassword', async () => {
     ): ValidatorFunction<I, O> =>
         async function (user, conf) {
             if (!user?.password_confirm) {
-                return Failure('You should confirm your password.');
+                throw 'You should confirm your password.'
             }
             if (user.password_confirm !== user.password) {
-                return Failure('The two passwords do not match.');
+                throw 'The two passwords do not match.'
             }
             return validate(validator)(user);
         };

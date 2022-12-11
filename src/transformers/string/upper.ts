@@ -1,7 +1,7 @@
-import { Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const upper = ():SyncValidatorFunction<string, string> => (value, conf) => {
-    return Success(value.toLocaleUpperCase());
+    return value.toLocaleUpperCase();
 };
 
 export default upper;

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { Failure, Success, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
+import { ValidatorConfiguration, ValidatorFunction } from '../../src/types';
 import validate from '../../src/validate';
 import optional from '../../src/validators/optional';
 
@@ -15,9 +15,9 @@ test.failing('optional validator if value is undefined returns successfully', as
     const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
         i += 1;
         if (value) {
-            return Success(value as string);
+            return value as string;
         }
-        return Failure('This field is required.');
+        throw 'This field is required.'
     };
 
     const validateFunctionOptional = validate([testValidation()]);
@@ -46,9 +46,9 @@ test.failing('optional validator if value is undefined returns successfully', as
 test('optional validator without it undefined fails', async () => {
     const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
         if (value) {
-            return Success(value as string);
+            return value as string;
         }
-        return Failure('This field is required.');
+        throw 'This field is required.'
     };
 
     const validateNotOptional = validate({ field: testValidation() });

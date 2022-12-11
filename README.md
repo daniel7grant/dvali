@@ -94,7 +94,7 @@ const isUniqueEmail = () =>
     async function (email, conf) {
         const exists = await db.users.find({ email }); // User | null
         if (!exists) {
-            return;
+            return email; // You have to return the original value
         }
         throw 'This email already in use. Try your alternate address.';
     };
@@ -106,21 +106,6 @@ const validateRegistration = validate({
 
 What you might notice is the extra parentheses before the async part: in Dvali it is customary to wrap the validator in an extra function. This allows to be consistent with other validation functions that need parameters (`minLength` for example).
 
-To make this `isUniqueEmail` validation function more expressive, we can use the `Success` and `Failure` macros, exported from the library:
-
-```js
-import validate, { Success, Failure } from 'dvali';
-
-const isUniqueEmail = () =>
-    async function (email, conf) {
-        const exists = await db.users.find({ email });
-        if (!exists) {
-            return Success();
-        }
-        return Failure('This email already in use. Try your alternate address.');
-    };
-```
-
 To make writing validation functions easier, there are several helpers in the core library for example `validateCondition` for testing simple conditions, or `validateRegex` for testing against a regular expression. Before writing your own validation function for everything, check these out!
 
 ### Sanitize and transform
@@ -131,12 +116,12 @@ To go forth with our registration theme, check this feature out with a sanitizat
 
 ```js
 import bcrypt from 'bcrypt';
-import validate, { isString, minLength, Success } from 'dvali';
+import validate, { isString, minLength } from 'dvali';
 
 const hash = () =>
     async function (password, conf) {
         const hashedPassword = await bcrypt.hash(password, 8);
-        return Success(hashedPassword);
+        return hashedPassword;
         // ... or just return the Promise:
         // return bcrypt.hash(password, 8);
     };
@@ -168,10 +153,10 @@ See the `confirmPassword` higher-order validator in action:
 const confirmPassword = (validators) =>
     async function (user, conf) {
         if (user?.password_confirm === undefined) {
-            return Failure('You should confirm your password.');
+            throw 'You should confirm your password.'
         }
         if (user.password_confirm !== user.password) {
-            return Failure('The two passwords do not match.');
+            throw 'The two passwords do not match.'
         }
         return validate(validators)(user);
     };

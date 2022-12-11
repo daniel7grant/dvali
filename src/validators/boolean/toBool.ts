@@ -1,7 +1,7 @@
-import { Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const toBool = (): SyncValidatorFunction<unknown, boolean> => (value) => {
-    return Success(!!value);
+    return !!value;
 };
 
 export default toBool;

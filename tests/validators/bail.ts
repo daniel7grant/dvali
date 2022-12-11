@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { Failure, Success, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
+import { ValidatorConfiguration, ValidatorFunction } from '../../src/types';
 import validate from '../../src/validate';
 import bail from '../../src/validators/bail';
 
@@ -15,13 +15,13 @@ test('bail runs over each test if they are not failing', async () => {
 
     const increment = (): ValidatorFunction<unknown, unknown> => async (value) => {
         i += 1;
-        return Success(value);
+        return value;
     };
 
     // To test whether it works with returning value
     const increment2 = (): ValidatorFunction<unknown, unknown> => async (value) => {
         i += 1;
-        return Success(value);
+        return value;
     };
 
     const validateBail = validate(bail([increment(), increment2(), increment()]));
@@ -35,7 +35,7 @@ test('bail stops after first failing test', async () => {
 
     const failIncrement = (): ValidatorFunction<unknown, unknown> => async () => {
         i += 1;
-        return Failure('Incrementation failed.');
+        throw 'Incrementation failed.'
     };
 
     const validateBail = validate(bail([failIncrement(), failIncrement(), failIncrement()]));
@@ -51,9 +51,9 @@ test('bail stops after first failing test', async () => {
 test('bail just passes to validate if the passed value is not an array', async () => {
     const increment = (): ValidatorFunction<unknown, unknown> => async (value) => {
         if (value) {
-            return Success(value);
+            return value;
         } else {
-            return Failure("This shouldn't pass.");
+            throw "This shouldn't pass."
         }
     };
 

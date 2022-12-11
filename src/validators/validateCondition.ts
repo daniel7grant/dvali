@@ -1,7 +1,5 @@
 import {
-    Failure,
     FailureFunction,
-    Success,
     ValidatorConfiguration,
     AsyncValidatorFunction,
     SyncValidatorFunctionInner,
@@ -33,16 +31,16 @@ function validateCondition<T>(
         if (isPromise(result)) {
             return result.then((result) => {
                 if (result) {
-                    return Success(field as T);
+                    return field as T;
                 } else {
-                    return Failure(errorMsg(field, conf));
+                    throw errorMsg(field, conf);
                 }
             });
         }
         if (result) {
-            return Success(field as T);
+            return field as T;
         } else {
-            return Failure(errorMsg(field, conf));
+            throw errorMsg(field, conf);
         }
     };
 }

@@ -1,13 +1,13 @@
-import { Failure, Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const gt =
     (min: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
         if (value > min) {
-            return Success(value);
+            return value;
         }
 
-        return Failure(`Field ${conf.name} should be greater than ${min}.`);
+        throw `Field ${conf.name} should be greater than ${min}.`
     };
 
 export default gt;

@@ -1,4 +1,4 @@
-import { Failure, FailureFunction, Success, SyncValidatorFunction } from '../types.js';
+import { FailureFunction, SyncValidatorFunction } from '../types.js';
 
 const validateRegex = (
     regex: RegExp,
@@ -6,9 +6,9 @@ const validateRegex = (
 ): SyncValidatorFunction<string, string> => {
     return function (value, conf) {
         if (regex.test(value)) {
-            return Success(value);
+            return value;
         } else {
-            return Failure(errorMsg(value, conf));
+            throw errorMsg(value, conf)
         }
     };
 };

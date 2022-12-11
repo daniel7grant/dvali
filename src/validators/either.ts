@@ -1,4 +1,4 @@
-import { InferValidator, Success, Validator, ValidatorConfiguration } from '../types.js';
+import { InferValidator, Validator, ValidatorConfiguration } from '../types.js';
 import validate, { hasNoPromise } from '../validate.js';
 
 function either<V extends Validator<unknown, unknown, unknown, unknown>>(

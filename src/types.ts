@@ -49,11 +49,3 @@ export interface FailureFunction<T> {
 }
 
 export type InferValidator<T> = T extends Validator<unknown, infer O, unknown, unknown> ? O : never;
-
-export const Success = function <T>(t: T): T {
-    return t;
-};
-
-export const Failure = function (t: string): never {
-    throw t;
-};

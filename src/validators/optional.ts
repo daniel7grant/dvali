@@ -1,11 +1,11 @@
-import { Success, SyncValidatorFunction } from '../types.js';
+import { SyncValidatorFunction } from '../types.js';
 
 function optional<T>(): SyncValidatorFunction<T, T | undefined> {
     return (value, conf) => {
         if (typeof value === 'undefined') {
-            return Success(value);
+            return value;
         }
-        return Success(value);
+        return value;
     };
 }
 

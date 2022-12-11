@@ -1,21 +1,21 @@
 import { expect, test } from '@jest/globals';
 import either from '../../src/validators/either';
 import validate from '../../src/validate';
-import { Failure, Success, ValidatorFunction } from '../../src/types';
+import { ValidatorFunction } from '../../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction<unknown, unknown> =>
     async function (value, _conf) {
-        return Success(value);
+        return value;
     };
 
 const testFailingValidation = (i: number): ValidatorFunction<unknown, unknown> =>
     async function (_value, _conf) {
-        return Failure(`test ${i} failed`);
+        throw `test ${i} failed`
     };
 
 const testTransformingValidation = (): ValidatorFunction<number, unknown> =>
     async function (value, _conf) {
-        return Success(value + 1);
+        return value + 1;
     };
 
 test('either function passes if both of the two validation passes', async () => {

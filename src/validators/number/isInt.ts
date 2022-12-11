@@ -1,4 +1,4 @@
-import { Failure, Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 import validateCondition from '../validateCondition.js';
 
 const isInt = (): SyncValidatorFunction<unknown, number> =>

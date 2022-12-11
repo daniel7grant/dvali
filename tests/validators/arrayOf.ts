@@ -1,24 +1,24 @@
 import { describe, expect, test } from '@jest/globals';
 import arrayOf from '../../src/validators/arrayOf';
 import validate from '../../src/validate';
-import { Failure, Success, ValidatorFunction } from '../../src/types';
+import { ValidatorFunction } from '../../src/types';
 
 const testSuccessfulValidation = (): ValidatorFunction<unknown, unknown> =>
     async function (value, _conf) {
-        return Success(value);
+        return value;
     };
 
 const testFailingValidation = (): ValidatorFunction<unknown, unknown> =>
     async function (_value, _conf) {
-        return Failure('test failed');
+        throw 'test failed'
     };
 
 const testMinimumValidation = (): ValidatorFunction<number, unknown> =>
     async function (value, _conf) {
         if (value > 2) {
-            return Success(value);
+            return value;
         } else {
-            return Failure('test failed');
+            throw 'test failed'
         }
     };
 

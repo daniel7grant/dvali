@@ -1,4 +1,4 @@
-import { Failure, Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const between: (
     min: number,
@@ -11,10 +11,10 @@ const between: (
             ((opts.minInclusive && value >= min) || (!opts.minInclusive && value > min)) &&
             ((opts.maxInclusive && value <= max) || (!opts.maxInclusive && value < max))
         ) {
-            return Success(value);
+            return value;
         }
 
-        return Failure(`Field ${conf.name} should be between ${min} and ${max}.`);
+        throw `Field ${conf.name} should be between ${min} and ${max}.`
     };
 
 export default between;

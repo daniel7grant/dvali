@@ -1,7 +1,7 @@
-import { Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const ceil = (): SyncValidatorFunction<number, number> => (value, conf) => {
-    return Success(Math.ceil(value));
+    return Math.ceil(value);
 };
 
 export default ceil;

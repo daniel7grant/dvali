@@ -1,4 +1,4 @@
-import { Failure, Success, SyncValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const inRange: (
     minDate: string | number | Date,
@@ -14,12 +14,10 @@ const inRange: (
             ((opts.minInclusive && value >= min) || (!opts.minInclusive && value > min)) &&
             ((opts.maxInclusive && value <= max) || (!opts.maxInclusive && value < max))
         ) {
-            return Success(value);
+            return value;
         }
 
-        return Failure(
-            `Field ${conf.name} should be between ${min.toString()} and ${max.toString()}.`
-        );
+        throw `Field ${conf.name} should be between ${min.toString()} and ${max.toString()}.`;
     };
 
 export default inRange;
