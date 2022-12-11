@@ -1,5 +1,4 @@
 import {
-    SyncValidatorFunction,
     SyncValidatorFunctionList,
     ValidatorConfiguration,
     ValidatorFunction,
@@ -35,7 +34,7 @@ function bail<I, A, O, B>(
                         if (isPromise(result)) {
                             return result.then(
                                 (newValue) => ({
-                                    value: typeof newValue !== 'undefined' ? newValue : value,
+                                    value: newValue,
                                     failures,
                                 }),
                                 (failure) => ({
@@ -45,7 +44,7 @@ function bail<I, A, O, B>(
                             );
                         }
                         return {
-                            value: typeof result !== 'undefined' ? result : value,
+                            value: result,
                             failures: failures,
                         };
                     });
@@ -57,7 +56,7 @@ function bail<I, A, O, B>(
                 if (isPromise(result)) {
                     return result.then(
                         (newValue) => ({
-                            value: typeof newValue !== 'undefined' ? newValue : value,
+                            value: newValue,
                             failures: previousState.failures,
                         }),
                         (failure) => ({
@@ -67,7 +66,7 @@ function bail<I, A, O, B>(
                     );
                 }
                 return {
-                    value: typeof result !== 'undefined' ? result : value,
+                    value: result,
                     failures: previousState.failures,
                 };
             },

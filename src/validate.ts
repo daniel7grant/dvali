@@ -10,10 +10,12 @@ function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A
                     const result = validator(value, conf);
                     if (isPromise(result)) {
                         return result.then(
-                            (newValue) => ({
-                                value: typeof newValue !== 'undefined' ? newValue : value,
-                                failures,
-                            }),
+                            (newValue) => {
+                                return {
+                                    value: newValue,
+                                    failures,
+                                };
+                            },
                             (failure) => ({
                                 value,
                                 failures: failures.concat(failure),
@@ -21,7 +23,7 @@ function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A
                         );
                     }
                     return {
-                        value: typeof result !== 'undefined' ? result : value,
+                        value: result,
                         failures: failures,
                     };
                 });
@@ -29,10 +31,12 @@ function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A
             const result: unknown = validator(value, conf);
             if (isPromise(result)) {
                 return result.then(
-                    (newValue) => ({
-                        value: typeof newValue !== 'undefined' ? newValue : value,
-                        failures: previousState.failures,
-                    }),
+                    (newValue) => {
+                        return {
+                            value: newValue,
+                            failures: previousState.failures,
+                        };
+                    },
                     (failure) => ({
                         value,
                         failures: previousState.failures.concat(failure),
@@ -40,7 +44,7 @@ function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A
                 );
             }
             return {
-                value: typeof result !== 'undefined' ? result : value,
+                value: result,
                 failures: previousState.failures,
             };
         },
@@ -78,14 +82,14 @@ function resolveValidatorObject<O>(validator: ValidatorObject<O>, testValue: any
             return result.then(
                 (value) =>
                     ({
-                        value: [key, typeof result === 'undefined' ? testValue[key] : value],
+                        value: [key, value],
                         failures: [],
                     } as ValidatorState<[keyof O, O[keyof O]]>),
                 (failure) => ({ value: [key, testValue[key]], failures: Array.isArray(failure) ? failure : [failure] } as ValidatorState<[keyof O, O[keyof O]]>)
             );
         }
         return {
-            value: [key, typeof result === 'undefined' ? testValue[key] : result],
+            value: [key, result],
             failures: [],
         } as ValidatorState<[keyof O, O[keyof O]]>;
     });
@@ -168,15 +172,14 @@ export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateC
             try {
                 const result = validator(testValue, conf);
                 if (isPromise(result)) {
-                    return result
-                        .then((newValue) => (typeof newValue !== 'undefined' ? newValue : testValue))
-                        .catch((failures) => {
-                            if (Array.isArray(failures)) {
-                                return Promise.reject(failures);
-                            }
-                            return Promise.reject([failures]);
-                        });
+                    return result.catch((failures) => {
+                        if (Array.isArray(failures)) {
+                            return Promise.reject(failures);
+                        }
+                        return Promise.reject([failures]);
+                    });
                 }
+                return result;
                 return result !== 'undefined' ? result : testValue;
             } catch (failures) {
                 if (Array.isArray(failures)) {
