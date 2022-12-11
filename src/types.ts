@@ -10,6 +10,10 @@ export interface ValidatorConfiguration {
     parent: any;
 }
 
+export type SyncValidatingFunction<I, O> = O extends void | undefined ? never : (val: I, c?: Partial<ValidatorConfiguration>) => O;
+export type AsyncValidatingFunction<I, O> = (val: I, c?: Partial<ValidatorConfiguration>) => Promise<O>;
+export type ValidatingFunction<I, O> = SyncValidatingFunction<I, O> | AsyncValidatingFunction<I, O>;
+
 export type SyncValidatorFunction<I, O> = (value: I, conf: ValidatorConfiguration) => O | undefined | void;
 // This is necessary so sync validators don't eat async validators (SyncValidatorFunction<I, Promise<O>> instead of ValidatorFunction<I, O>)
 export type SyncValidatorFunctionInner<I, O> = O extends Promise<infer _> ? never : SyncValidatorFunction<I, O>;

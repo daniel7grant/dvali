@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { SyncValidatorFunction, ValidatorFunction } from '../src/types';
+import { SyncValidatorFunction, ValidatingFunction, ValidatorFunction } from '../src/types';
 import validate from '../src/validate';
 
 const isString: SyncValidatorFunction<unknown, string> = (val, c) => {
@@ -118,15 +118,13 @@ test('inner sync validator function returns inner type', () => {
 });
 
 test('inner async validator function returns inner type', () => {
-    const validateWithInnerFunction = validate(validate(isStringP));
+    const validatingFn: ValidatingFunction<unknown, string> = validate(isStringP);
+    const validateWithInnerFunction = validate(validatingFn);
     const vfnai: Promise<string> = validateWithInnerFunction('');
 });
 test('inner validator function array returns inner type', () => {
     const validateWithInnerFunction11 = validate([validate(isString)]);
-    const vlist1i1: Promise<string> = validateWithInnerFunction11('');
-
-    const validateWithInnerFunction12 = validate([validate(isStringP)]);
-    const vlist1i2: Promise<string> = validateWithInnerFunction12('');
+    const vlist1i1: string = validateWithInnerFunction11('');
 
     const validateWithInnerFunction13 = validate(validate([isStringP]));
     const vlist1i3: Promise<string> = validateWithInnerFunction13('');
@@ -142,7 +140,8 @@ test('inner validator object returns inner object type', () => {
     const vobji3: { a: string; b: string } = validateWithInnerObject3({ a: '', b: '' });
 });
 test('inner nested validator object returns inner object type', () => {
-    const validateWithInnerNestedObject1 = validate({ a: { c: validate(isStringP) }, b: isStringP });
+    const vf: ValidatingFunction<unknown, string> = validate(isStringP);
+    const validateWithInnerNestedObject1 = validate({ a: { c: vf }, b: isStringP });
     const vdobji1: Promise<{ a: { c: string }; b: string }> = validateWithInnerNestedObject1({ a: { c: '' }, b: '' });
 
     const validateWithInnerNestedObject2 = validate({ a: { c: validate(isString) }, b: isStringP });
