@@ -1,4 +1,4 @@
-import { AsyncValidatingFunction, SyncValidatingFunction, SyncValidatorFunctionInner, SyncValidatorFunctionList, SyncValidatorFunctionList1, SyncValidatorFunctionList2, SyncValidatorFunctionList3, SyncValidatorObject, ValidatingFunction, Validator, ValidatorConfiguration, ValidatorFunction, ValidatorFunctionList, ValidatorFunctionList1, ValidatorFunctionList2, ValidatorFunctionList3, ValidatorObject, ValidatorState } from './types.js';
+import { AsyncValidatingFunction, SyncValidatingFunction, SyncValidatingFunctionInner, SyncValidatorFunctionInner, SyncValidatorFunctionList, SyncValidatorFunctionList1, SyncValidatorFunctionList2, SyncValidatorFunctionList3, SyncValidatorObject, ValidatingFunction, Validator, ValidatorConfiguration, ValidatorFunction, ValidatorFunctionList, ValidatorFunctionList1, ValidatorFunctionList2, ValidatorFunctionList3, ValidatorObject, ValidatorState } from './types.js';
 
 function resolveValidatorList<I, A, B, O>(validators: SyncValidatorFunctionList<I, A, B, O>, value: any, conf: ValidatorConfiguration): O;
 function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A, B, O>, value: any, conf: ValidatorConfiguration): Promise<O>;
@@ -89,7 +89,7 @@ function resolveValidatorObject<O>(validator: ValidatorObject<O>, testValue: any
             );
         }
         return {
-            value: [key, result],
+            value: [key, result] as [keyof O, O[keyof O]],
             failures: [],
         } as ValidatorState<[keyof O, O[keyof O]]>;
     });
@@ -132,7 +132,7 @@ const isValidatorFunction = <I, A, B, O>(validator: Validator<I, A, B, O>): vali
 };
 
 export function validate<I, O>(v: SyncValidatorFunctionInner<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
-export function validate<I, O>(v: SyncValidatingFunction<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
+export function validate<I, O>(v: SyncValidatingFunctionInner<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
 export function validate<I, O>(v: SyncValidatorFunctionList1<I, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
 export function validate<I, A, O>(v: SyncValidatorFunctionList2<I, A, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
 export function validate<I, A, B, O>(v: SyncValidatorFunctionList3<I, A, B, O>, c?: Partial<ValidatorConfiguration>): SyncValidatingFunction<I, O>;
