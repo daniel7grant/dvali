@@ -1,7 +1,7 @@
 import { SyncValidatorFunction } from '../../types.js';
 
 const tryNumber = (): SyncValidatorFunction<unknown, number> => (value, conf) => {
-    const parsed = Number.parseFloat(value as any);
+    const parsed = Number.parseFloat(value as string);
     if (!Number.isNaN(parsed)) {
         return parsed;
     }
