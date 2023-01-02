@@ -1,8 +1,5 @@
 import {
-    AsyncValidatorFunction,
-    InferValidator,
     SyncValidator,
-    SyncValidatorFunction,
     SyncValidatorFunctionInner,
     Validator,
     ValidatorConfiguration,

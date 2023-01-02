@@ -26,6 +26,7 @@ export type SyncValidatorFunctionList2<I, A, O> = [SyncValidatorFunctionInner<I,
 export type SyncValidatorFunctionList3<I, A, B, O> = [SyncValidatorFunctionInner<I, A>, SyncValidatorFunctionInner<A, B>, SyncValidatorFunctionInner<B, O>];
 export type SyncValidatorFunctionList<I, A, B, O> = SyncValidatorFunctionList1<I, O> | SyncValidatorFunctionList2<I, A, O> | SyncValidatorFunctionList3<I, A, B, O>;
 
+// TODO: add more cases for longer validators
 export type ValidatorFunctionList1<I, O> = [ValidatorFunction<I, O>];
 export type ValidatorFunctionList2<I, A, O> = [ValidatorFunction<I, A>, ValidatorFunction<A, O>];
 export type ValidatorFunctionList3<I, A, B, O> = [ValidatorFunction<I, A>, ValidatorFunction<A, B>, ValidatorFunction<B, O>];

@@ -7,6 +7,7 @@ import {
 } from '../types.js';
 import validate, { isPromise } from '../validate.js';
 
+// TODO: replace this with parallel validation
 function bail<I, A, O, B>(
     validators: SyncValidatorFunctionList<I, A, O, B>
 ): (val: I, c: ValidatorConfiguration) => O;

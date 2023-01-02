@@ -3,9 +3,10 @@ import { AsyncValidatingFunction, SyncValidatingFunction, SyncValidatingFunction
 function resolveValidatorList<I, A, B, O>(validators: SyncValidatorFunctionList<I, A, B, O>, value: any, conf: ValidatorConfiguration): O;
 function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A, B, O>, value: any, conf: ValidatorConfiguration): Promise<O>;
 function resolveValidatorList<I, A, B, O>(validators: ValidatorFunctionList<I, A, B, O>, value: any, conf: ValidatorConfiguration): O | Promise<O> {
-	// TODO: we probably should bail by default
+	// TODO: we should bail by default
     const result = (validators as ValidatorFunction<unknown, unknown>[]).reduce<ValidatorState<unknown> | Promise<ValidatorState<unknown>>>(
         (previousState, validator) => {
+            // TODO: refactor this to a unified function
             if (isPromise(previousState)) {
                 return previousState.then(({ value, failures }) => {
                     const result: unknown = validator(value, conf);
@@ -181,7 +182,7 @@ export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateC
                     });
                 }
                 return result;
-                // For some reason, without this it won't compile ???
+                // TODO: For some reason, without this it won't compile ???
                 return result !== 'undefined' ? result : testValue;
             } catch (failures) {
                 if (Array.isArray(failures)) {
@@ -195,5 +196,7 @@ export function validate<I, A, B, O>(validator: Validator<I, A, B, O>, validateC
         }
     };
 }
+
+// TODO: add identity transform function
 
 export default validate;

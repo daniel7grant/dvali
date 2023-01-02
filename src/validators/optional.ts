@@ -2,7 +2,6 @@ import {
     AsyncValidatingFunction,
     SyncValidatingFunction,
     SyncValidator,
-    ValidatingFunction,
     Validator,
     ValidatorConfiguration,
 } from '../types.js';
