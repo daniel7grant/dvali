@@ -1,19 +1,17 @@
 import validate, { hasNoPromise, isPromise } from '../validate.js';
 import {
-    Validator,
     ValidatorState,
-    SyncValidator,
     ValidatorConfiguration,
     SyncValidatingFunction,
     AsyncValidatingFunction,
+    SyncValidator,
+    Validator,
 } from '../types.js';
 
-function arrayOf<I, A, B, O>(
-    validator: SyncValidator<I, A, B, O>
-): SyncValidatingFunction<I[], O[]>;
-function arrayOf<I, A, B, O>(validator: Validator<I, A, B, O>): AsyncValidatingFunction<I[], O[]>;
-function arrayOf<I, A, B, O>(
-    validator: Validator<I, A, B, O>
+function arrayOf<I, O>(validator: SyncValidator<I, O>): SyncValidatingFunction<I[], O[]>;
+function arrayOf<I, O>(validator: Validator<I, O>): AsyncValidatingFunction<I[], O[]>;
+function arrayOf<I, O>(
+    validator: Validator<I, O>
 ): (val: I[], c: ValidatorConfiguration) => O[] | Promise<O[]> {
     return (testValues, conf) => {
         // Array of one item should use that validation to every item in the array

@@ -5,7 +5,11 @@
     "semi": true,
     "overrides": [
         {
-            "files": ["**/types.ts", "**/validate.ts"],
+            "files": [
+                "src/types.ts",
+                "src/validate.ts",
+                "src/validators/bail.ts"
+            ],
             "options": { "printWidth": 1000 }
         }
     ]

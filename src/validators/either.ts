@@ -1,29 +1,29 @@
 import {
-    SyncValidator,
     SyncValidatorFunctionInner,
-    Validator,
+    SyncValidator,
     ValidatorConfiguration,
     ValidatorFunction,
     ValidatorState,
+    Validator,
 } from '../types.js';
 import validate, { hasNoPromise, isPromise } from '../validate.js';
 
-function either<O1, O2>(
-    validators: [SyncValidator<any, any, any, O1>, SyncValidator<any, any, any, O2>]
+function either<I1, I2, O1, O2>(
+    validators: [SyncValidator<I1, O1>, SyncValidator<I2, O2>]
 ): SyncValidatorFunctionInner<unknown, O1 | O2>;
-function either<O1, O2>(
-    validators: [Validator<any, any, any, O1>, Validator<any, any, any, O2>]
+function either<I1, I2, O1, O2>(
+    validators: [Validator<I1, O1>, Validator<I2, O2>]
 ): ValidatorFunction<unknown, O1 | O2>;
-function either<O1, O2>(
-    validators: [Validator<any, any, any, O1>, Validator<any, any, any, O2>]
+function either<I1, I2, O1, O2>(
+    validators: [Validator<I1, O1>, Validator<I2, O2>]
 ): (val: unknown, c: ValidatorConfiguration) => O1 | O2 | Promise<O1 | O2> {
     return (value, conf) => {
         const results = validators.map((validator) => {
             try {
-                const result = validate(
-                    validator as Validator<unknown, unknown, unknown, unknown>,
+                const result = validate(validator as Validator<unknown, unknown>, conf)(
+                    value,
                     conf
-                )(value, conf) as O1 | O2 | Promise<O1 | O2>;
+                ) as O1 | O2 | Promise<O1 | O2>;
                 if (isPromise(result)) {
                     return result.then(
                         (value) =>

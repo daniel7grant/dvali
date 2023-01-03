@@ -44,6 +44,9 @@ test('sync validator function array returns transformed type without promise', (
 
     const validateWithSyncFunction3 = validate([isString, toNumber, intoString]);
     const vlist3: string = validateWithSyncFunction3('');
+
+    const validateWithSyncFunction24 = validate([toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString, toNumber, intoString]);
+    const vlist24: string = validateWithSyncFunction24('');
 });
 test('sync validator object returns object type without promise', () => {
     const validateWithObject = validate({ a: [isString, toNumber, intoString], b: isString });
@@ -67,6 +70,9 @@ test('async validator function array returns type with promise', () => {
    
     const validateWithAsyncFunction3 = validate([isStringP, toNumberP, intoStringP]);
     const vlist3p: Promise<string> = validateWithAsyncFunction3('');
+
+    const validateWithSyncFunction24 = validate([toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP, toNumberP, intoStringP]);
+    const vlist24p: Promise<string> = validateWithSyncFunction24('');
 });
 test('async validator object returns object type with promise', () => {
     const validateWithAsyncObject = validate({ a: [isStringP, toNumberP, intoStringP], b: isStringP });

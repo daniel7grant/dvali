@@ -69,7 +69,7 @@ import upper from './transformers/string/upper.js';
 
 import {
     FailureFunction,
-    Validator,
+    ValidatorInner,
     ValidatorConfiguration,
     ValidatorFunction,
     ValidatorObject,
@@ -78,7 +78,7 @@ import {
 
 export type {
     FailureFunction,
-    Validator,
+    ValidatorInner as Validator,
     ValidatorConfiguration,
     ValidatorFunction,
     ValidatorObject,

@@ -1,30 +1,16 @@
-import {
-    SyncValidatorFunctionList,
-    ValidatorConfiguration,
-    ValidatorFunction,
-    ValidatorFunctionList,
-    ValidatorState,
-} from '../types.js';
+import { SyncValidatorFunctionList, ValidatorConfiguration, ValidatorFunction, ValidatorFunctionList, ValidatorState } from '../types.js';
 import validate, { isPromise } from '../validate.js';
 
 // TODO: replace this with parallel validation
-function bail<I, A, O, B>(
-    validators: SyncValidatorFunctionList<I, A, O, B>
-): (val: I, c: ValidatorConfiguration) => O;
-function bail<I, A, O, B>(
-    validators: ValidatorFunctionList<I, A, O, B>
-): (val: I, c: ValidatorConfiguration) => Promise<O>;
-function bail<I, A, O, B>(
-    validators: ValidatorFunctionList<I, A, O, B>
-): (val: I, c: ValidatorConfiguration) => O | Promise<O> {
+function bail<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>(validators: SyncValidatorFunctionList<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>): (val: I, c: ValidatorConfiguration) => O;
+function bail<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>(validators: ValidatorFunctionList<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>): (val: I, c: ValidatorConfiguration) => Promise<O>;
+function bail<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>(validators: ValidatorFunctionList<I, A, B, C, D, E, F, G, H, J, K, L, M, P, Q, R, S, T, U, V, W, X, Y, Z, O>): (val: I, c: ValidatorConfiguration) => O | Promise<O> {
     if (!Array.isArray(validators)) {
         // If not an array is passed, simply continue validation
         return validate(validators);
     }
     return (value, conf) => {
-        const result = (validators as ValidatorFunction<unknown, unknown>[]).reduce<
-            ValidatorState<unknown> | Promise<ValidatorState<unknown>>
-        >(
+        const result = (validators as ValidatorFunction<unknown, unknown>[]).reduce<ValidatorState<unknown> | Promise<ValidatorState<unknown>>>(
             (previousState, validator) => {
                 if (isPromise(previousState)) {
                     return previousState.then(({ value, failures }) => {
