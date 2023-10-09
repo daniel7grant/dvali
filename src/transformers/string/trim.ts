@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const trim = (): ValidatorFunction<string> => (value, conf) => {
-    if (typeof value !== 'string') {
-        return Ignore();
-    }
-    return Success(value.trim());
+const trim = ():SyncValidatorFunction<string, string> => (value, conf) => {
+    return value.trim();
 };
 
 export default trim;

@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const ceil = (): ValidatorFunction<number> => (value, conf) => {
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-        return Ignore();
-    }
-    return Success(Math.ceil(value));
+const ceil = (): SyncValidatorFunction<number, number> => (value, conf) => {
+    return Math.ceil(value);
 };
 
 export default ceil;

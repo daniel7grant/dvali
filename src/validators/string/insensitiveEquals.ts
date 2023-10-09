@@ -1,15 +1,12 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const insensitiveEquals =
-    (to: string): ValidatorFunction<string> =>
+    (to: string): SyncValidatorFunction<string, string> =>
     (value, conf) => {
-        if (typeof value !== 'string') {
-            return Ignore();
-        }
         if (value.toLocaleLowerCase() === to.toLocaleLowerCase()) {
-            return Success();
+            return value;
         }
-        return Failure(`Field ${conf.name} should be equal to ${to}.`);
+        throw `Field ${conf.name} should be equal to ${to}.`
     };
 
 export default insensitiveEquals;

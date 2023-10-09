@@ -68,11 +68,8 @@ import truncate from './transformers/string/truncate.js';
 import upper from './transformers/string/upper.js';
 
 import {
-    Failure,
-    Ignore,
     FailureFunction,
-    Success,
-    Validator,
+    ValidatorInner,
     ValidatorConfiguration,
     ValidatorFunction,
     ValidatorObject,
@@ -81,7 +78,7 @@ import {
 
 export type {
     FailureFunction,
-    Validator,
+    ValidatorInner as Validator,
     ValidatorConfiguration,
     ValidatorFunction,
     ValidatorObject,
@@ -89,9 +86,6 @@ export type {
 };
 
 export {
-    Failure,
-    Ignore,
-    Success,
     validate,
     arrayOf,
     bail,

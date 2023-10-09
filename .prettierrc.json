@@ -2,5 +2,15 @@
     "tabWidth": 4,
     "singleQuote": true,
     "printWidth": 100,
-    "semi": true
+    "semi": true,
+    "overrides": [
+        {
+            "files": [
+                "src/types.ts",
+                "src/validate.ts",
+                "src/validators/bail.ts"
+            ],
+            "options": { "printWidth": 1000 }
+        }
+    ]
 }

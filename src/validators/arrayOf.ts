@@ -1,37 +1,65 @@
-import validate from '../validate.js';
-import { Validator, ValidatorFunction, ValidatorState } from '../types.js';
+import validate, { hasNoPromise, isPromise } from '../validate.js';
+import {
+    ValidatorState,
+    ValidatorConfiguration,
+    SyncValidatingFunction,
+    AsyncValidatingFunction,
+    SyncValidator,
+    Validator,
+} from '../types.js';
 
-const arrayOf =
-    <T>(validator: Validator<T>): ValidatorFunction<T[]> =>
-    (testValues, conf) => {
+function arrayOf<I, O>(validator: SyncValidator<I, O>): SyncValidatingFunction<I[], O[]>;
+function arrayOf<I, O>(validator: Validator<I, O>): AsyncValidatingFunction<I[], O[]>;
+function arrayOf<I, O>(
+    validator: Validator<I, O>
+): (val: I[], c: ValidatorConfiguration) => O[] | Promise<O[]> {
+    return (testValues, conf) => {
         // Array of one item should use that validation to every item in the array
         if (typeof testValues !== 'object' || !Array.isArray(testValues)) {
             throw `Field ${conf.name} should be an array.`;
         }
 
-        return Promise.all(
-            testValues.map<Promise<ValidatorState<T>>>((testValue, i) =>
-                validate(validator, {
-                    ...conf,
-                    name: `${conf.name}[${i}]`,
-                    path: conf.path.concat(i.toString()),
-                    parent: testValues,
-                })(testValue).then(
-                    (value) => ({ value, failures: [] }),
-                    (failures) => ({ value: testValue, failures })
-                )
-            )
-        ).then((results) => {
-            let validationFailures = results.reduce<string[]>(
-                (previousFailures, { failures }) => previousFailures.concat(failures),
-                []
-            );
-            if (validationFailures.length > 0) {
-                throw validationFailures;
-            }
+        const results = testValues.map<ValidatorState<O> | Promise<ValidatorState<O>>>(
+            (testValue, i) => {
+                try {
+                    const result = validate(validator, {
+                        ...conf,
+                        name: `${conf.name}[${i}]`,
+                        path: conf.path.concat(i.toString()),
+                        parent: testValues,
+                    })(testValue);
 
-            return results.map(({ value }) => value) as T[];
-        });
+                    if (isPromise(result)) {
+                        return result.then(
+                            (value) => ({ value, failures: [] }),
+                            (failures) => ({ value: testValue as any, failures })
+                        );
+                    }
+
+                    // TODO: handles multiple failures
+                    return { value: result, failures: [] };
+                } catch (failure) {
+                    return { value: testValue as any, failures: failure as string[] };
+                }
+            }
+        );
+
+        if (!hasNoPromise(results)) {
+            return Promise.all(results).then((results) => {
+                const failures = results.flatMap((result) => result.failures);
+                if (failures.length > 0) {
+                    throw failures;
+                }
+                return results.map(({ value }) => value);
+            });
+        }
+
+        const failures = results.flatMap((result) => result.failures);
+        if (failures.length > 0) {
+            throw failures;
+        }
+        return results.map(({ value }) => value);
     };
+}
 
 export default arrayOf;

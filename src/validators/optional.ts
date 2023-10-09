@@ -1,13 +1,19 @@
-import validate from '../validate.js';
-import { ValidatorFunction, Validator, Success } from '../types.js';
+import { AsyncValidatingFunction, SyncValidatingFunction, SyncValidator, ValidatorConfiguration, Validator } from '../types.js';
+import validate, { isPromise } from '../validate.js';
 
-const optional =
-    <T>(validators: Validator<T>): ValidatorFunction<T | undefined> =>
-    (value, conf) => {
+function optional<T>(validator: SyncValidator<unknown, T>): SyncValidatingFunction<unknown, T | undefined>;
+function optional<T>(validator: Validator<unknown, T>): AsyncValidatingFunction<unknown, T | undefined>;
+function optional<T>(validator: Validator<unknown, T>): (value: unknown, conf: ValidatorConfiguration) => T | undefined | Promise<T | undefined> {
+    return (value, conf) => {
         if (typeof value === 'undefined') {
-            return Success();
+            return value;
         }
-        return validate(validators, conf)(value);
+        const result = validate(validator)(value);
+        if (isPromise(result)) {
+            return result;
+        }
+        return result;
     };
+}
 
 export default optional;

@@ -1,17 +1,13 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const isMultipleOf =
-    (n: number): ValidatorFunction<number> =>
+    (n: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-            return Ignore();
-        }
-
         if (value % n === 0) {
-            return Success();
+            return value;
         }
 
-        return Failure(`Field ${conf.name} should be the multiple of ${n}.`);
+        throw `Field ${conf.name} should be the multiple of ${n}.`
     };
 
 export default isMultipleOf;

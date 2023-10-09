@@ -1,7 +1,7 @@
-import { Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const toInt = (): ValidatorFunction<number> => (value) => {
-    return Success(Number.parseInt(value as any));
+const toInt = (): SyncValidatorFunction<unknown, number> => (value) => {
+    return Number.parseInt(value as string);
 };
 
 export default toInt;

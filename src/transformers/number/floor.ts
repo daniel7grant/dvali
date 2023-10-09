@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const floor = (): ValidatorFunction<number> => (value, conf) => {
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-        return Ignore();
-    }
-    return Success(Math.floor(value));
+const floor = (): SyncValidatorFunction<number, number> => (value, conf) => {
+    return Math.floor(value);
 };
 
 export default floor;

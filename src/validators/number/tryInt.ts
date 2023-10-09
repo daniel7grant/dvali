@@ -1,11 +1,11 @@
-import { Failure, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const tryInt = (): ValidatorFunction<number> => (value, conf) => {
-    const parsed = Number.parseInt(value as any);
+const tryInt = (): SyncValidatorFunction<unknown, number> => (value, conf) => {
+    const parsed = Number.parseInt(value as string);
     if (!Number.isNaN(parsed)) {
-        return Success(parsed);
+        return parsed;
     }
-    return Failure(`Field ${conf.name} should be an integer.`);
+    throw `Field ${conf.name} should be an integer.`
 };
 
 export default tryInt;

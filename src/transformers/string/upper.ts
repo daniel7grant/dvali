@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const upper = (): ValidatorFunction<string> => (value, conf) => {
-    if (typeof value !== 'string') {
-        return Ignore();
-    }
-    return Success(value.toLocaleUpperCase());
+const upper = ():SyncValidatorFunction<string, string> => (value, conf) => {
+    return value.toLocaleUpperCase();
 };
 
 export default upper;

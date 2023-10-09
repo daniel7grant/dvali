@@ -1,16 +1,11 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
-import validateRegex from '../validateRegex.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const isUrl = (): ValidatorFunction<string> => (value, conf) => {
-    if (typeof value !== 'string') {
-        return Ignore();
-    }
-
+const isUrl = (): SyncValidatorFunction<string, string> => (value, conf) => {
     try {
-        const url = new URL(value);
-        return Success();
+        new URL(value);
+        return value;
     } catch {
-        return Failure(`Field ${conf.name} should be an url.`);
+        throw `Field ${conf.name} should be an url.`
     }
 };
 export default isUrl;

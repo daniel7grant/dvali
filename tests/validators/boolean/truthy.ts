@@ -12,49 +12,49 @@ const conf: ValidatorConfiguration = {
 test('truthy with other values returns success', async () => {
     const validateTruthy = truthy();
 
-    await expect(validateTruthy(true, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy(1 as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy(-1 as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy('string' as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy({} as any, conf)).resolves.toBeUndefined();
-    await expect(validateTruthy([] as any, conf)).resolves.toBeUndefined();
+    expect(validateTruthy(true, conf)).toEqual(true);
+    expect(validateTruthy(1, conf)).toEqual(1);
+    expect(validateTruthy(-1, conf)).toEqual(-1);
+    expect(validateTruthy('string', conf)).toEqual('string');
+    expect(validateTruthy({}, conf)).toEqual({});
+    expect(validateTruthy([], conf)).toEqual([]);
 });
 
 test('truthy with false, zero, empty string or nullish other fails', async () => {
     const validateTruthy = truthy();
 
     try {
-        await validateTruthy(false, conf);
+        validateTruthy(false, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy(0 as any, conf);
+        validateTruthy(0, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy(-0 as any, conf);
+        validateTruthy(-0, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy('' as any, conf);
+        validateTruthy('', conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy(null as any, conf);
+        validateTruthy(null, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy(undefined as any, conf);
+        validateTruthy(undefined, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }
     try {
-        await validateTruthy(NaN as any, conf);
+        validateTruthy(NaN, conf);
     } catch (err) {
         expect(err).toBe('Field boolField should be truthy.');
     }

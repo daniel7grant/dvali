@@ -1,17 +1,13 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const lt =
-    (max: number): ValidatorFunction<number> =>
+    (max: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-            return Ignore();
-        }
-
         if (value < max) {
-            return Success();
+            return value;
         }
 
-        return Failure(`Field ${conf.name} should be less than ${max}.`);
+        throw `Field ${conf.name} should be less than ${max}.`
     };
 
 export default lt;

@@ -12,10 +12,10 @@ const conf: ValidatorConfiguration = {
 test('tryBool with with true, false, one and zero returns the correct value', async () => {
     const sanitizeBool = tryBool();
 
-    await expect(sanitizeBool(true, conf)).resolves.toBe(true);
-    await expect(sanitizeBool(false, conf)).resolves.toBe(false);
-    await expect(sanitizeBool(1 as any, conf)).resolves.toBe(true);
-    await expect(sanitizeBool(0 as any, conf)).resolves.toBe(false);
+    await expect(sanitizeBool(true, conf)).toBe(true);
+    await expect(sanitizeBool(false, conf)).toBe(false);
+    await expect(sanitizeBool(1 as any, conf)).toBe(true);
+    await expect(sanitizeBool(0 as any, conf)).toBe(false);
 });
 
 test('tryBool with other things fails', async () => {
@@ -61,8 +61,8 @@ test('tryBool with other things fails', async () => {
 test('tryBool can be customized to accept other truthy or falsey values', async () => {
     const sanitizeBool = tryBool([true, 1, 'true', 600], [true, 1, 'false', null]);
 
-    await expect(sanitizeBool('true' as any, conf)).resolves.toBe(true);
-    await expect(sanitizeBool('false' as any, conf)).resolves.toBe(false);
-    await expect(sanitizeBool(600 as any, conf)).resolves.toBe(true);
-    await expect(sanitizeBool(null as any, conf)).resolves.toBe(false);
+    await expect(sanitizeBool('true' as any, conf)).toBe(true);
+    await expect(sanitizeBool('false' as any, conf)).toBe(false);
+    await expect(sanitizeBool(600 as any, conf)).toBe(true);
+    await expect(sanitizeBool(null as any, conf)).toBe(false);
 });

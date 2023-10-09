@@ -1,17 +1,13 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
 const gte =
-    (min: number): ValidatorFunction<number> =>
+    (min: number): SyncValidatorFunction<number, number> =>
     (value, conf) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-            return Ignore();
-        }
-
         if (value >= min) {
-            return Success();
+            return value;
         }
 
-        return Failure(`Field ${conf.name} should be greater than or equal to ${min}.`);
+        throw `Field ${conf.name} should be greater than or equal to ${min}.`
     };
 
 export default gte;

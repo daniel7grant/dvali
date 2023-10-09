@@ -1,15 +1,12 @@
-import { Failure, Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const closeTo: (v: number, e?: number) => ValidatorFunction<number> =
+const closeTo: (v: number, e?: number) => SyncValidatorFunction<number, number> =
     (exactValue, epsilon = Number.EPSILON) =>
     (value, conf) => {
-        if (typeof value !== 'number') {
-            return Ignore();
-        }
         if (Math.abs(value - exactValue) < epsilon) {
-            return Success(exactValue);
+            return exactValue;
         }
-        return Failure(`Field ${conf.name} should be approximately ${exactValue}.`);
+        throw `Field ${conf.name} should be approximately ${exactValue}.`
     };
 
 export default closeTo;

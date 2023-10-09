@@ -4,10 +4,7 @@ import validate, {
     isEmail,
     minLength,
     ValidatorFunction,
-    Success,
-    Failure,
-    Ignore,
-    Validator,
+    ValidatorObject,
 } from '../src/index';
 
 test('README: Validation functions', async () => {
@@ -22,7 +19,12 @@ test('README: Validation functions', async () => {
         },
     });
 
-    const validatedUser = await validateUser({
+    type ExpectedType = {
+        email: string;
+        password: string;
+        address: { city: string; street: string };
+    };
+    const validatedUser: ExpectedType = validateUser({
         email: 'jdoe@example.net',
         password: 'asdasd69',
         address: {
@@ -37,16 +39,6 @@ test('README: Validation functions', async () => {
         password: 'asdasd69',
         address: { city: 'Washington DC', street: 'Pennsylvania Avenue' },
     });
-
-    // Let's check for the expected type with some TypeScript magic
-    type ExpectedType = {
-        email: string;
-        password: string;
-        address: { city: string; street: string };
-    };
-    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
-    // This line shouldn't compile if the type is wrong
-    const cond1: AssertExpectedType<typeof validatedUser> = true;
 });
 
 test('README: Bring your own validator - isUniqueEmail starting', async () => {
@@ -59,11 +51,11 @@ test('README: Bring your own validator - isUniqueEmail starting', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
             const exists = await db.users.find({ email }); // User | null
             if (!exists) {
-                return;
+                return email;
             }
             throw 'This email already in use. Try your alternate address.';
         };
@@ -90,37 +82,29 @@ test('README: Bring your own validator - isUniqueEmail full', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore();
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success();
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     const validateRegistration = validate({
         email: [isString(), isUniqueEmail()],
     });
 
-    const validatedRegistration = await validateRegistration({ email: 'dsa@asd.asd' });
+    type ExpectedType = {
+        email: string;
+    };
+    const validatedRegistration: ExpectedType = await validateRegistration({ email: 'dsa@asd.asd' });
     expect(validatedRegistration).toEqual({ email: 'dsa@asd.asd' });
     try {
         await validateRegistration({ email: 'asd@asd.asd' });
     } catch (err) {
         expect(err).toEqual(['This email already in use. Try your alternate address.']);
     }
-
-    // Let's check for the expected type with some TypeScript magic
-    type ExpectedType = {
-        email: string;
-    };
-    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
-    // This line shouldn't compile if the type is wrong
-    const cond1: AssertExpectedType<typeof validatedRegistration> = true;
 });
 
 test('README: Sanitize and transform - hash', async () => {
@@ -133,16 +117,13 @@ test('README: Sanitize and transform - hash', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore();
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success();
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     // Mock bcrypt
@@ -152,13 +133,10 @@ test('README: Sanitize and transform - hash', async () => {
         },
     };
 
-    const hash = (): ValidatorFunction<string> =>
+    const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
-            if (typeof password !== 'string') {
-                return Ignore();
-            }
             const hashedPassword = await bcrypt.hash(password, 8);
-            return Success(hashedPassword);
+            return hashedPassword;
         };
 
     const validateRegistration = validate({
@@ -166,7 +144,11 @@ test('README: Sanitize and transform - hash', async () => {
         password: [isString(), minLength(8), hash()],
     });
 
-    const validatedRegistration = await validateRegistration({
+    type ExpectedType = {
+        email: string;
+        password: string;
+    };
+    const validatedRegistration: ExpectedType = await validateRegistration({
         email: 'asd2@asd.asd',
         password: 'asdasd69',
     });
@@ -175,15 +157,6 @@ test('README: Sanitize and transform - hash', async () => {
         email: 'asd2@asd.asd',
         password: '$2b$08$4S0b.0ut...',
     });
-
-    // Let's check for the expected type with some TypeScript magic
-    type ExpectedType = {
-        email: string;
-        password: string;
-    };
-    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
-    // This line shouldn't compile if the type is wrong
-    const cond1: AssertExpectedType<typeof validatedRegistration> = true;
 });
 
 test('README: Higher-order validators - confirmPassword', async () => {
@@ -196,16 +169,13 @@ test('README: Higher-order validators - confirmPassword', async () => {
         },
     };
 
-    const isUniqueEmail = (): ValidatorFunction<string> =>
+    const isUniqueEmail = (): ValidatorFunction<string, string> =>
         async function (email, conf) {
-            if (typeof email !== 'string') {
-                return Ignore();
-            }
             const exists = await db.users.find({ email });
             if (!exists) {
-                return Success();
+                return email;
             }
-            return Failure('This email already in use. Try your alternate address.');
+            throw 'This email already in use. Try your alternate address.'
         };
 
     // Mock bcrypt
@@ -215,22 +185,24 @@ test('README: Higher-order validators - confirmPassword', async () => {
         },
     };
 
-    const hash = (): ValidatorFunction<string> =>
+    const hash = (): ValidatorFunction<string, string> =>
         async function (password, conf) {
-            if (typeof password !== 'string') {
-                return Ignore();
-            }
             const hashedPassword = await bcrypt.hash(password, 8);
-            return Success(hashedPassword);
+            return hashedPassword;
         };
 
-    const confirmPassword = <T>(validator: Validator<T>): ValidatorFunction<T> =>
+    const confirmPassword = <
+        I extends { email: string; password: string; password_confirm: string },
+        O extends { email: string; password: string }
+    >(
+        validator: ValidatorObject<O>
+    ): ValidatorFunction<I, O> =>
         async function (user, conf) {
             if (!user?.password_confirm) {
-                return Failure('You should confirm your password.');
+                throw 'You should confirm your password.'
             }
             if (user.password_confirm !== user.password) {
-                return Failure('The two passwords do not match.');
+                throw 'The two passwords do not match.'
             }
             return validate(validator)(user);
         };
@@ -242,7 +214,11 @@ test('README: Higher-order validators - confirmPassword', async () => {
         })
     );
 
-    const validatedRegistration = await validateRegistration({
+    type ExpectedType = {
+        email: string;
+        password: string;
+    };
+    const validatedRegistration: ExpectedType = await validateRegistration({
         email: 'asd2@asd.asd',
         password: 'asdasd69',
         password_confirm: 'asdasd69',
@@ -252,13 +228,4 @@ test('README: Higher-order validators - confirmPassword', async () => {
         email: 'asd2@asd.asd',
         password: '$2b$08$4S0b.0ut...',
     });
-
-    // Let's check for the expected type with some TypeScript magic
-    type ExpectedType = {
-        email: string;
-        password: string;
-    };
-    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
-    // This line shouldn't compile if the type is wrong
-    const cond1: AssertExpectedType<typeof validatedRegistration> = true;
 });

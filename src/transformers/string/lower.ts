@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const lower = (): ValidatorFunction<string> => (value, conf) => {
-    if (typeof value !== 'string') {
-        return Ignore();
-    }
-    return Success(value.toLocaleLowerCase());
+const lower = (): SyncValidatorFunction<string, string> => (value, conf) => {
+    return value.toLocaleLowerCase();
 };
 
 export default lower;

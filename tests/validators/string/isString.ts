@@ -12,8 +12,8 @@ const conf: ValidatorConfiguration = {
 test('isString, when passed value is string returns success', async () => {
     const sanitizeString = isString();
 
-    await expect(sanitizeString('string', conf)).resolves.toBeUndefined();
-    await expect(sanitizeString('0', conf)).resolves.toBeUndefined();
+    await expect(sanitizeString('string', conf)).toEqual('string');
+    await expect(sanitizeString('0', conf)).toEqual('0');
 });
 
 test('isString, when passed value is not string, fails', async () => {

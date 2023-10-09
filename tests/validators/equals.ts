@@ -11,71 +11,71 @@ const conf: ValidatorConfiguration = {
 
 test('equals validator if the value is equals to the param, returns successfully', async () => {
     const validateStringEquality = equals('asdasd');
-    await expect(validateStringEquality('asdasd', conf)).resolves.toBeUndefined();
+    expect(validateStringEquality('asdasd', conf)).toEqual('asdasd');
 
     const validateNumberEquality = equals(100);
-    await expect(validateNumberEquality(100, conf)).resolves.toBeUndefined();
+    expect(validateNumberEquality(100, conf)).toEqual(100);
 
     const validateBoolEquality = equals(true);
-    await expect(validateBoolEquality(true, conf)).resolves.toBeUndefined();
+    expect(validateBoolEquality(true, conf)).toEqual(true);
 
     const obj = {};
     const validateObjectEquality = equals(obj);
-    await expect(validateObjectEquality(obj, conf)).resolves.toBeUndefined();
+    expect(validateObjectEquality(obj, conf)).toEqual(obj);
 
     const validateNullEquality = equals(null);
-    await expect(validateNullEquality(null, conf)).resolves.toBeUndefined();
+    expect(validateNullEquality(null, conf)).toEqual(null);
 
     const validateUndefinedEquality = equals(undefined);
-    await expect(validateUndefinedEquality(undefined, conf)).resolves.toBeUndefined();
+    expect(validateUndefinedEquality(undefined, conf)).toEqual(undefined);
 });
 
 test('equals validator if the value is not equals, fails', async () => {
     const validateStringEquality = equals('asdasd');
     try {
-        await validateStringEquality('dsadsa', conf);
+        validateStringEquality('dsadsa', conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to asdasd.');
     }
 
     const validateCapitalizedStringEquality = equals('asdasd');
     try {
-        await validateCapitalizedStringEquality('ASDASD', conf);
+        validateCapitalizedStringEquality('ASDASD', conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to asdasd.');
     }
 
     const validateNumberEquality = equals(100);
     try {
-        await validateNumberEquality(101, conf);
+        validateNumberEquality(101, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to 100.');
     }
 
     const validateFloatEquality = equals(0.3);
     try {
-        await validateFloatEquality(0.1 + 0.2, conf);
+        validateFloatEquality(0.1 + 0.2, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to 0.3.');
     }
 
     const validateBoolEquality = equals(true);
     try {
-        await validateBoolEquality(false, conf);
+        validateBoolEquality(false, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to true.');
     }
 
     const validateNaNEquality = equals(NaN);
     try {
-        await validateNaNEquality(NaN, conf);
+        validateNaNEquality(NaN, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to NaN.');
     }
 
     const validateObjectEquality = equals({});
     try {
-        await validateObjectEquality({}, conf);
+        validateObjectEquality({}, conf);
     } catch (err) {
         expect(err).toBe('Field strField should be equal to [object Object].');
     }

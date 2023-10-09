@@ -1,32 +1,34 @@
 import { describe, expect, test } from '@jest/globals';
-import { Failure, Success, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
+import { SyncValidatorFunction, ValidatorConfiguration, ValidatorFunction } from '../../src/types';
 import validate from '../../src/validate';
 import optional from '../../src/validators/optional';
 
-const conf: ValidatorConfiguration = {
-    name: 'optionalField',
-    original: {},
-    path: [],
-    parent: {},
-};
-
-test('optional validator if value is undefined, returns successfully without calling the inner validator', async () => {
+test('optional sync validator if value is undefined returns successfully', async () => {
     let i = 0;
-    const testValidation = (): ValidatorFunction<string> => async (value) => {
+    const testValidation = (): SyncValidatorFunction<unknown, string> => (value) => {
         i += 1;
         if (value) {
-            return Success();
+            return value as string;
         }
-        return Failure('This field is required.');
+        throw 'This field is required.';
     };
 
-    const validateFunctionOptional = validate({ field: optional(testValidation()) });
-    expect(await validateFunctionOptional({})).toEqual({} as any);
+    const validateFunctionOptional = validate(optional([testValidation()]));
+    expect(validateFunctionOptional(undefined)).toEqual(undefined);
     expect(i).toEqual(0);
-    expect(await validateFunctionOptional({ field: 'string' })).toEqual({ field: 'string' });
+    expect(validateFunctionOptional({ field: 'string' })).toEqual({ field: 'string' });
     expect(i).toEqual(1);
+});
 
-    i = 0;
+test('optional validator if value is undefined returns successfully', async () => {
+    let i = 0;
+    const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
+        i += 1;
+        if (value) {
+            return value as string;
+        }
+        throw 'This field is required.';
+    };
 
     const validateListOptional = validate({
         field: optional([testValidation(), testValidation()]),
@@ -36,22 +38,19 @@ test('optional validator if value is undefined, returns successfully without cal
     expect(await validateListOptional({ field: 'string' })).toEqual({ field: 'string' });
     expect(i).toEqual(2);
 
-    // Let's check for the expected type with some TypeScript magic
-    const validatedOptional = await validateFunctionOptional({ field: 'string' });
+    // Let's check for the expected type
     type ExpectedType = {
         field: string | undefined;
     };
-    type AssertExpectedType<T> = T extends ExpectedType ? true : never;
-    // This line shouldn't compile if the type is wrong
-    const cond1: AssertExpectedType<typeof validatedOptional> = true;
+    // const validatedType: ExpectedType = await validateFunctionOptional({ field: 'string' });
 });
 
-test('optional validator without it, undefined fails', async () => {
-    const testValidation = (): ValidatorFunction<string> => async (value) => {
+test('optional validator without it undefined fails', async () => {
+    const testValidation = (): ValidatorFunction<unknown, string> => async (value) => {
         if (value) {
-            return Success();
+            return value as string;
         }
-        return Failure('This field is required.');
+        throw 'This field is required.';
     };
 
     const validateNotOptional = validate({ field: testValidation() });

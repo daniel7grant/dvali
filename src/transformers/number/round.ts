@@ -1,10 +1,7 @@
-import { Ignore, Success, ValidatorFunction } from '../../types.js';
+import { SyncValidatorFunction } from '../../types.js';
 
-const round = (): ValidatorFunction<number> => (value, conf) => {
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-        return Ignore();
-    }
-    return Success(Math.round(value));
+const round = ():SyncValidatorFunction<number, number> => (value, conf) => {
+    return Math.round(value);
 };
 
 export default round;
